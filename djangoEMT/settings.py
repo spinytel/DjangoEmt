@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     "compressor",
+    "authentication",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -119,3 +120,5 @@ STATICFILES_FINDERS = (
 )
 
 COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
+
+AUTH_USER_MODEL = 'authentication.Account'
