@@ -1,0 +1,5 @@
+@media only screen and (max-width:768px) {
+    #main-container{
+        min-width: 625px;
+    }
+}

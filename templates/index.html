@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="dJangoAdmin">
+<head>
+    <meta charset="utf-8">
+    <title>Employee Management Tool</title>
+    {% include 'stylesheets.html' %}
+</head>
+<body>
+    <div id="main-container">
+        {% include 'header.html' %}
+
+        <div id="container" class="ng-view">
+            {% include 'login.html' %}
+        </div>
+        <div id="footer">
+            <p>Copyright &copy; 2009 - 2015 Spinytel | Design &amp; Developed by <a target="_blank" href="http://zemdialer.com">Spinytel</a></p>
+        </div>
+    </div>
+    {% include 'javascrips.html' %}
+</body>
+</html>

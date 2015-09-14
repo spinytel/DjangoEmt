@@ -1,0 +1,21 @@
+{% load compress %}
+{% load staticfiles %}
+
+{% compress css %}
+<link rel="shortcut icon" href="{% static '_$img/favicon.ico' %}" />
+
+<!-- CSS (Main File) -->
+<link rel="stylesheet" href="{% static '_$css/myStyle.css' %}" />
+<link rel="stylesheet" href="{% static '_$css/media_desktop.css' %}" />
+<link rel="stylesheet" href="{% static '_$css/media_tab.css' %}" />
+<link rel="stylesheet" href="{% static '_$css/font.css' %}" />
+
+<!-- CSS (Date Time Picker) -->
+<link rel="stylesheet" href="{% static 'lib/date_time_picker/jquery.datetimepicker.css' %}">
+
+<!-- CSS (Table) -->
+<link rel="stylesheet" href="{% static 'lib/table/t_style.css' %}">
+
+<!-- Tooltip (CSS) -->
+<link rel="stylesheet" href="{% static 'lib/tooltipster/tooltipster.css' %}">
+{% endcompress %}
