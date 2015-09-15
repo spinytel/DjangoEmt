@@ -13,10 +13,10 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import patterns, url
+from django.conf.urls import include, patterns, url
 from djangoEMT.views import IndexView
 
-urlpatterns = patterns(
-     '',
+urlpatterns = [
+    url(r'^project/', include('project.urls')),
     url('^.*$', IndexView.as_view(), name='index'),
-)
+]
