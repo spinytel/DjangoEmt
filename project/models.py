@@ -8,9 +8,15 @@ class Project(models.Model):
     deadline = models.DateTimeField('deadline')
     status = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.id
+
 
 class MilestoneType(models.Model):
     types = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.id
 
 
 class Milestone(models.Model):
@@ -22,6 +28,9 @@ class Milestone(models.Model):
     user_id = models.ForeignKey(Account)
     type_id = models.ForeignKey(MilestoneType)
     budget = models.IntegerField()
+
+    def __str__(self):
+        return self.id
 
 
 class Ticket(models.Model):
@@ -36,6 +45,9 @@ class Ticket(models.Model):
     priority = models.IntegerField()
     estimate = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.id
+
 
 class Comment(models.Model):
     ticket_id = models.ForeignKey(Ticket)
@@ -45,18 +57,30 @@ class Comment(models.Model):
     curr_status = models.CharField(max_length=100)
     details = models.TextField()
 
+    def __str__(self):
+        return self.id
+
 
 class TicketFile(models.Model):
     ticket_id = models.ForeignKey(Ticket)
     file_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.id
 
 
 class ProjectFile(models.Model):
     ticket_id = models.ForeignKey(Project)
     file_name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.id
+
 
 class ProjectMember(models.Model):
     project_id = models.ForeignKey(Project)
     user_id = models.ForeignKey(Account)
     member_type = models.IntegerField()
+
+    def __str__(self):
+        return self.id

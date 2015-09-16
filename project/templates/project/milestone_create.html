@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    {% include 'project/project_header.html' %}
+
+    <div class="p_up">
+        <div class="p_up_left">
+            <h1 class="inline">New Milestone</h1>
+            <a href="#"><p id="milestone_new" class="button">Cancel</p></a>
+        </div>
+        <div class="p_up_right">
+            <p>Project Creation Date : #</p>
+            <div class="clear"></div>
+            <p>Estimated Project Deadline : #</p>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="p_middle">
+        <div id="milestone_add_body">
+            <form enctype="multipart/form-data" method="POST" name="milestone_add">
+                {% csrf_token %}
+                {{ form.project_id }}
+                <div class="p_form_left">
+                    <div class="p-10">
+                        <div class="p_left_fields">
+                            <ul>
+                                <li>
+                                    <div class="level">{{ form.start_date.label }} :</div>
+                                    <div class="fields">
+                                        {{ form.start_date }}
+                                        {% if form.start_date.errors %}
+                                            <div class="alert alert-danger">{{ form.start_date.errors.as_text }}</div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">{{ form.due_date.label }} :</div>
+                                    <div class="fields">
+                                        {{ form.due_date }}
+                                        {% if form.due_date.errors %}
+                                            <div class="alert alert-danger">{{ form.due_date.errors.as_text }}</div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">{{ form.m_responsible.label }} :</div>
+                                    <div class="fields">
+                                        {{ form.m_responsible }}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">{{ form.budget.label }} :</div>
+                                    <div class="fields">
+                                        {{ form.budget }}
+                                        {% if form.budget.errors %}
+                                            <div class="alert alert-danger">{{ form.budget.errors.as_text }}</div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">{{ form.m_type.label }} :</div>
+                                    <div class="fields">
+                                        {{ form.m_type }}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="p_form_right">
+                    <div class="m_title">
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="alert alert-danger">{{ form.title.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="m_desc">
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="alert alert-danger">{{ form.description.errors.as_text }}</div>
+                        {% endif %}
+                        <input type="submit" name="submit_milestone_new" value="Create Milestone">
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </form>
+        </div>
+    </div>
+    {% include 'project/project_footer.html' %}
+{% endblock %}

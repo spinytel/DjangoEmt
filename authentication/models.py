@@ -39,6 +39,9 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    def get_id(self):
+        return self.id
+
     def __str__(self):
         return self.email
 
