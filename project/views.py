@@ -1,8 +1,9 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.utils import timezone
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
-from .models import Project
+from .models import Project,ProjectFile
 from authentication.models import Account
 from .forms import ProjectForm
 from django.db.models import Q
@@ -21,12 +22,24 @@ def project_create(request, template_name='project/create.html'):
     members = Account.objects.filter(is_admin = False).order_by('id')
 
     if request.POST:
-        form = ProjectForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(ok)
+        pr_form = ProjectForm(request.POST,request.FILES)
+        if pr_form.is_valid():
+            pform = pr_form.cleaned_data
+            p_name = pform['name']
+            create_date = timezone.now()
+            deadline = pform['deadline']
+            project_form = Project.objects.create(name=p_name,create_date=create_date,deadline=deadline,status='new')
+            project_form.save()
+            latest = Project.objects.latest('id')
+            proj_id = latest.pk
+            file_name = request.FILES['project_file']
 
+            project_files = ProjectFile.objects.create(file_name=file_name,project_id=proj_id)
+            project_files.save()
+
+            return HttpResponse('ok')
     return render(request, template_name, {'form': form, 'leaders': leaders, 'members':members})
+
 
 def project_edit(request,project_id,template_name="project/project_form.html"):
     project = Project.objects.get(pk=int(project_id))
