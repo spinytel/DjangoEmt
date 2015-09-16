@@ -1,0 +1,69 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+<div id="main-block">
+
+      <div class="dashboard_general">
+          <div class="main-block-title">
+              <div id="bread-crumps">
+                  <div style="height: 20px; line-height: 23px;">
+                      <a id="home_logo" href="home.php">Dashboard</a>»<a href="project_manage.php">All Projects</a>»<a style="color: #767676;">Project Add </a>
+                  </div>
+              </div>
+              <div class="clear"></div>
+          </div>
+          <div class="main-block-padding">
+              <form name="project_add" method="POST" enctype="multipart/form-data" action="">
+                {% csrf_token %}
+                  <div style="float: left; width: 50%;">
+                      <div class="level_name">{{ form.name.label }} <strong>*</strong></div>
+                      {{ form.name }}
+                      {% if form.name.errors %}
+                        <div class="alert alert-danger">{{ form.name.errors.as_text }}</div>
+                      {% endif %}
+                      <div class="level_name">Select Lead Member <strong>*</strong></div>
+                      <div class="select_box">
+                        {% for leader in leaders %}
+                          <div id="lead_{{ leader.id }}">
+                              <input type="checkbox" value="{{ leader.id }}" name="lead_user_ID[]" class="lead_box" id="b{{ leader.id }}">
+                              <label for="b{{ leader.id }}"><span class="box_check" onclick="member_show_hide('normal',{{ leader.id }},1)"></span><span class="box_name">{{ leader.username }}</span></label>
+                          </div>
+                        {% endfor %}
+                        </div>
+                      <div style="margin-top: 20px;" class="level_name">Project File's </div>
+                      <input type="file" name="p_files[]" style="margin: 5px 5px 2px 5px;">
+                      <div id="add_files"></div>
+                      <div id="add_another_i" class="add_another">
+                          <a>
+                              
+                              <p>Add Another File</p>
+                          </a>
+                      </div>
+                  </div>
+                  <div style="float: right; width: 50%;">
+                      <div class="level_name">{{ form.deadline.label }} <strong>*</strong></div>
+                      {{ form.deadline }}
+                      {% if form.deadline.errors %}
+                        <div class="alert alert-danger">{{ form.deadline.errors.as_text }}</div>
+                      {% endif %}
+                      <div class="level_name">Select Normal Member <strong>*</strong></div>
+                      <div class="select_box">
+                        {% for member in members %}
+                          <div id="normal_{{ member.id }}">
+                              <input type="checkbox" value="{{ member.id }}" name="normal_user_ID[]" class="normal_box" id="c{{ member.id }}">
+                              <label for="c{{ member.id }}"><span class="box_check"></span><span class="box_name">{{ member.username }}</span></label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
+                  </div>
+                  <div class="clear"></div>
+                  <div style="text-align: center; margin-top: 30px;">
+                      <input type="submit" value="Add Project" name="submit_project_add">
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+{% endblock %}

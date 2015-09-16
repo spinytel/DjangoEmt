@@ -37,7 +37,9 @@ a:hover{
     font-family: Roboto-Medium,Arial,Helvetica,sans-serif !important;
 }
 
-
+.err{
+  display: none;
+}
 
 
 /*************************** Header - Start *************************/
@@ -183,7 +185,7 @@ a:hover{
     font-weight: 400;
     display: block;
     padding: 10px 10px 10px 35px;
-    /*background: url("../_$img/button_2.png") no-repeat 13px 9px;*/
+    /*background: url("../img/button_2.png") no-repeat 13px 9px;*/
     background-size:16px 16px;
     font-size: 12px;
     color: #555555;
@@ -199,77 +201,77 @@ a:hover{
     text-align: center
 }
 #nav-menu ul li a#dashboard-icon{
-    background: url("../_$img/dashboard-16.png") no-repeat 10px 10px;
+    background: url("../img/dashboard-16.png") no-repeat 10px 10px;
 }
 #nav-menu ul li a#project-icon{
-    background: url("../_$img/project-icon.png") no-repeat 10px 10px;
+    background: url("../img/project-icon.png") no-repeat 10px 10px;
 }
 #nav-menu ul li a#attendance-icon{
-    background: url("../_$img/attendance-icon.png") no-repeat 10px 10px;
+    background: url("../img/attendance-icon.png") no-repeat 10px 10px;
 }
 #nav-menu ul li a#roster-icon{
-    background: url("../_$img/roster-calendar.png") no-repeat 10px 10px;
+    background: url("../img/roster-calendar.png") no-repeat 10px 10px;
 }
 #nav-menu ul li a#general-icon{
-    background: url("../_$img/general-calender.png") no-repeat 10px 10px;
+    background: url("../img/general-calender.png") no-repeat 10px 10px;
 }
 #nav-menu ul li a#leave-icon{
-    background: url("../_$img/leave-icon.png") no-repeat 10px 10px;
+    background: url("../img/leave-icon.png") no-repeat 10px 10px;
 }
 #nav-menu ul li a.report-icon{
-    background: url("../_$img/report-icon.png") no-repeat 10px 9px;
+    background: url("../img/report-icon.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#task-icon{
-    background: url("../_$img/task-icon.png") no-repeat 10px 9px;
+    background: url("../img/task-icon.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a.manage-icon{
-    background: url("../_$img/manage-icon.png") no-repeat 10px 9px;
+    background: url("../img/manage-icon.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#how_to-icon{
-    background: url("../_$img/how_to-icon.png") no-repeat 10px 9px;
+    background: url("../img/how_to-icon.png") no-repeat 10px 9px;
 }
 
 
 #nav-menu ul li a#attendance-report{
-    background: url("../_$img/attendance-report.png") no-repeat 10px 9px;
+    background: url("../img/attendance-report.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#task-report{
-    background: url("../_$img/task-report.png") no-repeat 10px 9px;
+    background: url("../img/task-report.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#point-report{
-    background: url("../_$img/point-report.png") no-repeat 10px 9px;
+    background: url("../img/point-report.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#leave-report{
-    background: url("../_$img/leave-report.png") no-repeat 10px 9px;
+    background: url("../img/leave-report.png") no-repeat 10px 9px;
 }
 
 
 #nav-menu ul li a#my_account-manage{
-    background: url("../_$img/my_account-manage.png") no-repeat 10px 9px;
+    background: url("../img/my_account-manage.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#employee-manage{
-    background: url("../_$img/employee-manage.png") no-repeat 10px 9px;
+    background: url("../img/employee-manage.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#leave-manage{
-    background: url("../_$img/leave-manage.png") no-repeat 10px 9px;
+    background: url("../img/leave-manage.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#extra-workday{
-    background: url("../_$img/extra-workday.png") no-repeat 10px 9px;
+    background: url("../img/extra-workday.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#roster-manage{
-    background: url("../_$img/roster-manage.png") no-repeat 10px 9px;
+    background: url("../img/roster-manage.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#limit-manage{
-    background: url("../_$img/limit-manage.png") no-repeat 10px 9px;
+    background: url("../img/limit-manage.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#entry-manage{
-    background: url("../_$img/entry-manage.png") no-repeat 10px 9px;
+    background: url("../img/entry-manage.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#holiday-manage{
-    background: url("../_$img/holiday-manage.png") no-repeat 10px 9px;
+    background: url("../img/holiday-manage.png") no-repeat 10px 9px;
 }
 #nav-menu ul li a#settings-manage{
-    background: url("../_$img/settings-manage.png") no-repeat 10px 9px;
+    background: url("../img/settings-manage.png") no-repeat 10px 9px;
 }
 #nav-menu li:hover a{
     color: #18858D;
@@ -297,7 +299,7 @@ a:hover{
 #nav-menu ul ul li a{
     color: #555555;
     /*
-    background: url("../_$img/link.png") no-repeat 12px 10px;
+    background: url("../img/link.png") no-repeat 12px 10px;
     */
 }
 #nav-menu .active_ul{
@@ -320,12 +322,12 @@ a:hover{
 }
 .active a{
     color: #18858D !important;
-    /*background: url("../_$img/button_2_hover.png") no-repeat 13px 9px !important;*/
+    /*background: url("../img/button_2_hover.png") no-repeat 13px 9px !important;*/
 }
 #nav-menu ul .active ul li a{
     color: #555555;
     /*
-    background: url("../_$img/link.png") no-repeat 12px 10px !important;
+    background: url("../img/link.png") no-repeat 12px 10px !important;
     */
 }
 #show_sub_menu, #show_sub_menu_ul, #show_sub_menu2, #show_sub_menu_ul2{
@@ -567,7 +569,7 @@ hr{
     padding-left: 20px;
 }
 #home_logo{
-    background: url("../_$img/home.png") no-repeat scroll 0 -1px / 16px 16px transparent;
+    background: url("../img/home.png") no-repeat scroll 0 -1px / 16px 16px transparent;
 }
 /*************************** Main Body - End *************************/
 
@@ -1087,7 +1089,7 @@ a:focus{
 }
 .pegination_active {
     border: 1px solid #1D9616;
-    background: url("../_$img/pagination-bg.gif") repeat-x scroll 0 0 #21A016;
+    background: url("../img/pagination-bg.gif") repeat-x scroll 0 0 #21A016;
     color: #FFFFFF !important;
     font-size: 12px !important;
     margin: 0 2px;
@@ -1096,7 +1098,7 @@ a:focus{
     text-shadow: 0 1px 0 #333333;
 }
 .pegination a:hover {
-    background: url("../_$img/pagination-bg.gif") repeat-x scroll 0 0 #21A016;
+    background: url("../img/pagination-bg.gif") repeat-x scroll 0 0 #21A016;
     border: 1px solid #1D9616;
     color: #FFFFFF !important;
     text-shadow: 0 1px 0 #333333;
@@ -1104,12 +1106,12 @@ a:focus{
 }
 
 .table-icon { padding: 1px 8px; margin-right: 10px; }
-.add.table-icon { background: url(../_$img/i_add.png) no-repeat; }
-.edit.table-icon { background: url(../_$img/i_edit.png) no-repeat; }
-.delete.table-icon { background: url(../_$img/i_delete.png) no-repeat; }
-.view.table-icon { background: url(../_$img/i_view.png) no-repeat; }
-.manage.table-icon { background: url(../_$img/i_manage.png) no-repeat; }
-.details.table-icon { background: url(../_$img/i_details.png) no-repeat; }
+.add.table-icon { background: url(../img/i_add.png) no-repeat; }
+.edit.table-icon { background: url(../img/i_edit.png) no-repeat; }
+.delete.table-icon { background: url(../img/i_delete.png) no-repeat; }
+.view.table-icon { background: url(../img/i_view.png) no-repeat; }
+.manage.table-icon { background: url(../img/i_manage.png) no-repeat; }
+.details.table-icon { background: url(../img/i_details.png) no-repeat; }
 
 #search {
     background: none repeat scroll 0 0 #57c8f1;
@@ -1327,7 +1329,7 @@ a:focus{
     list-style: none;
     padding: 2px 0 2px 20px;
     margin-left: 3px;
-    background: url('../_$img/list-button.png') no-repeat 0 50%;
+    background: url('../img/list-button.png') no-repeat 0 50%;
 }
 .inner_ul li a{
     font-family: Roboto-Light, Arial, Helvetica, sans-serif;
@@ -1340,13 +1342,13 @@ a:focus{
 }
 
 .save{
-    background: url("../_$img/save.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0)!important;
+    background: url("../img/save.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0)!important;
     height: 16px!important;
     width: 16px!important;
     border: none!important;
 }
 .cancel{
-    background: url("../_$img/cancel.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+    background: url("../img/cancel.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
     border: medium none !important;
     height: 16px !important;
     width: 16px !important;
@@ -1359,7 +1361,7 @@ a:focus{
     left    : 0;
     width   : 100%;
     height  : 100%;
-    background: rgba( 255, 255, 255, .5 ) url('../_$img/ajax-loader-2.gif') 50% 50% no-repeat;
+    background: rgba( 255, 255, 255, .5 ) url('../img/ajax-loader-2.gif') 50% 50% no-repeat;
 }
 /************************************ Home - End ******************************************/
 
@@ -1792,7 +1794,7 @@ a:focus{
     list-style: none;
     margin: 0 0 10px 5px;
     padding: 0 0 0 15px;
-    background: url("../_$img/howTo-icon.png") no-repeat scroll 0px 50% transparent;
+    background: url("../img/howTo-icon.png") no-repeat scroll 0px 50% transparent;
 }
 .active_howTo{
     background-color: #636262;
@@ -1884,11 +1886,11 @@ input[type="checkbox"] + label .box_check {
     height:19px;
     margin:-1px 4px 10px 0;
     vertical-align:middle;
-    background:url("../_$img/check_box.png") left top no-repeat;
+    background:url("../img/check_box.png") left top no-repeat;
     cursor:pointer;
 }
 input[type="checkbox"]:checked + label .box_check {
-    background:url("../_$img/check_box.png") -21px top no-repeat;
+    background:url("../img/check_box.png") -21px top no-repeat;
 }
 .add_another {
     position: relative;
@@ -1969,25 +1971,25 @@ input[type="checkbox"]:checked + label .box_check {
     font-size: 12px !important;
 }
 #nav_list li:nth-child(1) {
-    background: url("../_$img/p_home.png") 14px 11px no-repeat;
+    background: url("../img/p_home.png") 14px 11px no-repeat;
 }
 #nav_list li:nth-child(2) {
-    background: url("../_$img/new_ticket.png") 14px 11px no-repeat;
+    background: url("../img/new_ticket.png") 14px 11px no-repeat;
 }
 #nav_list li:nth-child(3) {
-    background: url("../_$img/all_tickets.png") 14px 11px no-repeat;
+    background: url("../img/all_tickets.png") 14px 11px no-repeat;
 }
 #nav_list li:nth-child(4) {
-    background: url("../_$img/project-wall.png") 14px 11px no-repeat;
+    background: url("../img/project-wall.png") 14px 11px no-repeat;
 }
 #nav_list li:nth-child(5) {
-    background: url("../_$img/milestone.png") 14px 11px no-repeat;
+    background: url("../img/milestone.png") 14px 11px no-repeat;
 }
 #nav_list li:nth-child(6) {
-    background: url("../_$img/files.png") 14px 11px no-repeat;
+    background: url("../img/files.png") 14px 11px no-repeat;
 }
 #nav_list li#p_active:nth-child(1) {
-    background: #f2eddc url("../_$img/p_active.png") 14px 11px no-repeat;
+    background: #f2eddc url("../img/p_active.png") 14px 11px no-repeat;
     border-left: 1px solid #f2eddc;
     border-bottom: 1px solid #E9CACA;
     border-right: 1px solid #E9CACA;
@@ -1995,7 +1997,7 @@ input[type="checkbox"]:checked + label .box_check {
     top: -1px;
 }
 #nav_list li#p_active{
-    background: #f2eddc url("../_$img/p_active.png") 14px 11px no-repeat;
+    background: #f2eddc url("../img/p_active.png") 14px 11px no-repeat;
     border-bottom: 1px solid #E9CACA;
     border-right: 1px solid #E9CACA;
     border-left: 1px solid #E9CACA;
@@ -2154,7 +2156,7 @@ input[type="checkbox"]:checked + label .box_check {
     font-size: 11px;
     color: #000000;
     line-height: 18px;
-    background: rgba(0, 0, 0, 0) url("../_$img/project_stream.png") no-repeat scroll 0 2px;
+    background: rgba(0, 0, 0, 0) url("../img/project_stream.png") no-repeat scroll 0 2px;
     padding-left: 20px;
 }
 .stream_status span:nth-child(1){
@@ -2172,7 +2174,7 @@ input[type="checkbox"]:checked + label .box_check {
     font-size: 11px;
     color: #000000;
     padding-left: 40px;
-    background: rgba(0, 0, 0, 0) url("../_$img/tickets_details_change.png") no-repeat scroll 20px 1px;
+    background: rgba(0, 0, 0, 0) url("../img/tickets_details_change.png") no-repeat scroll 20px 1px;
     margin-top: 2px;
 }
 .stream_comment{
@@ -2180,7 +2182,7 @@ input[type="checkbox"]:checked + label .box_check {
     font-size: 11px;
     color: #000000;
     padding-left: 40px;
-    background: rgba(0, 0, 0, 0) url("../_$img/tickets_details_change.png") no-repeat scroll 20px 1px;
+    background: rgba(0, 0, 0, 0) url("../img/tickets_details_change.png") no-repeat scroll 20px 1px;
     margin-top: 2px;
 }
 .stream_status_change span{
@@ -2493,13 +2495,13 @@ table.milestone_table thead tr th:nth-child(8){
     border-left: 1px solid #CFCFCF;
 }
 .list-action{
-    background: url('../_$img/tickets_icons.png') center -511px no-repeat;
+    background: url('../img/tickets_icons.png') center -511px no-repeat;
     width: 20px;
     padding: 1px 10px;
     cursor: pointer;
 }
 .list-action:hover{
-    /*background: url('../_$img/tickets_icons.png') center -543px no-repeat;*/
+    /*background: url('../img/tickets_icons.png') center -543px no-repeat;*/
 }
 .progress-mother{
     margin: 5px 15px;
@@ -2555,7 +2557,7 @@ table.milestone_table thead tr th:nth-child(8){
     display: none;
 }
 .active_menu_button{
-    background: url('../_$img/tickets_icons.png') center -543px no-repeat;
+    background: url('../img/tickets_icons.png') center -543px no-repeat;
 }
 .project_vertical_menu{
     min-width:160px;
@@ -2591,16 +2593,16 @@ table.milestone_table thead tr th:nth-child(8){
     background-color: #f5f5f5;
 }
 .context_wall{
-    background: url('../_$img/context_view.png') 9px no-repeat;
+    background: url('../img/context_view.png') 9px no-repeat;
 }
 .context_edit{
-    background: url('../_$img/context_edit.png') 9px no-repeat;
+    background: url('../img/context_edit.png') 9px no-repeat;
 }
 .context_delete{
-    background: url('../_$img/context_delete.png') 9px no-repeat;
+    background: url('../img/context_delete.png') 9px no-repeat;
 }
 .context_details{
-    background: url('../_$img/context_details.png') 9px no-repeat;
+    background: url('../img/context_details.png') 9px no-repeat;
 }
 .context_divider{
     height: 1px;
@@ -2712,7 +2714,7 @@ table.ticket_table tbody tr td:nth-child(1){
     width: 4%;
     min-width: 19px;
     border-right: 1px solid #CFCFCF;
-    background: url('../_$img/ticket_ID.png') 5px  no-repeat;
+    background: url('../img/ticket_ID.png') 5px  no-repeat;
     padding: 4px 5px 4px 16px;
     font-weight: 600;
 }
@@ -2848,7 +2850,7 @@ ul.files_ul li a, ul.files_ul li:last-child a{
     font: 11px Roboto-Light-i,Arial,Helvetica,sans-serif;
     color: #000;
     margin-bottom: 2px;
-    background: url('../_$img/tickets_details_change.png') 0 1px no-repeat;
+    background: url('../img/tickets_details_change.png') 0 1px no-repeat;
     padding-left: 20px;
 }
 .t_c_middle p span{

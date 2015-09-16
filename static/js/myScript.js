@@ -1,4 +1,4 @@
 jQuery('.datetime_picker').datetimepicker({
     timepicker:false,
-    format:'Y-m-d'
+    format:'d.m.Y'
 });

@@ -1,9 +1,6 @@
 from django import forms
-from django.forms import ModelForm
-from project.models import *
+from django.utils import timezone
 
-
-class ProjectForm(ModelForm):
-    class Meta:
-        model = Project
-        fields = ('name', 'create_date','deadline','status')
+class ProjectForm(forms.Form):
+    name = forms.CharField(label='Project Name', max_length=200, required=True)
+    deadline = forms.DateTimeField(label='Deadline', widget=forms.TextInput(attrs={'class':'datetime_picker'}))
