@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="dJangoAdmin">
+<html lang="en" ng-app="djangoEMT">
 <head>
     <meta charset="utf-8">
     <title>Employee Management Tool</title>
@@ -9,8 +9,7 @@
     <div id="main-container">
         {% include 'header.html' %}
 
-        <div id="container" class="ng-view">
-            {% include 'login.html' %}
+        <div id="container" ng-view>
         </div>
         <div id="footer">
             <p>Copyright &copy; 2009 - 2015 Spinytel | Design &amp; Developed by <a target="_blank" href="http://zemdialer.com">Spinytel</a></p>

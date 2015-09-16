@@ -40,10 +40,10 @@ class Account(AbstractBaseUser):
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.email
+        return self.account.email
 
     def get_full_name(self):
-        return ' '.join([self.username])
+        return ' '.join([self.account.username])
 
     def get_short_name(self):
-        return self.username
+        return self.account.username

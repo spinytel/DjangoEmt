@@ -13,10 +13,17 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import patterns, url
+from django.conf.urls import url, include, patterns
 from djangoEMT.views import IndexView
+from rest_framework_nested import routers
+from authentication.views import AccountViewSet, LoginView, LogoutView
+
+router = routers.SimpleRouter()
+router.register(r'accounts', AccountViewSet)
 
 urlpatterns = patterns(
-     '',
-    url('^.*$', IndexView.as_view(), name='index'),
+    '',
+    url(r'^login/$', LoginView.as_view(), name='login'),
+    url(r'^logout/$', LogoutView.as_view(), name='logout'),
+    url(r'^$', IndexView.as_view(), name='index'),
 )
