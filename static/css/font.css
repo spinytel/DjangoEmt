@@ -1,6 +1,6 @@
 @font-face{
     font-family: Roboto-Thin;
-    src: url('../_$fonts/Roboto/Roboto-Thin.ttf') format('truetype');
+    src: url('../fonts/Roboto/Roboto-Thin.ttf') format('truetype');
 
     /*src: url('../fonts/Roboto/Roboto-Thin.eot');
     src: url('../fonts/Roboto/Roboto-Thin.eot?#iefix') format('eot'),
@@ -13,7 +13,7 @@
 }
 @font-face{
     font-family: Roboto-Thin-i;
-    src: url('../_$fonts/Roboto/Roboto-ThinItalic.ttf') format('truetype');
+    src: url('../fonts/Roboto/Roboto-ThinItalic.ttf') format('truetype');
 
     /*src: url('../fonts/Roboto/Roboto-ThinItalic.eot');
     src: url('../fonts/Roboto/Roboto-ThinItalic.eot?#iefix') format('eot'),
@@ -26,7 +26,7 @@
 }
 @font-face{
     font-family: Roboto-Light;
-    src: url('../_$fonts/Roboto/Roboto-Light.ttf') format('truetype');
+    src: url('../fonts/Roboto/Roboto-Light.ttf') format('truetype');
 
     /*src: url('../fonts/Roboto/Roboto-Light.eot');
     src: url('../fonts/Roboto/Roboto-Light.eot?#iefix') format('eot'),
@@ -39,7 +39,7 @@
 }
 @font-face{
     font-family: Roboto-Light-i;
-    src: url('../_$fonts/Roboto/Roboto-LightItalic.ttf') format('truetype');
+    src: url('../fonts/Roboto/Roboto-LightItalic.ttf') format('truetype');
 
     /*src: url('../fonts/Roboto/Roboto-LightItalic.eot');
     src: url('../fonts/Roboto/Roboto-LightItalic.eot?#iefix') format('eot'),
@@ -52,7 +52,7 @@
 }
 @font-face{
     font-family: Roboto-Regular;
-    src: url('../_$fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+    src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype');
 
     /*src: url('../fonts/Roboto/Roboto-Regular.eot');
     src: url('../fonts/Roboto/Roboto-Regular.eot?#iefix') format('eot'),
@@ -65,7 +65,7 @@
 }
 @font-face{
     font-family: Roboto-Medium;
-    src: url('../_$fonts/Roboto/Roboto-Medium.ttf') format('truetype');
+    src: url('../fonts/Roboto/Roboto-Medium.ttf') format('truetype');
 
     /*src: url('../fonts/Roboto/Roboto-Medium.eot');
     src: url('../fonts/Roboto/Roboto-Medium.eot?#iefix') format('eot'),
