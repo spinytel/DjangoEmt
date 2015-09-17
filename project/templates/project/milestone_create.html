@@ -20,6 +20,7 @@
         <div id="milestone_add_body">
             <form enctype="multipart/form-data" method="POST" name="milestone_add">
                 {% csrf_token %}
+
                 {{ form.project_id }}
                 <div class="p_form_left">
                     <div class="p-10">

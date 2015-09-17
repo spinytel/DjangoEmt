@@ -20,5 +20,5 @@ class MilestoneForm(forms.Form):
         self.fields['due_date'] = forms.DateTimeField(label='Due Date', widget=forms.TextInput(attrs={'class':'dp_milestone_due_date', 'placeholder':'Due Date'}), required=True)
         self.fields['budget'] = forms.IntegerField(label='Budget', max_value=99999999, required=False, widget=forms.TextInput(attrs={'placeholder':'Budget'}))
 
-        self.fields['m_type'] = forms.ChoiceField(label="Responsible", choices=[(c.id, c.types) for c in MilestoneType.objects.order_by('id')], widget=forms.Select(attrs={'class':'p_selection selection'}))
-        self.fields['m_responsible'] = forms.ChoiceField(label="Milestone type", choices=[(c.user_id.get_id(), c.user_id.get_full_name()) for c in ProjectMember.objects.filter(project_id__id = passing_product_id)], widget=forms.Select(attrs={'class':'p_selection selection'}))
+        self.fields['m_type'] = forms.ChoiceField(label="Milestone type", choices=[(c.id, c.types) for c in MilestoneType.objects.order_by('id')], widget=forms.Select(attrs={'class':'p_selection selection'}))
+        self.fields['m_responsible'] = forms.ChoiceField(label="Responsible", choices=[(c.user.get_id(), c.user.get_full_name()) for c in ProjectMember.objects.filter(project__id = passing_product_id)], widget=forms.Select(attrs={'class':'p_selection selection'}))

@@ -59,9 +59,9 @@ def milestone_create(request, project_id, template_name='project/milestone_creat
                 start_date=form['start_date'],
                 due_date=form['due_date'],
                 budget=form['budget'],
-                project_id_id=form['project_id'],
-                user_id_id=form['m_responsible'],
-                type_id_id=form['m_type'])
+                project_id=form['project_id'],
+                user_id=form['m_responsible'],
+                type_id=form['m_type'])
             form.save()
             return HttpResponse('OK')
 
