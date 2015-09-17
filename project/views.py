@@ -3,42 +3,63 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
-from .models import Project,ProjectFile
+from .models import Project,ProjectFile,ProjectMember
 from authentication.models import Account
 from .forms import ProjectForm
 from django.db.models import Q
 # Create your views here.
-"""
-def project(request, question_id):
-    try:
-        project = Project.objects.get()
-    except Question.DoesNotExist:
-        raise Http404("Question does not exist")
-    return render(request, 'project/detail.html', {'question': question})
-"""
+
+def projects(request):
+    #projects = Project.objects.all()
+    ps = [[a['id'],a['create_date'],a['name'],a['deadline']] for a in Project.objects.all().values()]
+    fs = [[b['file_name'] for b in ProjectFile.objects.select_related().filter(project_id__id=int(a[0])).values()] for a in ps]
+
+    l = []
+    k = ['project_id', 'create_date', 'name','deadline', 'files']
+    for i in range(0,len(ps)) :
+        a = ps[i]
+        a.append(fs[i])
+        l.append(dict(zip(k,a)))
+    projects = l
+    #leader = ProjectMember.objects.filter(project_i.=)
+    #all_files = ProjectFile.objects.select_related().filter(project_id__id= )
+    #all_members = ProjectMember.objects.select_related()
+
+    return render(request, 'project/lists.html',{'projects':projects})
+
 def project_create(request, template_name='project/create.html'):
-    form = ProjectForm()
+    proj_form = ProjectForm()
     leaders = Account.objects.filter(~Q(email= "hrd@spinytel.com"))
     members = Account.objects.filter(is_admin = False).order_by('id')
 
     if request.POST:
-        pr_form = ProjectForm(request.POST,request.FILES)
-        if pr_form.is_valid():
-            pform = pr_form.cleaned_data
-            p_name = pform['name']
+
+        proj_form = ProjectForm(request.POST,request.FILES)
+        if proj_form.is_valid():
+            #import pdb; pdb.set_trace()
+            form_data = proj_form.cleaned_data
+            p_name = form_data['name']
             create_date = timezone.now()
-            deadline = pform['deadline']
-            project_form = Project.objects.create(name=p_name,create_date=create_date,deadline=deadline,status='new')
-            project_form.save()
+            deadline = form_data['deadline']
+            project_row = Project.objects.create(name=p_name,create_date=create_date,deadline=deadline,status='new')
+            project_row.save()
+
+            #project file process start
             latest = Project.objects.latest('id')
             proj_id = latest.pk
-            file_name = request.FILES['project_file']
+            for file_name in request.FILES.getlist('project_file'):
+                project_files = ProjectFile.objects.create(file_name=file_name,project_id=proj_id)
+                project_files.save()
 
-            project_files = ProjectFile.objects.create(file_name=file_name,project_id=proj_id)
-            project_files.save()
+            #project and lead members process
+            for lead_member in request.POST.getlist('lead_user_ID'):
+                project_lead = ProjectMember.objects.create(project_id=proj_id,user_id=lead_member,member_type=1)
+
+            for normal_member in request.POST.getlist('normal_user_ID'):
+                project_member = ProjectMember.objects.create(project_id=proj_id,user_id=normal_member,member_type=2)
 
             return HttpResponse('ok')
-    return render(request, template_name, {'form': form, 'leaders': leaders, 'members':members})
+    return render(request, template_name, {'proj_form': proj_form, 'leaders': leaders, 'members':members})
 
 
 def project_edit(request,project_id,template_name="project/project_form.html"):

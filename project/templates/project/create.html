@@ -17,22 +17,25 @@
               <form name="project_add" method="POST" enctype="multipart/form-data" action=".">
                 {% csrf_token %}
                   <div style="float: left; width: 50%;">
-                      <div class="level_name">{{ form.name.label }} <strong>*</strong></div>
-                      {{ form.name }}
-                      {% if form.name.errors %}
-                        <div class="alert alert-danger">{{ form.name.errors.as_text }}</div>
+                      <div class="level_name">{{ proj_form.name.label }} <strong>*</strong></div>
+                      {{ proj_form.name }}
+                      {% if proj_form.name.errors %}
+                        <div class="alert alert-danger">{{ proj_form.name.errors.as_text }}</div>
                       {% endif %}
                       <div class="level_name">Select Lead Member <strong>*</strong></div>
                       <div class="select_box">
                         {% for leader in leaders %}
                           <div id="lead_{{ leader.id }}">
-                              <input type="checkbox" value="{{ leader.id }}" name="lead_user_ID[]" class="lead_box" id="b{{ leader.id }}">
+                              <input type="checkbox" value="{{ leader.id }}" name="lead_user_ID" class="lead_box" id="b{{ leader.id }}">
                               <label for="b{{ leader.id }}"><span class="box_check" onclick="member_show_hide('normal',{{ leader.id }},2)"></span><span class="box_name">{{ leader.username }}</span></label>
                           </div>
                         {% endfor %}
                         </div>
-                      <div style="margin-top: 20px;" class="level_name">{{ form.project_file.label }}</div>
-                      {{ form.project_file }}
+                      <div style="margin-top: 20px;" class="level_name">{{ proj_form.project_file.label }}</div>
+                      {{ proj_form.project_file }}
+                      {% if proj_form.project_file.errors %}
+                        <div class="alert alert-danger">{{ proj_form.project_file.errors.as_text }}</div>
+                      {% endif %}
                       <div id="add_files"></div>
                       <div id="add_another_i" class="add_another">
                           <a>
@@ -41,19 +44,18 @@
                       </div>
                   </div>
                   <div style="float: right; width: 50%;">
-                      <div class="level_name">{{ form.deadline.label }} <strong>*</strong></div>
-                      {{ form.deadline }}
-                      {% if form.deadline.errors %}
-                        <div class="alert alert-danger">{{ form.deadline.errors.as_text }}</div>
+                      <div class="level_name">{{ proj_form.deadline.label }} <strong>*</strong></div>
+                      {{ proj_form.deadline }}
+                      {% if proj_form.deadline.errors %}
+                        <div class="alert alert-danger">{{ proj_form.deadline.errors.as_text }}</div>
                       {% endif %}
                       <div class="level_name">Select Normal Member <strong>*</strong></div>
                       <div class="select_box">
                         {% for member in members %}
                           <div id="normal_{{ member.id }}">
-                              <input type="checkbox" value="{{ member.id }}" name="normal_user_ID[]" class="normal_box" id="c{{ member.id }}">
+                              <input type="checkbox" value="{{ member.id }}" name="normal_user_ID" class="normal_box" id="c{{ member.id }}">
                               <label for="c{{ member.id }}"><span class="box_check" onclick="member_show_hide('lead',{{ member.id}},2)" ></span><span class="box_name">{{ member.username }}</span></label>
                           </div>
-
                         {% endfor %}
                       </div>
                       <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
@@ -66,9 +68,4 @@
           </div>
       </div>
   </div>
-  <script>
-        $("#add_another_i").click(function(){
-            $("#add_files").append('<input style="margin: 5px 5px 2px 5px;" type="file" name="project_file">');
-        });
-    </script>
 {% endblock %}

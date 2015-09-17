@@ -1,123 +1,95 @@
-jQuery('.datetime_picker').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-
-
-/**
- * Created by mamun0024 on 12/10/14.
- */
-// User Add Rule
-
-var loader    = $('.loader');
-
-jQuery('#date_time_picker').datetimepicker({
-    timepicker:false,
-    format:'d.m.Y'
-});
-jQuery('#date_time_picker2').datetimepicker({
-    timepicker:false,
-    format:'d.m.Y'
-});
-jQuery('#date_time_picker3').datetimepicker({
-    timepicker:true,
-    datepicker:false,
-    format:'g:i A'
-});
-jQuery('#date_time_picker4').datetimepicker({
-    timepicker:true,
-    datepicker:false,
-    format:'g:i A'
-});
-jQuery('#date_time_picker5').datetimepicker({
-    datepicker:false,
-    format:'g:i:s A'
-});
-jQuery('#date_time_picker6').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-jQuery('#date_time_picker7').datetimepicker({
-    timepicker:true,
-    format:'Y-m-d g:i A'
-});
-jQuery('#date_time_picker8').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-jQuery('#date_time_picker9').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-jQuery('#system_start_date').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-jQuery('#project_deadline').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-jQuery('#milestone_start_date').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-jQuery('#milestone_due_date').datetimepicker({
-    timepicker:false,
-    format:'Y-m-d'
-});
-
 //Pop up Div Declaration - Start
-$(document).ready( function() {
-    $(".entry,#closeEntry").click( function () {
-        var id = $(this).find('input[name="user_id"]').val();
-        ajax_entry_userID(id);
-        $('#popUpEntry input[name="passing_user_id"]').val(id);
-        popup('popUpEntry')
-    });
-});
-$(document).ready( function() {
-    $(".leave,#closeLeave").click( function () {
-        var id = $(this).find('input[name="user_id"]').val();
-        ajax_leave_userID(id);
-        $('#popUpLeave input[name="passing_user_id"]').val(id);
-        popup('popUpLeave')
-    });
-});
-$(document).ready( function() {
-    $(".att_entry,#closeEntry_details").click( function () {
-        var id = $(this).find('input[name="user_id"]').val();
-        var date = $(this).find('input[name="date"]').val();
-        ajax_att_popup(date);
-        $('#popUpEntry_details input[name="passing_user_id"]').val(id);
-        $('#popUpEntry_details input[name="passing_date"]').val(date);
-        popup('popUpEntry_details')
-    });
-});
-$(document).ready( function() {
-    $(".att_leave,#closeLeave_details").click( function () {
-        var user_id = $(this).find('input[name="user_id"]').val();
-        var att_id = $(this).find('input[name="att_id"]').val();
-        var date = $(this).find('input[name="date"]').val();
-        ajax_att_popup(date);
-        $('#popUpLeave_details input[name="passing_user_id"]').val(user_id);
-        $('#popUpLeave_details input[name="passing_date"]').val(date);
-        $('#popUpLeave_details input[name="passing_ID"]').val(att_id);
-        popup('popUpLeave_details')
-    });
-});
+$(document).ready(function() {
+  $('.datetime_picker').datetimepicker({
+      timepicker:false,
+      format:'Y-m-d'
+  });
 
-$(document).ready( function() {
-    $(".task_limit_add,#close_task_limit").click( function () {
-        popup('task_limit_add');
+  $("#add_another_i").click(function(){
+      $("#add_files").append('<input style="margin: 5px 5px 2px 5px;" type="file" name="project_file">');
+  });
+
+  $(".entry,#closeEntry").click( function () {
+      var id = $(this).find('input[name="user_id"]').val();
+      ajax_entry_userID(id);
+      $('#popUpEntry input[name="passing_user_id"]').val(id);
+      popup('popUpEntry')
+  });
+
+
+  $(".leave,#closeLeave").click( function () {
+      var id = $(this).find('input[name="user_id"]').val();
+      ajax_leave_userID(id);
+      $('#popUpLeave input[name="passing_user_id"]').val(id);
+      popup('popUpLeave')
+  });
+
+
+  $(".att_entry,#closeEntry_details").click( function () {
+      var id = $(this).find('input[name="user_id"]').val();
+      var date = $(this).find('input[name="date"]').val();
+      ajax_att_popup(date);
+      $('#popUpEntry_details input[name="passing_user_id"]').val(id);
+      $('#popUpEntry_details input[name="passing_date"]').val(date);
+      popup('popUpEntry_details')
+  });
+
+
+  $(".att_leave,#closeLeave_details").click( function () {
+      var user_id = $(this).find('input[name="user_id"]').val();
+      var att_id = $(this).find('input[name="att_id"]').val();
+      var date = $(this).find('input[name="date"]').val();
+      ajax_att_popup(date);
+      $('#popUpLeave_details input[name="passing_user_id"]').val(user_id);
+      $('#popUpLeave_details input[name="passing_date"]').val(date);
+      $('#popUpLeave_details input[name="passing_ID"]').val(att_id);
+      popup('popUpLeave_details')
+  });
+
+
+
+  $(".task_limit_add,#close_task_limit").click( function () {
+      popup('task_limit_add');
+  });
+
+  $(".task_limit_edit,#close_task_limit_edit").click( function () {
+      var edit_id = $(this).find('input[name="edit_id"]').val();
+      ajax_limit_edit(edit_id);
+      $('#task_limit_edit input[name="passing_user_id"]').val(edit_id);
+      popup('task_limit_edit');
+  });
+
+  $(".task_add_edit,#close_task_add_edit").click( function () {
+      var task_id = $(this).find('input[name="task_id"]').val();
+      ajax_task_add_edit(task_id);
+      $('#task_add_edit input[name="passing_task_id"]').val(task_id);
+      popup('task_add_edit');
+  });
+
+
+    $(".public_holiday_add,#close_public_holiday_add").click( function () {
+        popup('public_holiday_add');
     });
-});
-$(document).ready( function() {
-    $(".task_limit_edit,#close_task_limit_edit").click( function () {
-        var edit_id = $(this).find('input[name="edit_id"]').val();
-        ajax_limit_edit(edit_id);
-        $('#task_limit_edit input[name="passing_user_id"]').val(edit_id);
-        popup('task_limit_edit');
+
+    $(".public_holiday_edit,#close_public_holiday_edit").click( function () {
+        var holiday_ID = $(this).find('input[name="holiday_ID"]').val();
+        ajax_holiday_edit_load(holiday_ID);
+        $('#public_holiday_edit input[name="holiday_ID"]').val(holiday_ID);
+        popup('public_holiday_edit');
     });
+
+
+    $(".entry_time_add,#close_entry_time").click( function () {
+        popup('entry_time_add');
+    });
+
+    $(".entry_time_edit,#close_entry_time_edit").click( function () {
+        var entry_ID = $(this).find('input[name="entry_ID"]').val();
+        ajax_entry_edit_load(entry_ID);
+        $('#entry_time_edit input[name="passing_user_ID"]').val(entry_ID);
+        popup('entry_time_edit');
+    });
+
 });
 //Pop up Div Declaration - End
 
@@ -443,17 +415,6 @@ function entry_task_edit_save(){
     }
 }
 
-
-
-// Task Functions - Start
-$(document).ready( function() {
-    $(".task_add_edit,#close_task_add_edit").click( function () {
-        var task_id = $(this).find('input[name="task_id"]').val();
-        ajax_task_add_edit(task_id);
-        $('#task_add_edit input[name="passing_task_id"]').val(task_id);
-        popup('task_add_edit');
-    });
-});
 function ajax_task_add_edit(task_ID){
     if(task_ID){
         $.ajax({
@@ -520,23 +481,6 @@ function entry_task_add(){
 }
 // Task Functions - End
 
-
-
-
-// Entry Time Functions - Start
-$(document).ready( function() {
-    $(".entry_time_add,#close_entry_time").click( function () {
-        popup('entry_time_add');
-    });
-});
-$(document).ready( function() {
-    $(".entry_time_edit,#close_entry_time_edit").click( function () {
-        var entry_ID = $(this).find('input[name="entry_ID"]').val();
-        ajax_entry_edit_load(entry_ID);
-        $('#entry_time_edit input[name="passing_user_ID"]').val(entry_ID);
-        popup('entry_time_edit');
-    });
-});
 function entry_time_save(){
     var user_ID = $('select[name="user_ID"]').val();
     var entry_date = $('input[name="entry_date"]').val();
@@ -608,23 +552,6 @@ function entry_time_edit_save(){
 }
 // Entry Time Functions - End
 
-
-
-
-// Public Holiday Functions - Start
-$(document).ready( function() {
-    $(".public_holiday_add,#close_public_holiday_add").click( function () {
-        popup('public_holiday_add');
-    });
-});
-$(document).ready( function(){
-    $(".public_holiday_edit,#close_public_holiday_edit").click( function () {
-        var holiday_ID = $(this).find('input[name="holiday_ID"]').val();
-        ajax_holiday_edit_load(holiday_ID);
-        $('#public_holiday_edit input[name="holiday_ID"]').val(holiday_ID);
-        popup('public_holiday_edit');
-    });
-});
 function public_holiday_save(){
     var holiday_date = $('input[name="holiday_date"]').val();
     var holiday_name = $('input[name="holiday_name"]').val();

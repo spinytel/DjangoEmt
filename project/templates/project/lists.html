@@ -7,14 +7,13 @@
             <div class="main-block-title">
                 <div id="bread-crumps">
                     <div style="height: 20px; line-height: 23px;">
-                        <a href="home.php" id="home_logo">Dashboard</a>»<a style="color: #767676;"><?php if($_SESSION["user_role"] == 1){ echo "All Projects"; }else{ echo "My Projects"; }?></a>
+                        <a href="home.php" id="home_logo">Dashboard</a>»<a style="color: #767676;">All Projects</a>
                     </div>
                 </div>
-                <?php if($_SESSION["user_role"] == 1){ ?>
+
                 <div style="float: right; height: 20px; ">
                     <a href="project_add.php" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="_$includes/_$img/i_add.png"></a>
                 </div>
-                <?php } ?>
                 <div class="clear"></div>
             </div>
             <div class="main-block-padding">
@@ -25,62 +24,28 @@
                         <th>Project Name</th>
                         <th>Creation Date</th>
                         <th>Deadline</th>
-                        <th>Members</th>
+                        <th>Files</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php
-                    //$query1 = $DBH->prepare("SELECT * FROM lms_project WHERE p_status != 'completed' ORDER BY p_create_date DESC");
-                    $query1 = $DBH->prepare("SELECT p.*
-                                             FROM lms_project AS p
-                                             LEFT JOIN lms_project_member AS p_m
-                                             ON p.ID = p_m.project_ID
-                                             WHERE p_m.member_ID = :member_ID
-                                             AND p.p_status != 'completed'
-                                             ORDER BY p.ID DESC");
-                    $query1->bindParam(':member_ID', $_SESSION["user_ID"], PDO::PARAM_INT);
-                    $query1->execute();
-                    $j = 1;
-                    while($row1 = $query1->fetch(PDO::FETCH_ASSOC)){
-                        ?>
+                      {% for project in projects %}
                         <tr>
-                            <td valign="center" align="center"><?php echo $j; ?></td>
-                            <td valign="center" align="center"><?php echo $row1['p_name']; ?></td>
-                            <td valign="center" align="center"><?php echo date('d M, Y', strtotime($row1['p_create_date'])); ?></td>
-                            <td valign="center" align="center"><?php echo date('d M, Y', strtotime($row1['p_deadline'])); ?></td>
+                            <td valign="center" align="center">{{ project.project_id }}</td>
+                            <td valign="center" align="center">{{ project.name }}</td>
+                            <td valign="center" align="center">{{ project.create_date }}</td>
+                            <td valign="center" align="center">{{ project.deadline }}</td>
                             <td valign="center" align="left">
-                                <?php
-                                $project_ID = $row1['ID'];
-                                $query3 = $DBH->prepare("SELECT p_m.member_ID, p_m.m_type_ID, u.name
-                                                         FROM lms_project_member AS p_m
-                                                         LEFT JOIN lms_user AS u
-                                                         ON p_m.member_ID = u.ID
-                                                         WHERE p_m.project_ID = :projectID
-                                                         ORDER BY p_m.m_type_ID ASC");
-                                $query3->bindParam(':projectID', $project_ID, PDO::PARAM_INT);
-                                $query3->execute();
-                                while ($row3 = $query3->fetch(PDO::FETCH_ASSOC)){
-                                    if($row3['m_type_ID'] == 1){
-                                        echo $row3['name'].'<img src="_$includes/_$img/L.png" alt="Lead Member" class="member_icon">';
-                                    }elseif($row3['m_type_ID'] == 2){
-                                        echo $row3['name'].'<img src="_$includes/_$img/N.png" alt="Normal Member" class="member_icon">';
-                                    }
-                                }
-
-                                ?>
+                              {% for files_name in project.files %}
+                                {{ files_name }}
+                              {% endfor %}
                             </td>
                             <td valign="center" align="center">
-                                if($row2['m_type_ID'] == 1){
-                                    echo '<a class="table-icon edit" title="Edit Project" href="project_edit.php?ID='.$row1['ID'].'"></a>';
-                                }
-                                <a class="table-icon details" title="Project Details" href="project_home.php?ID=<?php echo $row1['ID']; ?>"></a>
+                              <a class="table-icon edit" title="Edit Project" href=""></a>
+                              <a class="table-icon details" title="Project Details" href=""></a>
                             </td>
                         </tr>
-                        <?php
-                        $j++;
-                    }
-                    ?>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
