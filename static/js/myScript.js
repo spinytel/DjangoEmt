@@ -66,6 +66,15 @@ $(document).ready(function() {
       popup('task_add_edit');
   });
 
+jQuery('.dp_milestone_start_date').datetimepicker({
+    timepicker:false,
+    format:'Y-m-d'
+});
+
+jQuery('.dp_milestone_due_date').datetimepicker({
+    timepicker:false,
+    format:'Y-m-d'
+});
 
     $(".public_holiday_add,#close_public_holiday_add").click( function () {
         popup('public_holiday_add');

@@ -1,11 +1,15 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.utils import timezone
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
+<<<<<<< HEAD
 from .models import Project,ProjectFile,ProjectMember
+=======
+from django.utils import timezone
+from .models import Project, ProjectMember, MilestoneType, Milestone
+>>>>>>> origin/emt_rejoan
 from authentication.models import Account
-from .forms import ProjectForm
+from .forms import ProjectForm, MilestoneForm, MilestoneEditForm
 from django.db.models import Q
 # Create your views here.
 
@@ -72,3 +76,53 @@ def project_edit(request,project_id,template_name="project/project_form.html"):
         project_form.save()
         return HttpResponse("ok")
     return render_to_response(template_name, context, context_instance = RequestContext(request))
+
+
+def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
+    milestone_details = Milestone.objects.filter(project_id=project_id)
+    return render(request, template_name, {'milestone_details': milestone_details})
+
+
+def milestone_create(request, project_id, template_name='milestone/milestone_create.html'):
+    form = MilestoneForm(passing_id=project_id)
+
+    if request.POST:
+        form = MilestoneForm(request.POST, passing_id=project_id)
+        if form.is_valid():
+            form = form.cleaned_data
+            form = Milestone.objects.create(
+                title=form['title'],
+                description=form['description'],
+                start_date=form['start_date'],
+                due_date=form['due_date'],
+                budget=form['budget'],
+                project_id=form['project_id'],
+                user_id=form['m_responsible'],
+                type_id=form['m_type'])
+            form.save()
+            return HttpResponse('OK')
+
+    return render(request, template_name, {'form': form})
+
+
+def milestone_edit(request, project_id, milestone_id, template_name='milestone/milestone_edit.html'):
+    form = MilestoneEditForm(passing_milestone_id=milestone_id)
+
+    if request.POST:
+        form = MilestoneEditForm(request.POST, passing_milestone_id=milestone_id)
+        if form.is_valid():
+            form = form.cleaned_data
+            Milestone.objects.filter(pk = milestone_id).update(
+                title=form['title'],
+                description=form['description'],
+                start_date=form['start_date'],
+                due_date=form['due_date'],
+                budget=form['budget'],
+                project_id=form['project_id'],
+                user_id=form['m_responsible'],
+                type_id=form['m_type'])
+            return HttpResponse('OK')
+        else:
+            return HttpResponse(form)
+
+    return render(request, template_name, {'form': form})
