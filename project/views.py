@@ -2,12 +2,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
-<<<<<<< HEAD
-from .models import Project,ProjectFile,ProjectMember
-=======
+
+from .models import Project,ProjectFile,ProjectMember, MilestoneType, Milestone
+
 from django.utils import timezone
-from .models import Project, ProjectMember, MilestoneType, Milestone
->>>>>>> origin/emt_rejoan
+
 from authentication.models import Account
 from .forms import ProjectForm, MilestoneForm, MilestoneEditForm
 from django.db.models import Q
