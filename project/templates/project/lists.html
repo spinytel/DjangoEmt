@@ -14,7 +14,7 @@
                 </div>
 
                 <div style="float: right; height: 20px; ">
-                    <a href="project_add.php" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="_$includes/_$img/i_add.png"></a>
+                    <a href="/project/create/" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="../../../static/img/i_add.png"></a>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -44,7 +44,7 @@
                             </td>
                             <td valign="center" align="center">
                               <a class="table-icon edit" title="Edit Project" href=""></a>
-                              <a class="table-icon details" title="Project Details" href=""></a>
+                              <a class="table-icon details" title="Project Details" href="/project/{{ project.project_id }}/milestone/"></a>
                             </td>
                         </tr>
                         {% endfor %}
