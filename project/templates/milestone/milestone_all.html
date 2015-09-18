@@ -55,7 +55,7 @@
                         </div>
                     </td>
                     <td valign="center" align="center" style="text-align: center;">
-                        <a class="list-action" title="Context Menu">&nbsp;</a>
+                        <a class="list-action" title="Context Menu" id="p_click_{{ milestone.id }}"  onclick="project_menu_toggle({{ milestone.id }})">&nbsp;</a>
                         <div class="project_vertical_menu" id="p_menu_{{ milestone.id }}">
                             <ul>
                                 <li><a class="context_wall" href="#">View on Project Wall</a></li>
@@ -70,5 +70,34 @@
             </tbody>
         </table>
     </div>
+    <script>
+        var previous_id ;
+        function project_menu_toggle(ID){
+            if(previous_id == null){
+                $('#p_menu_'+ID).toggle();
+
+                if($('#p_menu_'+ID).css("display") == "block"){
+                    $('#p_click_'+ID).addClass('active_menu_button');
+                }else{
+                    $('#p_click_'+ID).removeClass('active_menu_button');
+                }
+            }else if(previous_id != ID){
+                $('#p_menu_'+previous_id).hide();
+                $('#p_click_'+previous_id).removeClass('active_menu_button');
+
+                $('#p_menu_'+ID).show();
+                $('#p_click_'+ID).addClass('active_menu_button');
+            }else{
+                $('#p_menu_'+ID).toggle();
+
+                if($('#p_menu_'+ID).css("display") == "block"){
+                    $('#p_click_'+ID).addClass('active_menu_button');
+                }else{
+                    $('#p_click_'+ID).removeClass('active_menu_button');
+                }
+            }
+            previous_id = ID;
+        }
+    </script>
     {% include 'project/project_footer.html' %}
 {% endblock %}
