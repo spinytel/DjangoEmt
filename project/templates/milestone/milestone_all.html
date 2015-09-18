@@ -5,7 +5,7 @@
     <div class="p_up">
         <div class="p_up_left">
             <h1 class="inline">New Milestone</h1>
-            <a href=""><p id="milestone_new" class="button">New</p></a>
+            <a href="/project/{{ project_id }}/milestone/create"><p id="milestone_new" class="button">New</p></a>
         </div>
         <div class="p_up_right">
             <p>Project Creation Date : #</p>
@@ -59,9 +59,9 @@
                         <div class="project_vertical_menu" id="p_menu_{{ milestone.id }}">
                             <ul>
                                 <li><a class="context_wall" href="#">View on Project Wall</a></li>
-                                <li><a class="context_edit" href="#">Edit</a></li>
+                                <li><a class="context_edit" href="/project/{{ milestone.project.id }}/milestone/{{ milestone.id }}/edit">Edit</a></li>
                                 <li class="context_divider"></li>
-                                <li><a class="context_delete" href="#" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
+                                <li><a class="context_delete" href="/project/{{ milestone.project.id }}/milestone/{{ milestone.id }}/delete" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
                             </ul>
                         </div>
                     </td>

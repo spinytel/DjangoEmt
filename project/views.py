@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
@@ -79,11 +79,6 @@ def project_edit(request,project_id,template_name="project/project_form.html"):
     return render_to_response(template_name, context, context_instance = RequestContext(request))
 
 
-def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
-    milestone_details = Milestone.objects.filter(project_id=project_id)
-    return render(request, template_name, {'milestone_details': milestone_details})
-
-
 def milestone_create(request, project_id, template_name='milestone/milestone_create.html'):
     form = MilestoneForm(passing_id=project_id)
 
@@ -101,9 +96,9 @@ def milestone_create(request, project_id, template_name='milestone/milestone_cre
                 user_id=form['m_responsible'],
                 type_id=form['m_type'])
             form.save()
-            return HttpResponse('OK')
+            return redirect('/project/'+project_id+'/milestone/')
 
-    return render(request, template_name, {'form': form})
+    return render(request, template_name, {'form': form, 'project_id': project_id})
 
 
 def milestone_edit(request, project_id, milestone_id, template_name='milestone/milestone_edit.html'):
@@ -122,8 +117,20 @@ def milestone_edit(request, project_id, milestone_id, template_name='milestone/m
                 project_id=form['project_id'],
                 user_id=form['m_responsible'],
                 type_id=form['m_type'])
-            return HttpResponse('OK')
+            return redirect('/project/'+project_id+'/milestone/')
         else:
             return HttpResponse(form)
 
-    return render(request, template_name, {'form': form})
+    return render(request, template_name, {'form': form, 'project_id': project_id})
+
+
+def milestone_delete(request, project_id, milestone_id):
+    data = get_object_or_404(Milestone, pk=milestone_id)
+    data.delete()
+    return redirect('/project/'+project_id+'/milestone/')
+
+
+def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
+    milestone_details = Milestone.objects.filter(project_id=project_id)
+    return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id})
+
