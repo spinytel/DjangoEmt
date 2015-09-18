@@ -12,6 +12,7 @@ from .forms import ProjectForm, MilestoneForm, MilestoneEditForm
 from django.db.models import Q
 # Create your views here.
 
+
 def projects(request):
     #projects = Project.objects.all()
     ps = [[a['id'],a['create_date'],a['name'],a['deadline']] for a in Project.objects.all().values()]
@@ -29,6 +30,7 @@ def projects(request):
     #all_members = ProjectMember.objects.select_related()
 
     return render(request, 'project/lists.html',{'projects':projects})
+
 
 def project_create(request, template_name='project/create.html'):
     proj_form = ProjectForm()

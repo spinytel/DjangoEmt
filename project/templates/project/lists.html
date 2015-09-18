@@ -2,7 +2,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div id="main-block">
+{% include 'menu.html' %}
+<div id="block">
+    <div id="main-block">
         <div class="dashboard_general">
             <div class="main-block-title">
                 <div id="bread-crumps">
@@ -51,4 +53,5 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
