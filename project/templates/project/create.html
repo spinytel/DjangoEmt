@@ -21,8 +21,10 @@
                       {% if proj_form.name.errors %}
                         <div class="alert alert-danger">{{ proj_form.name.errors.as_text }}</div>
                       {% endif %}
-                      <div class="level_name">Select Lead Member <strong>*</strong></div>
+                      <div class="level_name">{{proj_form.selected_lead} Lead Member <strong>*</strong></div>
+
                       <div class="select_box">
+
                         {% for leader in leaders %}
                           <div id="lead_{{ leader.id }}">
                               <input type="checkbox" value="{{ leader.id }}" name="lead_user_ID" class="lead_box" id="b{{ leader.id }}">

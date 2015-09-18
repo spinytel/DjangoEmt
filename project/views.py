@@ -1,33 +1,28 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse,HttpResponseRedirect
-from django.shortcuts import render
-
+from django.shortcuts import render,get_object_or_404
 from .models import Project,ProjectFile,ProjectMember, MilestoneType, Milestone
-
 from django.utils import timezone
-
+from django.conf import settings
 from authentication.models import Account
-from .forms import ProjectForm, MilestoneForm, MilestoneEditForm
+from .forms import ProjectForm, MilestoneForm, MilestoneEditForm,ProjectEditForm
 from django.db.models import Q
+import os
 # Create your views here.
 
 def projects(request):
-    #projects = Project.objects.all()
     ps = [[a['id'],a['create_date'],a['name'],a['deadline']] for a in Project.objects.all().values()]
-    fs = [[b['file_name'] for b in ProjectFile.objects.select_related().filter(project_id__id=int(a[0])).values()] for a in ps]
+    lm = [[Account.objects.values_list('username',flat=True).filter(id=int(b['user_id'])) for b in ProjectMember.objects.select_related().filter(project_id__id=int(a[0])).filter(member_type=1).values()] for a in ps]
+    nm = [[Account.objects.values_list('username',flat=True).filter(id=int(b['user_id'])) for b in ProjectMember.objects.select_related().filter(project_id__id=int(a[0])).filter(member_type=2).values()] for a in ps]
 
-    l = []
-    k = ['project_id', 'create_date', 'name','deadline', 'files']
+    projects = []
+    k = ['project_id', 'create_date', 'name','deadline', 'files','leaders','members']
     for i in range(0,len(ps)) :
         a = ps[i]
-        a.append(fs[i])
-        l.append(dict(zip(k,a)))
-    projects = l
-    #leader = ProjectMember.objects.filter(project_i.=)
-    #all_files = ProjectFile.objects.select_related().filter(project_id__id= )
-    #all_members = ProjectMember.objects.select_related()
-
+        a.append(lm[i])
+        a.append(nm[i])
+        projects.append(dict(zip(k,a)))
     return render(request, 'project/lists.html',{'projects':projects})
 
 def project_create(request, template_name='project/create.html'):
@@ -51,6 +46,8 @@ def project_create(request, template_name='project/create.html'):
             latest = Project.objects.latest('id')
             proj_id = latest.pk
             for file_name in request.FILES.getlist('project_file'):
+                full_filename = os.path.join(settings.MEDIA_ROOT, file_name)
+                #fout = open(file_name, 'wb+')
                 project_files = ProjectFile.objects.create(file_name=file_name,project_id=proj_id)
                 project_files.save()
 
@@ -65,16 +62,23 @@ def project_create(request, template_name='project/create.html'):
     return render(request, template_name, {'proj_form': proj_form, 'leaders': leaders, 'members':members})
 
 
-def project_edit(request,project_id,template_name="project/project_form.html"):
-    project = Project.objects.get(pk=int(project_id))
-    context = {
-        'project_form': ProjectForm(instance=project),
-    }
-    project_form = ProjectForm(request.POST)
-    if project_form.is_valid():
-        project_form.save()
+def project_edit(request,project_id,template_name="project/create.html"):
+    if project_id:
+        project = get_object_or_404(Project, pk=project_id)
+        selected_lead = ProjectMember.objects.filter(project_id=project_id).filter(member_type=1).values_list('user_id',flat=True)
+        #import pdb; pdb.set_trace()
+        leaders = Account.objects.filter(~Q(email= "hrd@spinytel.com"))
+        members = Account.objects.filter(is_admin = False).order_by('id')
+
+    form = ProjectEditForm(request.POST)
+    if form.is_valid():
+        form.save()
         return HttpResponse("ok")
-    return render_to_response(template_name, context, context_instance = RequestContext(request))
+    else:
+        edit = {'name':project.name,'deadline':project.deadline,'selected_lead':selected_lead}
+        import pdb; pdb.set_trace()
+        proj_form = ProjectEditForm(edit)
+    return render_to_response(template_name, {'proj_form':proj_form, 'leaders': leaders, 'members':members}, context_instance = RequestContext(request))
 
 
 def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):

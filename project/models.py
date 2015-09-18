@@ -65,7 +65,7 @@ class TicketFile(models.Model):
     ticket = models.ForeignKey(Ticket)
     file_name = models.CharField(max_length=100)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.id
 
 
@@ -73,7 +73,7 @@ class ProjectFile(models.Model):
     project = models.ForeignKey(Project)
     file_name = models.CharField(max_length=100)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.id
 
 
@@ -82,5 +82,5 @@ class ProjectMember(models.Model):
     user = models.ForeignKey(Account)
     member_type = models.IntegerField()
 
-    def __str__(self):
+    def __unicode__(self):
         return self.id
