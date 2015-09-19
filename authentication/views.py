@@ -90,7 +90,9 @@ def user_edit(request, user_id):
 
 @login_required
 def user_delete(request, user_id):
-    user_details = Account.objects.all()
+    data = get_object_or_404(Account, pk=user_id)
+    data.delete()
+    return redirect('/accounts/users/')
 
 
 @login_required
