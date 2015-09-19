@@ -1,6 +1,6 @@
 
 {% extends "layout.html" %}
-
+{% load staticfiles %}
 {% block content %}
 <div id="main-block">
       <div class="dashboard_general">
@@ -21,19 +21,19 @@
                       {% if proj_form.name.errors %}
                         <div class="alert alert-danger">{{ proj_form.name.errors.as_text }}</div>
                       {% endif %}
-                      <div class="level_name">{{proj_form.selected_lead} Lead Member <strong>*</strong></div>
+                      <div class="level_name">Project Lead Member <strong>*</strong></div>
 
                       <div class="select_box">
-
                         {% for leader in leaders %}
                           <div id="lead_{{ leader.id }}">
-                              <input type="checkbox" value="{{ leader.id }}" name="lead_user_ID" class="lead_box" id="b{{ leader.id }}">
+                              <input type="checkbox" value="{{ leader.id }}" name="lead_user_ID" class="lead_box" id="b{{ leader.id }}" {% if leader.id in selected_lead %} {{ "checked" }} {% endif %}>
                               <label for="b{{ leader.id }}"><span class="box_check" onclick="member_show_hide('normal',{{ leader.id }},2)"></span><span class="box_name">{{ leader.username }}</span></label>
                           </div>
                         {% endfor %}
-                        </div>
+                      </div>
                       <div style="margin-top: 20px;" class="level_name">{{ proj_form.project_file.label }}</div>
                       {{ proj_form.project_file }}
+
                       {% if proj_form.project_file.errors %}
                         <div class="alert alert-danger">{{ proj_form.project_file.errors.as_text }}</div>
                       {% endif %}
@@ -54,16 +54,26 @@
                       <div class="select_box">
                         {% for member in members %}
                           <div id="normal_{{ member.id }}">
-                              <input type="checkbox" value="{{ member.id }}" name="normal_user_ID" class="normal_box" id="c{{ member.id }}">
+                              <input type="checkbox" value="{{ member.id }}" name="normal_user_ID" class="normal_box" id="c{{ member.id }}" {% if member.id in selected_member %} {{ "checked" }} {% endif %}>
                               <label for="c{{ member.id }}"><span class="box_check" onclick="member_show_hide('lead',{{ member.id}},2)" ></span><span class="box_name">{{ member.username }}</span></label>
                           </div>
                         {% endfor %}
                       </div>
                       <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
+                      {% if project_files %}
+                      <div class="level_name" style="margin-top: 20px;">Existing Project Files </div>
+                      {% for project_file in project_files %}
+                        <div class="project_files" id="e_p_f_{{project_file.0}}">
+                              <a target="_blank" href="{% static 'uploads/' %}{{project_file.1}}">{{project_file.1}}</a>
+                                    <!--<img onclick="delete_p_file('.$row_p_f['ID'].','.$project_ID.',\''.$row_p_f['file_name'].'\');" src="_$includes/_$img/delete_i.png" title="Delete" alt="Delete">-->
+                         </div>
+                      {% endfor %}
+                      {% endif %}
                   </div>
                   <div class="clear"></div>
                   <div style="text-align: center; margin-top: 30px;">
-                      <input type="submit" value="Add Project" name="submit_project_add">
+                    {{proj_form.project_update_id.as_hidden}}
+                      <input type="submit" value="{{proj_form.submit_val}}" name="submit_project_add">
                   </div>
               </form>
           </div>
