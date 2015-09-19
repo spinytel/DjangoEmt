@@ -2,17 +2,15 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
-
 from .models import Project,ProjectFile,ProjectMember, MilestoneType, Milestone
-
 from django.utils import timezone
-
 from authentication.models import Account
 from .forms import ProjectForm, MilestoneForm, MilestoneEditForm
 from django.db.models import Q
-# Create your views here.
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def projects(request):
     #projects = Project.objects.all()
     ps = [[a['id'],a['create_date'],a['name'],a['deadline']] for a in Project.objects.all().values()]
@@ -32,6 +30,7 @@ def projects(request):
     return render(request, 'project/lists.html',{'projects':projects})
 
 
+@login_required
 def project_create(request, template_name='project/create.html'):
     proj_form = ProjectForm()
     leaders = Account.objects.filter(~Q(email= "hrd@spinytel.com"))
@@ -67,6 +66,7 @@ def project_create(request, template_name='project/create.html'):
     return render(request, template_name, {'proj_form': proj_form, 'leaders': leaders, 'members':members})
 
 
+@login_required
 def project_edit(request,project_id,template_name="project/project_form.html"):
     project = Project.objects.get(pk=int(project_id))
     context = {
@@ -79,6 +79,7 @@ def project_edit(request,project_id,template_name="project/project_form.html"):
     return render_to_response(template_name, context, context_instance = RequestContext(request))
 
 
+@login_required
 def milestone_create(request, project_id, template_name='milestone/milestone_create.html'):
     form = MilestoneForm(passing_id=project_id)
 
@@ -101,6 +102,7 @@ def milestone_create(request, project_id, template_name='milestone/milestone_cre
     return render(request, template_name, {'form': form, 'project_id': project_id})
 
 
+@login_required
 def milestone_edit(request, project_id, milestone_id, template_name='milestone/milestone_edit.html'):
     form = MilestoneEditForm(passing_milestone_id=milestone_id)
 
@@ -124,13 +126,14 @@ def milestone_edit(request, project_id, milestone_id, template_name='milestone/m
     return render(request, template_name, {'form': form, 'project_id': project_id})
 
 
+@login_required
 def milestone_delete(request, project_id, milestone_id):
     data = get_object_or_404(Milestone, pk=milestone_id)
     data.delete()
     return redirect('/project/'+project_id+'/milestone/')
 
 
+@login_required
 def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
     milestone_details = Milestone.objects.filter(project_id=project_id)
     return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id})
-
