@@ -1,0 +1,59 @@
+diff --git a/djangoEMT/urls.py b/djangoEMT/urls.py
+index 8656996..5d97b49 100644
+--- a/djangoEMT/urls.py
++++ b/djangoEMT/urls.py
+@@ -14,9 +14,9 @@ Including another URLconf
+     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
+ """
+ from django.conf.urls import include, patterns, url
+-from djangoEMT.views import IndexView
++from djangoEMT.views import LoginView
+ 
+ urlpatterns = [
+     url(r'^project/', include('project.urls')),
+-    url('^.*$', IndexView.as_view(), name='index'),
++    url('^.*$', LoginView.as_view(), name='login'),
+ ]
+diff --git a/djangoEMT/views.py b/djangoEMT/views.py
+index 5665b59..7ce6402 100644
+--- a/djangoEMT/views.py
++++ b/djangoEMT/views.py
+@@ -3,9 +3,9 @@ from django.views.generic.base import TemplateView
+ from django.utils.decorators import method_decorator
+ 
+ 
+-class IndexView(TemplateView):
+-    template_name = 'layout.html'
++class LoginView(TemplateView):
++    template_name = 'login.html'
+ 
+     @method_decorator(ensure_csrf_cookie)
+     def dispatch(self, *args, **kwargs):
+-        return super(IndexView, self).dispatch(*args, **kwargs)
++        return super(LoginView, self).dispatch(*args, **kwargs)
+diff --git a/templates/layout.html b/templates/layout.html
+index 8ebc1f1..c1a88c5 100644
+--- a/templates/layout.html
++++ b/templates/layout.html
+@@ -3,7 +3,7 @@
+ <html>
+ <head>
+     <meta charset="utf-8">
+-    <title>Employee Management Tool</title>
++    <title>Project Management Tool</title>
+     {% include 'stylesheets.html' %}
+     <script type="text/javascript" src="{% static 'lib/jquery/jquery.js' %}"></script>
+ </head>
+diff --git a/templates/login.html b/templates/login.html
+index 751364f..860b026 100644
+--- a/templates/login.html
++++ b/templates/login.html
+@@ -4,7 +4,7 @@
+ <div id="sign-father">
+     <div id="sign-in">
+         <div id="message">
+-            <span style='color: green;'>Please Login First</span>"
++            <span style='color: green;'>Please Login First</span>
+         </div>
+         <form method="post" name="user_entry">
+             <label for="login">Email</label>
