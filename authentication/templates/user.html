@@ -7,7 +7,7 @@
             <div class="main-block-title">
                 <div id="bread-crumps">
                     <div style="height: 20px; line-height: 23px;">
-                        <a id="home_logo" href="/accounts/users/">User Manager</a>»<a style="color: #767676;">User Add </a>
+                        <a id="home_logo" href="/accounts/users/">User Manager</a>»<a style="color: #767676;">{{ form.breadcrumb }}</a>
                     </div>
                 </div>
                 <div class="clear"></div>
@@ -15,6 +15,7 @@
             <div class="main-block-padding">
                 <form name="user_add" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    {{form.user_pre_id.as_hidden}}
                     <div style="float: left; width: 50%;">
                         <div class="level_name">{{ form.is_admin.label }}</div>
                         {{ form.is_admin }}
@@ -52,7 +53,7 @@
                     </div>
                     <div class="clear"></div>
                     <div style="text-align: center; margin-top: 30px;">
-                    <input type="submit" value="Add User">
+                    <input type="submit" value="{{ form.submit }}">
                     </div>
                 </form>
             </div>

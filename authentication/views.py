@@ -2,12 +2,9 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, redirect, get_object_or_404
-from django.core.validators import validate_email
-from django.contrib.auth.models import User
-
+from django.shortcuts import redirect, get_object_or_404
 from authentication.models import Account
-from .forms import UserForm
+from .forms import UserForm, UserEditForm
 
 
 def user_login(request):
@@ -79,13 +76,34 @@ def user_create(request):
             else:
                 return HttpResponse("Please enter valid Email Address.")
 
-    return render(request, 'user_create.html', {'form': form})
+    form.submit = 'Add User'
+    form.breadcrumb = 'User Add'
+    return render(request, 'user.html', {'form': form})
 
 
 @login_required
 def user_edit(request, user_id):
-    user_details = Account.objects.all()
-    return render(request, 'user_edit.html', {'user_details': user_details})
+    form = get_object_or_404(Account, pk=user_id)
+
+    if request.POST:
+        form = UserEditForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if my_validate_email(data['email']):
+                pk = data['user_pre_id']
+                Account.objects.filter(pk = pk).update(
+                        username=data['username'],
+                        email=data['email'],
+                        is_admin=data['is_admin'])
+                return redirect('/accounts/users/')
+            else:
+                return HttpResponse("Please enter valid Email Address.")
+
+    data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
+    form = UserEditForm(data)
+    form.submit = 'Update User'
+    form.breadcrumb = 'User Edit'
+    return render(request, 'user.html', {'form': form})
 
 
 @login_required

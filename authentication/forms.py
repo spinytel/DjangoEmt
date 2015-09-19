@@ -1,6 +1,5 @@
 from django import forms
 from authentication.models import Account
-from django.contrib.auth.forms import UserCreationForm
 
 
 class UserForm(forms.ModelForm):
@@ -20,3 +19,10 @@ class UserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class UserEditForm(forms.Form):
+    username = forms.CharField(label='Name', max_length=200, required=True, widget=forms.TextInput(attrs={'placeholder': 'User Name'}))
+    email = forms.CharField(label='Email', required=True, widget=forms.TextInput(attrs={'placeholder': 'User Email'}))
+    is_admin = forms.ChoiceField(label="User Type", choices=[(False, 'General'), (True, 'Administrator')], widget=forms.Select(attrs={'class': 'selection'}), required=False)
+    user_pre_id = forms.CharField()
