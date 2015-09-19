@@ -2,8 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.core.validators import validate_email
+from django.contrib.auth.models import User
 
 from authentication.models import Account
+from .forms import UserForm
 
 
 def user_login(request):
@@ -46,6 +50,47 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return render(request, 'login.html')
+
+
+def my_validate_email(email):
+    from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
+
+
+@login_required
+def user_create(request):
+    form = UserForm()
+
+    if request.POST:
+        form = UserForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if my_validate_email(data['email']):
+                if data['password'] and data['confirm_password'] and data['password'] == data['confirm_password']:
+                    form.save()
+                    return redirect('/accounts/users/')
+                else:
+                    return HttpResponse('Password Mismatch')
+            else:
+                return HttpResponse("Please enter valid Email Address.")
+
+    return render(request, 'user_create.html', {'form': form})
+
+
+@login_required
+def user_edit(request, user_id):
+    user_details = Account.objects.all()
+    return render(request, 'user_edit.html', {'user_details': user_details})
+
+
+@login_required
+def user_delete(request, user_id):
+    user_details = Account.objects.all()
 
 
 @login_required
