@@ -6,7 +6,8 @@
         <div id="message">
             <span style='color: green;'>Please Login First</span>
         </div>
-        <form method="post" name="user_entry">
+        <form method="POST" name="user_entry" action="/account/login/">
+            {% csrf_token %}
             <label for="login">Email</label>
             <input type="text" name="email" placeholder="Email" required autocomplete="off">
 
