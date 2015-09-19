@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 
+from authentication.models import Account
+
 
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
@@ -44,3 +46,9 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return render(request, 'login.html')
+
+
+@login_required
+def user_all(request):
+    user_details = Account.objects.all()
+    return render(request, 'user_all.html', {'user_details': user_details})
