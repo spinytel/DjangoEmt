@@ -91,11 +91,11 @@ def user_create(request):
                     else:
                         return HttpResponse('Password Mismatch')
                 else:
-                    return HttpResponse("Please enter valid Email Address.")
+                    return HttpResponse("Please enter a valid Email Address.")
 
         form.submit = 'Add User'
         form.breadcrumb = 'User Add'
-        return render(request, 'user.html', {'form': form})
+        return render(request, 'user.html', {'form': form, 'user_type': user_type})
     else:
         return HttpResponse("Permission Denied")
 
@@ -111,13 +111,17 @@ def user_edit(request, user_id):
                 form_data = form.cleaned_data
                 if my_validate_email(form_data['email']):
                     pk = form_data['user_pre_id']
+                    username = form_data['username']
+                    email = form_data['email']
+                    is_admin = form_data['is_admin'] == 'True'
+                    
                     Account.objects.filter(pk = pk).update(
-                            username=form_data['username'],
-                            email=form_data['email'],
-                            is_admin=form_data['is_admin'])
+                            username=username,
+                            email=email,
+                            is_admin=is_admin)
                     return redirect('/accounts/users/')
                 else:
-                    return HttpResponse("Please enter valid Email Address.")
+                    return HttpResponse("Please enter a valid Email Address.")
 
         data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
         form = UserEditForm(data)
@@ -135,13 +139,14 @@ def user_edit(request, user_id):
                     form_data = form.cleaned_data
                     if my_validate_email(form_data['email']):
                         pk = form_data['user_pre_id']
+                        username = form_data['username']
+                        email = form_data['email']
                         Account.objects.filter(pk = pk).update(
-                                username=form_data['username'],
-                                email=form_data['email'],
-                                is_admin=form_data['is_admin'])
+                                username=username,
+                                email=email)
                         return redirect('/accounts/users/')
                     else:
-                        return HttpResponse("Please enter valid Email Address.")
+                        return HttpResponse("Please enter a valid Email Address.")
 
             data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
             form = UserEditForm(data)
