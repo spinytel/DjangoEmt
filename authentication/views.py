@@ -60,60 +60,116 @@ def my_validate_email(email):
 
 
 @login_required
+def get_logged_in_user_type(request):
+    user_type = request.user.is_admin
+    if user_type:
+        return True
+    else:
+        return False
+
+
+@login_required
+def get_logged_in_user_id(request):
+    user_id = request.user.id
+    return user_id
+
+
+@login_required
 def user_create(request):
-    form = UserForm()
+    user_type = get_logged_in_user_type(request)
+    if user_type:
+        form = UserForm()
 
-    if request.POST:
-        form = UserForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            if my_validate_email(data['email']):
-                if data['password'] and data['confirm_password'] and data['password'] == data['confirm_password']:
-                    form.save()
-                    return redirect('/accounts/users/')
+        if request.POST:
+            form = UserForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                if my_validate_email(data['email']):
+                    if data['password'] and data['confirm_password'] and data['password'] == data['confirm_password']:
+                        form.save()
+                        return redirect('/accounts/users/')
+                    else:
+                        return HttpResponse('Password Mismatch')
                 else:
-                    return HttpResponse('Password Mismatch')
-            else:
-                return HttpResponse("Please enter valid Email Address.")
+                    return HttpResponse("Please enter valid Email Address.")
 
-    form.submit = 'Add User'
-    form.breadcrumb = 'User Add'
-    return render(request, 'user.html', {'form': form})
+        form.submit = 'Add User'
+        form.breadcrumb = 'User Add'
+        return render(request, 'user.html', {'form': form})
+    else:
+        return HttpResponse("Permission Denied")
 
 
 @login_required
 def user_edit(request, user_id):
-    form = get_object_or_404(Account, pk=user_id)
+    user_type = get_logged_in_user_type(request)
+    if user_type:
+        form = get_object_or_404(Account, pk=user_id)
+        if request.POST:
+            form = UserEditForm(request.POST)
+            if form.is_valid():
+                form_data = form.cleaned_data
+                if my_validate_email(form_data['email']):
+                    pk = form_data['user_pre_id']
+                    Account.objects.filter(pk = pk).update(
+                            username=form_data['username'],
+                            email=form_data['email'],
+                            is_admin=form_data['is_admin'])
+                    return redirect('/accounts/users/')
+                else:
+                    return HttpResponse("Please enter valid Email Address.")
 
-    if request.POST:
-        form = UserEditForm(request.POST)
-        if form.is_valid():
-            form_data = form.cleaned_data
-            if my_validate_email(form_data['email']):
-                pk = form_data['user_pre_id']
-                Account.objects.filter(pk = pk).update(
-                        username=form_data['username'],
-                        email=form_data['email'],
-                        is_admin=form_data['is_admin'])
-                return redirect('/accounts/users/')
-            else:
-                return HttpResponse("Please enter valid Email Address.")
+        data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
+        form = UserEditForm(data)
+        form.submit = 'Update User'
+        form.breadcrumb = 'User Edit'
+        return render(request, 'user.html', {'form': form, 'user_type': user_type})
+    else:
+        logged_user_id = get_logged_in_user_id(request)
+        #import pdb; pdb.set_trace()
+        if logged_user_id == int(user_id):
+            form = get_object_or_404(Account, pk=user_id)
+            if request.POST:
+                form = UserEditForm(request.POST)
+                if form.is_valid():
+                    form_data = form.cleaned_data
+                    if my_validate_email(form_data['email']):
+                        pk = form_data['user_pre_id']
+                        Account.objects.filter(pk = pk).update(
+                                username=form_data['username'],
+                                email=form_data['email'],
+                                is_admin=form_data['is_admin'])
+                        return redirect('/accounts/users/')
+                    else:
+                        return HttpResponse("Please enter valid Email Address.")
 
-    data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
-    form = UserEditForm(data)
-    form.submit = 'Update User'
-    form.breadcrumb = 'User Edit'
-    return render(request, 'user.html', {'form': form})
+            data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
+            form = UserEditForm(data)
+            form.submit = 'Update User'
+            form.breadcrumb = 'User Edit'
+            return render(request, 'user.html', {'form': form, 'user_type': user_type})
+        else:
+            return HttpResponse("Permission Denied")
 
 
 @login_required
 def user_delete(request, user_id):
-    data = get_object_or_404(Account, pk=user_id)
-    data.delete()
-    return redirect('/accounts/users/')
+    user_type = get_logged_in_user_type(request)
+    if user_type:
+        data = get_object_or_404(Account, pk=user_id)
+        data.delete()
+        return redirect('/accounts/users/')
+    else:
+        return HttpResponse("Permission Denied")
 
 
 @login_required
 def user_all(request):
-    user_details = Account.objects.all()
-    return render(request, 'user_all.html', {'user_details': user_details})
+    user_type = get_logged_in_user_type(request)
+    if user_type:
+        user_details = Account.objects.all().values()
+    else:
+        user_id = get_logged_in_user_id(request)
+        user_details = Account.objects.filter(pk=user_id).values()
+
+    return render(request, 'user_all.html', {'user_details': user_details, 'user_type': user_type})

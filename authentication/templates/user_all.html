@@ -11,7 +11,7 @@
                         <a id="home_logo" style="color: #767676;">User Manager</a>
                     </div>
                 </div>
-                {% if user.is_admin %}
+                {% if user_type %}
                     <div style="float: right; height: 20px; ">
                         <a href="{% url 'auth:user_create' %}" title="Add User" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add User</span><img style="height: 15px;" src="{% static 'img/user-add.png' %}"></a>
                     </div>
@@ -37,14 +37,16 @@
                                 <td valign="center" align="center">{{ user.email }}</td>
                                 <td valign="center" align="center">
                                     {% if user.is_admin %}
-                                    Administrator
+                                        Administrator
                                     {% else %}
-                                    General
+                                        General
                                     {% endif %}
                                 </td>
                                 <td valign="center" align="center">
                                     <a class="table-icon edit" title="Edit User" href="{% url 'auth:user_edit' user.id  %}"></a>
-                                    <a class="table-icon delete" title="Delete User" href="{% url 'auth:user_delete' user.id  %}"></a>
+                                    {% if user_type %}
+                                        <a class="table-icon delete" title="Delete User" href="{% url 'auth:user_delete' user.id  %}"></a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

@@ -18,8 +18,10 @@
                     {% csrf_token %}
                     {{form.user_pre_id.as_hidden}}
                     <div style="float: left; width: 50%;">
-                        <div class="level_name">{{ form.is_admin.label }}</div>
-                        {{ form.is_admin }}
+                        {% if user_type %}
+                            <div class="level_name">{{ form.is_admin.label }}</div>
+                            {{ form.is_admin }}
+                         {% endif %}
 
                         <div class="level_name">{{ form.username.label }}</div>
                         {{ form.username }}
