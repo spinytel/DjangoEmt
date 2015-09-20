@@ -13,7 +13,7 @@
                 </div>
                 {% if user.is_admin %}
                     <div style="float: right; height: 20px; ">
-                        <a href="{% url 'user_create' %}" title="Add User" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add User</span><img style="height: 15px;" src="{% static 'img/user-add.png' %}"></a>
+                        <a href="{% url 'auth:user_create' %}" title="Add User" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add User</span><img style="height: 15px;" src="{% static 'img/user-add.png' %}"></a>
                     </div>
                 {% endif %}
                 <div class="clear"></div>
@@ -43,8 +43,8 @@
                                     {% endif %}
                                 </td>
                                 <td valign="center" align="center">
-                                    <a class="table-icon edit" title="Edit User" href="{% url 'user_edit' user.id  %}"></a>
-                                    <a class="table-icon delete" title="Delete User" href="{% url 'user_delete' user.id  %}"></a>
+                                    <a class="table-icon edit" title="Edit User" href="{% url 'auth:user_edit' user.id  %}"></a>
+                                    <a class="table-icon delete" title="Delete User" href="{% url 'auth:user_delete' user.id  %}"></a>
                                 </td>
                             </tr>
                         {% endfor %}

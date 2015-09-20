@@ -16,6 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url
 
 urlpatterns = [
-    url(r'^accounts/',include('authentication.urls')),
-    url(r'^project/', include('project.urls')),
+    url(r'^accounts/',include('authentication.urls', namespace='auth')),
+    url(r'^project/', include('project.urls', namespace='project')),
 ]
