@@ -1,5 +1,7 @@
 from django.db import models
 from authentication.models import Account
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class Project(models.Model):
@@ -66,7 +68,7 @@ class TicketFile(models.Model):
     file_name = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return self.id
+        return unicode(self.id)
 
 
 class ProjectFile(models.Model):
@@ -82,5 +84,6 @@ class ProjectMember(models.Model):
     user = models.ForeignKey(Account)
     member_type = models.IntegerField()
 
+
     def __unicode__(self):
-        return self.id
+        return unicode(self.id)

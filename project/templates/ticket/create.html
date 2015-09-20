@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="p_up">
+        <div class="p_up_left">
+            <h1 class="inline">New Ticket</h1>
+            <a href=""><p id="milestone_new" class="button">Cancel</p></a>
+        </div>
+        <div class="p_up_right">
+            <p>Project Creation Date : </p>
+            <div class="clear"></div>
+            <p>Estimated Project Deadline :</p>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="p_middle">
+        <div id="milestone_add_body">
+            <form action="" enctype="multipart/form-data" method="POST" name="ticket_add">
+              {% csrf_token %}
+                  {{tick_form.project_id.as_hidden}}
+                  {{tick_form.ticket_id.as_hidden}}
+                <div class="p_form_left">
+                    <div class="p-10">
+                        <div class="p_left_fields">
+                            <ul>
+                                <li>
+                                    <div class="level">Reported by :</div>
+                                    <div class="fields">
+                                        <span id="report_by">get_from_session</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">Status :</div>
+                                    <div class="fields">
+                                        {{tick_form.status}}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">Priority :</div>
+                                    <div class="fields">
+                                      {{tick_form.priority}}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">Assigned to :</div>
+                                    <div class="fields">
+                                        <select class="p_selection selection" name="t_assign">
+                                          {% for assigned in assign_to %}
+                                            <option value="{{assigned.0}}">{{assigned.1}}</option>
+                                          {% endfor %}
+                                        </select>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">Milestone :</div>
+                                    <div class="fields">
+                                        <select class="p_selection selection" name="t_milestone">
+                                          {% for milestone in milestones %}
+                                            <option value="{{milestone.id}}" {% if milestone_id %}{% if milestone_id == milestone.id %}
+  selected="yes" {% endif %}{% endif %}>{{milestone.title}}</option>
+                                          {% endfor %}
+                                        </select>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="level">Estimate :</div>
+                                    <div class="fields">
+                                        {{tick_form.estimate}}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="p_form_right">
+                    <div class="m_title">
+                        {{tick_form.title}}
+                    </div>
+                    <div class="m_desc">
+                          {{tick_form.description}}
+                        <div>
+                            <div class="level" style="margin-top: 5px;">File's </div>
+                              {{tick_form.ticket_file}}
+                            <div id="add_files"></div>
+                            <div class="add_another" id="add_another_if">
+                                <a>
+                                    <img src="includes/img/i_add.png" alt="Add Another File" title="Add Another File">
+                                    <p>Add Another File</p>
+                                </a>
+                            </div>
+                            <input type="submit" style="margin-top: 25px;" name="submit_ticket_new" value="{{tick_form.submit_val}}">
+                            <div class="clear"></div>
+                        </div>
+                        {% if ticket_files %}
+                        <div style="width: 50%; float: right;">
+                          <div class="level_name" style="margin-top: 20px;">Existing Ticket Files </div>
+                            {% for ticket_file in ticket_files %}
+                              <div class="project_files" id="e_p_f_{{ticket_file.0}}">
+                                    <a target="_blank" href="{% static 'uploads/' %}{{ticket_file.1}}">{{ticket_file.1}}</a>
+                                          <!--<img onclick="delete_p_file('.$row_p_f['ID'].','.$project_ID.',\''.$row_p_f['file_name'].'\');" src="_$includes/_$img/delete_i.png" title="Delete" alt="Delete">-->
+                               </div>
+                            {% endfor %}
+                          </div>
+                          <div class="clear"></div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

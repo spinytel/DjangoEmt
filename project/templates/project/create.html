@@ -7,7 +7,7 @@
           <div class="main-block-title">
               <div id="bread-crumps">
                   <div style="height: 20px; line-height: 23px;">
-                      <a id="home_logo" href="home.php">Dashboard</a>»<a href="project_manage.php">All Projects</a>»<a style="color: #767676;">Project Add </a>
+                      <a id="home_logo" href="home.php">Dashboard</a>»<a href="{% url 'projects' %}">All Projects</a>»<a style="color: #767676;">Project Add </a>
                   </div>
               </div>
               <div class="clear"></div>
@@ -61,13 +61,13 @@
                       </div>
                       <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
                       {% if project_files %}
-                      <div class="level_name" style="margin-top: 20px;">Existing Project Files </div>
-                      {% for project_file in project_files %}
-                        <div class="project_files" id="e_p_f_{{project_file.0}}">
-                              <a target="_blank" href="{% static 'uploads/' %}{{project_file.1}}">{{project_file.1}}</a>
-                                    <!--<img onclick="delete_p_file('.$row_p_f['ID'].','.$project_ID.',\''.$row_p_f['file_name'].'\');" src="_$includes/_$img/delete_i.png" title="Delete" alt="Delete">-->
-                         </div>
-                      {% endfor %}
+                        <div class="level_name" style="margin-top: 20px;">Existing Project Files </div>
+                          {% for project_file in project_files %}
+                            <div class="project_files" id="e_p_f_{{project_file.0}}">
+                                  <a target="_blank" href="{% static 'uploads/' %}{{project_file.1}}">{{project_file.1}}</a>
+                                        <!--<img onclick="delete_p_file('.$row_p_f['ID'].','.$project_ID.',\''.$row_p_f['file_name'].'\');" src="_$includes/_$img/delete_i.png" title="Delete" alt="Delete">-->
+                             </div>
+                          {% endfor %}
                       {% endif %}
                   </div>
                   <div class="clear"></div>

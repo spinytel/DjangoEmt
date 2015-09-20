@@ -9,6 +9,10 @@ $(document).ready(function() {
       $("#add_files").append('<input style="margin: 5px 5px 2px 5px;" type="file" name="project_file">');
   });
 
+  $("#add_another_if").click(function(){
+      $("#add_files").append('<input style="margin: 5px 5px 2px 5px;" type="file" name="ticket_file">');
+  });
+
   $(".entry,#closeEntry").click( function () {
       var id = $(this).find('input[name="user_id"]').val();
       ajax_entry_userID(id);
