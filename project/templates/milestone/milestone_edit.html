@@ -5,7 +5,7 @@
     <div class="p_up">
         <div class="p_up_left">
             <h1 class="inline">New Milestone</h1>
-            <a href="/project/{{ project_id }}/milestone/"><p id="milestone_new" class="button">Cancel</p></a>
+            <a href="{% url 'milestone_all' project_id  %}"><p id="milestone_new" class="button">Cancel</p></a>
         </div>
         <div class="p_up_right">
             <p>Project Creation Date : #</p>
@@ -80,7 +80,7 @@
                         {% if form.description.errors %}
                             <div class="alert alert-danger">{{ form.description.errors.as_text }}</div>
                         {% endif %}
-                        <input type="submit" name="submit_milestone_update" value="Update Milestone">
+                        <input type="submit" value="Update Milestone">
                     </div>
                 </div>
                 <div class="clear"></div>

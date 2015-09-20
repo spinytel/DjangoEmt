@@ -4,7 +4,7 @@
         <div id="user-info">
             {% if user.is_authenticated %}
                 <h1>{{ user.username }}</h1>
-                <h2><a href="/accounts/logout/">Log Out</a></h2>
+                <h2><a href="{% url 'user_logout' %}">Log Out</a></h2>
             {% else %}
                 <h1>WelCome, Guest </h1>
             {% endif %}

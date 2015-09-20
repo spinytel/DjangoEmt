@@ -88,13 +88,13 @@ def user_edit(request, user_id):
     if request.POST:
         form = UserEditForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            if my_validate_email(data['email']):
-                pk = data['user_pre_id']
+            form_data = form.cleaned_data
+            if my_validate_email(form_data['email']):
+                pk = form_data['user_pre_id']
                 Account.objects.filter(pk = pk).update(
-                        username=data['username'],
-                        email=data['email'],
-                        is_admin=data['is_admin'])
+                        username=form_data['username'],
+                        email=form_data['email'],
+                        is_admin=form_data['is_admin'])
                 return redirect('/accounts/users/')
             else:
                 return HttpResponse("Please enter valid Email Address.")
