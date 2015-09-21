@@ -1,0 +1,142 @@
+
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="p_up">
+        <div class="p_up_left">
+            <h1 class="inline">Tickets</h1>
+            <a href="{% url "ticket_create" project.id %}"><p id="milestone_new" class="button">New</p></a>
+        </div>
+        <div class="p_up_right">
+            <p>Project Creation Date : {{project.create_date}} </p>
+            <div class="clear"></div>
+            <p>Estimated Project Deadline :  {{project.deadline}}</p>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="p_middle">
+        <div id="table_filter">
+            <div id="table_filter_upper">
+                <div id="table_filter_inner">
+                    <form action="" enctype="multipart/form-data" method="POST">
+                      {% csrf_token %}
+                        <div class="filter_level">Ticket ID</div>
+                        <div class="filter_field">
+                            <input type="text" name="f_ticket_ID" placeholder="Ticket ID" value="{% if t_id != 'no' %}{{t_id}}{% endif %}">
+                        </div>
+                        <div class="filter_level">Priority</div>
+                        <div class="filter_field">
+                            <select class="f_filter_selection selection" name="f_priority">
+                                <option  value="">All</option>
+                                <option  value="1" {% if f_priority == '1' %}selected{% endif %}>Highest (1)</option>
+                                <option  value="2" {% if f_priority == '2' %}selected{% endif %}>High (2)</option>
+                                <option  value="3" {% if f_priority == '3' %}selected{% endif %}>Normal (3)</option>
+                                <option  value="4" {% if f_priority == '4' %}selected{% endif %}>Low (4)</option>
+                                <option value="5" {% if f_priority == '5' %}selected{% endif %}>Lowest (5)</option>
+                            </select>
+                        </div>
+                        <div class="filter_level">Ticket Status</div>
+                        <div class="filter_field">
+                            <select class="f_filter_selection selection" name="f_status">
+                                <option value="">All</option>
+                                <option value="New" {% if f_status == 'New' %}selected{% endif %}>New</option>
+                                <option  value="Accepted" {% if f_status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                                <option value="Test" {% if f_status == 'Test' %}selected{% endif %}>Test</option>
+                                <option  value="Fixed" {% if f_status == 'Fixed' %}selected{% endif %}>Fixed</option>
+                                <option value="Invalid" {% if f_status == 'Invalid' %}selected{% endif %}>Invalid</option>
+                            </select>
+                        </div>
+                        <div style="text-align: center;">
+                            <input type="submit" style="margin: 5px 0 20px 0; width: 90px;" name="submit_ticket_filter" value="Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="table_data">
+            <div id="filter_option">
+                <div id="filter_option_1">
+                    <p id="filter_button"><img class='filter_arrow' src='{% static "img/right_arrow.png" %}'>Filter</p>
+                </div>
+
+                <div class="clear"></div>
+            </div>
+            <table class="project_table ticket_table"  width="100%" cellspacing="0" cellpadding="5" align="center">
+                <thead>
+                <tr>
+                    <th title="Ticket ID" style="text-align: center;">#</th>
+                    <th>Summary</th>
+                    <th>Milestone</th>
+                    <th>Assigned To</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Estimate</th>
+                    <th style="text-align: center;">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% for ticket in tickets %}
+                    <tr>
+                        <td title="Ticket ID" valign="center" align="center" style="text-align: center;">{{ticket.0}}</td>
+                        <td valign="center" align="center">{{ticket.1}}</td>
+                        <td valign="center" align="center">
+                            {{ ticket.2.0 }}
+                        </td>
+                        <td valign="center" align="center">{{ticket.3.0}}</td>
+                        <td valign="center" align="center">{{ticket.4}}</td>
+                        <td valign="center" align="center">
+                          {% if ticket.5 == 1 %}
+                              Highest (1)
+                          {% elif ticket.5 == 2 %}
+                              High (2)
+                          {% elif ticket.5 == 3 %}
+                              Normal (3)
+                          {% elif ticket.5 == 4 %}
+                              Low (4)
+                          {% else %}
+                              Lowest (5)
+                          {% endif %}
+                        </td>
+                        <td valign="center" align="center">
+                          {% if ticket.6 == "Small" %}
+                              <img class='estimate_t' src='{% static "img/estimate_small.png" %}'> Small
+                          {% elif ticket.6 == "Medium" %}
+                              <img class='estimate_t' src='{% static "img/estimate_medium.png" %}'> Medium
+                          {% elif ticket.6 == "Large" %}
+                              <img class='estimate_t' src='{% static "img/estimate_large.png" %}'> Large
+                          {% else %}
+                              <img class='estimate_t' src='{% static "img/estimate_none.png" %}'> None
+                          {% endif %}
+                        </td>
+                        <td valign="center" align="center" style="text-align: center;">
+                            <a class="list-action" title="Context Menu" id="p_click_{{ticket.0}}" onclick="project_menu_toggle({{ticket.0}})">&nbsp;</a>
+                            <div class="project_vertical_menu" id="p_menu_{{ticket.0}}">
+                                <ul>
+                                    <li><a class="context_edit" href="{% url "ticket_edit" project.id ticket.0   %}">Edit</a></li>
+                                    <li class="context_divider"></li>
+                                    <li><a class="context_delete" href="" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <script>
+    {% if posted == 'no' %}
+        var table_height = $('.ticket_table').height();
+        $("#table_filter_upper").css("height",table_height+27);
+    {% else %}
+        $('.filter_arrow').attr('src','/static/img/left_arrow.png');
+        $("#table_filter_inner").css("display","block");
+        $("#table_filter").css("width","20%");
+        $("#table_data").css("width","80%");
+        $("#table_filter_upper").css("height","inherit");
+    {% endif %}
+    </script>
+
+{% endblock %}

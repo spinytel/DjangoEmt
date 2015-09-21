@@ -133,7 +133,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
     tick_form = TicketForm(initial={'project_id': project_id})
     assign_to = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
     milestones = Milestone.objects.filter(project_id = project_id).values()
-    #members = Account.objects.filter(is_admin = False).order_by('id')
+    project = get_object_or_404(Project,pk=project_id)
 
     if request.POST:# if submit form
         tick_form = TicketForm(request.POST, request.FILES)
@@ -173,12 +173,11 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
 
             return HttpResponse('/ticket/')
     tick_form.submit_val = 'Add Ticket'
-    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones})
+    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project})
 
 
 #ticket manager @rejoan
 def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.html'):
-    #import pdb;pdb.set_trace()
     if ticket_id:
         ticket = get_object_or_404(Ticket, pk=ticket_id)
         tick_form = TicketEditForm(initial={'project_id': project_id,'ticket_id':ticket_id})
@@ -186,7 +185,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
         assign_to = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
         milestones = Milestone.objects.filter(project_id = project_id).values()
         ticket_files = TicketFile.objects.filter(ticket_id=int(ticket_id)).values_list('id', 'file_name')
-        #import pdb;pdb.set_trace()
+        project = get_object_or_404(Project,pk=project_id)
 
     if request.POST:# if submit form
         tick_form = TicketEditForm(request.POST, request.FILES)
@@ -225,28 +224,48 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
                 ticket_files.save()
 
             return HttpResponse('/ticket/')
-    data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate,'milestone_id':ticket.milestone_id,'assign_id':ticket.assign_person_id}
+    data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate}
 
     tick_form = TicketEditForm(data)
-    #import pdb;pdb.set_trace()
     tick_form.submit_val = 'Update Ticket'
     #import pdb;pdb.set_trace()
-    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files})
+    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project})
 
 
-def tickets(request):
-    ps = [[a['id'],a['create_date'],a['name'],a['deadline']] for a in Project.objects.all().values()]
-    lm = [[Account.objects.values_list('username',flat=True).filter(id=int(b['user_id'])) for b in ProjectMember.objects.select_related().filter(project_id__id=int(a[0])).filter(member_type=1).values()] for a in ps]
-    nm = [[Account.objects.values_list('username',flat=True).filter(id=int(b['user_id'])) for b in ProjectMember.objects.select_related().filter(project_id__id=int(a[0])).filter(member_type=2).values()] for a in ps]
+def tickets(request,project_id):
+    f_ticket = Ticket.objects.filter(project_id=project_id).values()
+    if request.POST:
+        posted = 'yes'
+        t_id = request.POST['f_ticket_ID']
+        f_priority = request.POST['f_priority']
+        f_status = request.POST['f_status']
 
-    projects = []
-    k = ['project_id', 'create_date', 'name','deadline','leaders','members']
-    for i in range(0,len(ps)) :
-        a = ps[i]
-        a.append(lm[i])
-        a.append(nm[i])
-        projects.append(dict(zip(k,a)))
-    return render(request, 'project/lists.html',{'projects':projects})
+        if t_id.isdigit():
+            f_ticket = Ticket.objects.filter(project_id=project_id).filter(id=int(t_id)).values()
+
+        if f_priority.isdigit():
+            f_ticket = Ticket.objects.filter(project_id=project_id).filter(priority=int(f_priority)).values()
+
+        if f_status.isalnum():
+            f_ticket = Ticket.objects.filter(project_id=project_id).filter(status=str(f_status)).values()
+        #import pdb;pdb.set_trace()    
+    else:
+        t_id = f_status = f_priority = posted = 'no'
+
+
+    ticket = [[a['id'],a['title'],a['milestone_id'],a['assign_person_id'],a['status'],a['priority'],a['estimate']] for a in f_ticket]
+    milestones = [Milestone.objects.values_list('title',flat=True).filter(id=int(b[2])) for b in ticket]
+    assigned_to = [Account.objects.filter(id=int(b[3])).values_list('username', flat=True) for b in ticket]
+    project = get_object_or_404(Project, pk=project_id)
+
+    tickets = []
+    for i in range(0,len(ticket)) :
+        t = ticket[i]
+        t[2] = milestones[i]
+        t[3] = assigned_to[i]
+        tickets.append(t)
+
+    return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
 
 
 def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):

@@ -5,6 +5,29 @@ $(document).ready(function() {
       format:'Y-m-d'
   });
 
+  // Filter Design - Start
+var table_height = $('.ticket_table').height();
+//alert(table_height);
+$("#table_filter_upper").css("height",table_height+27);
+
+$('#filter_button').on({
+    'click': function(){
+        if($('#table_filter_inner').css("display") == "block"){
+            $('.filter_arrow').attr('src','/static/img/right_arrow.png');
+            $("#table_filter_inner").css("display","none");
+            $("#table_filter").css("width","2%");
+            $("#table_data").css("width","98%");
+            $("#table_filter_upper").css("height",$('.ticket_table').height()+27);
+        }else{
+            $('.filter_arrow').attr('src','/static/img/left_arrow.png');
+            $("#table_filter_inner").css("display","block");
+            $("#table_filter").css("width","20%");
+            $("#table_data").css("width","80%");
+            $("#table_filter_upper").css("height","inherit");
+        }
+    }
+});
+
   $("#add_another_i").click(function(){
       $("#add_files").append('<input style="margin: 5px 5px 2px 5px;" type="file" name="project_file">');
   });
@@ -105,7 +128,33 @@ jQuery('.dp_milestone_due_date').datetimepicker({
 
 });
 //Pop up Div Declaration - End
+var previous_id ;
+function project_menu_toggle(ID){
+    if(previous_id == null){
+        $('#p_menu_'+ID).toggle();
 
+        if($('#p_menu_'+ID).css("display") == "block"){
+            $('#p_click_'+ID).addClass('active_menu_button');
+        }else{
+            $('#p_click_'+ID).removeClass('active_menu_button');
+        }
+    }else if(previous_id != ID){
+        $('#p_menu_'+previous_id).hide();
+        $('#p_click_'+previous_id).removeClass('active_menu_button');
+
+        $('#p_menu_'+ID).show();
+        $('#p_click_'+ID).addClass('active_menu_button');
+    }else{
+        $('#p_menu_'+ID).toggle();
+
+        if($('#p_menu_'+ID).css("display") == "block"){
+            $('#p_click_'+ID).addClass('active_menu_button');
+        }else{
+            $('#p_click_'+ID).removeClass('active_menu_button');
+        }
+    }
+    previous_id = ID;
+}
 
 
 //Pop Up All Method - Start

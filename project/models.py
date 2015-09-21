@@ -39,7 +39,7 @@ class Ticket(models.Model):
     creator = models.ForeignKey(Account,related_name="creator_id")
     create_date = models.DateTimeField('date created')
     project = models.ForeignKey(Project)
-    milestone = models.ForeignKey(Milestone)
+    milestone = models.ForeignKey(Milestone,related_name = "milestone_dd")
     assign_person = models.ForeignKey(Account,related_name="assign_person_id")
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -47,8 +47,8 @@ class Ticket(models.Model):
     priority = models.IntegerField()
     estimate = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.id
+    def __unicode__(self):
+        return unicode(self.id)
 
 
 class Comment(models.Model):

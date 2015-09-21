@@ -4,12 +4,12 @@
 <div class="p_up">
         <div class="p_up_left">
             <h1 class="inline">New Ticket</h1>
-            <a href=""><p id="milestone_new" class="button">Cancel</p></a>
+            <a href="{% url "tickets" project.id %}"><p id="milestone_new" class="button">Cancel</p></a>
         </div>
         <div class="p_up_right">
-            <p>Project Creation Date : </p>
+            <p>Project Creation Date : {{project.create_date}} </p>
             <div class="clear"></div>
-            <p>Estimated Project Deadline :</p>
+            <p>Estimated Project Deadline : {{project.deadline}} </p>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>
@@ -47,7 +47,7 @@
                                     <div class="fields">
                                         <select class="p_selection selection" name="t_assign">
                                           {% for assigned in assign_to %}
-                                            <option value="{{assigned.0}}">{{assigned.1}}</option>
+                                            <option value="{{assigned.0}}" {% if assignId == assigned.0 %}selected{% endif %}>{{assigned.1}}</option>
                                           {% endfor %}
                                         </select>
                                     </div>
@@ -57,8 +57,7 @@
                                     <div class="fields">
                                         <select class="p_selection selection" name="t_milestone">
                                           {% for milestone in milestones %}
-                                            <option value="{{milestone.id}}" {% if milestone_id %}{% if milestone_id == milestone.id %}
-  selected="yes" {% endif %}{% endif %}>{{milestone.title}}</option>
+                                            <option value="{{milestone.id}}" {% if milesId == milestone.id %}selected{% endif %}>{{milestone.title}}</option>
                                           {% endfor %}
                                         </select>
                                     </div>
@@ -77,11 +76,18 @@
                     <div class="m_title">
                         {{tick_form.title}}
                     </div>
+                    {% if tick_form.title.errors %}
+                      <div class="alert alert-danger">{{ tick_form.title.errors.as_text }}</div>
+                    {% endif %}
                     <div class="m_desc">
                           {{tick_form.description}}
+                          {% if tick_form.description.errors %}
+                            <div class="alert alert-danger">{{ tick_form.description.errors.as_text }}</div>
+                          {% endif %}
                         <div>
                             <div class="level" style="margin-top: 5px;">File's </div>
                               {{tick_form.ticket_file}}
+
                             <div id="add_files"></div>
                             <div class="add_another" id="add_another_if">
                                 <a>
