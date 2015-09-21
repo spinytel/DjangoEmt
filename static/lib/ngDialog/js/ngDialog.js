@@ -175,7 +175,7 @@
 					 * - showClose {Boolean} - show close button, default true
 					 * - closeByEscape {Boolean} - default true
 					 * - closeByDocument {Boolean} - default true
-					 * - preCloseCallback {String|Function} - user supplied function name/function called before closing dialog (if set)
+					 * - preCloseCallback {String|Function} - users supplied function name/function called before closing dialog (if set)
 					 *
 					 * @return {Object} dialog
 					 */
@@ -350,7 +350,7 @@
 					 * - showClose {Boolean} - show close button, default true
 					 * - closeByEscape {Boolean} - default false
 					 * - closeByDocument {Boolean} - default false
-					 * - preCloseCallback {String|Function} - user supplied function name/function called before closing dialog (if set); not called on confirm
+					 * - preCloseCallback {String|Function} - users supplied function name/function called before closing dialog (if set); not called on confirm
 					 *
 					 * @return {Object} dialog
 					 */

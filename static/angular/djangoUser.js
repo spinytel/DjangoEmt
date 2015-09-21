@@ -2,21 +2,20 @@
   'use strict';
 
   angular
-    .module('djangoEMT', [
-      'djangoEMT.config',
-      'djangoEMT.routes',
-      'djangoEMT.authentication',
-      'djangoEMT.layout'
+    .module('djangoUser', [
+      'djangoUser.config',
+      'djangoUser.routes',
+      'djangoUser.users'
     ]);
 
   angular
-    .module('djangoEMT.config', []);
+    .module('djangoUser.config', []);
 
   angular
-    .module('djangoEMT.routes', ['ngRoute']);
+    .module('djangoUser.routes', ['ngRoute']);
 
   angular
-    .module('djangoEMT')
+    .module('djangoUser')
     .run(run);
 
   run.$inject = ['$http'];

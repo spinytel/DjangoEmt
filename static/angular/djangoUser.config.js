@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('djangoEMT.config')
+    .module('djangoUser.config')
     .config(config);
 
   config.$inject = ['$locationProvider'];

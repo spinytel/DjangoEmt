@@ -71,7 +71,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			show: []
 		};
 		this.checkInterval = null;
-		// this will be the user content shown in the tooltip. A capital "C" is used because there is also a method called content()
+		// this will be the users content shown in the tooltip. A capital "C" is used because there is also a method called content()
 		this.Content;
 		// this is the original element which is being applied the tooltipster plugin
 		this.$el = $(element);
@@ -148,7 +148,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 				if ((!deviceHasTouchCapability && self.options.iconDesktop) || (deviceHasTouchCapability && self.options.iconTouch)) {
 					
 					// TODO : the tooltip should be automatically be given an absolute position to be near the origin. Otherwise, when the origin is floating or what, it's going to be nowhere near it and disturb the position flow of the page elements. It will imply that the icon also detects when its origin moves, to follow it : not trivial.
-					// Until it's done, the icon feature does not really make sense since the user still has most of the work to do by himself
+					// Until it's done, the icon feature does not really make sense since the users still has most of the work to do by himself
 					
 					// if the icon provided is in the form of a string
 					if(typeof self.options.icon === 'string'){
@@ -158,7 +158,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 					}
 					// if it is an object (sensible choice)
 					else {
-						// (deep) clone the object if iconCloning == true, to make sure every instance has its own proxy. We use the icon without wrapping, no need to. We do not give it a class either, as the user will undoubtedly style the object on his own and since our css properties may conflict with his own
+						// (deep) clone the object if iconCloning == true, to make sure every instance has its own proxy. We use the icon without wrapping, no need to. We do not give it a class either, as the users will undoubtedly style the object on his own and since our css properties may conflict with his own
 						if (self.options.iconCloning) self.$elProxy = self.options.icon.clone(true);
 						else self.$elProxy = self.options.icon;
 					}
@@ -337,7 +337,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 						// build the base of our tooltip
 						self.$tooltip = $('<div class="tooltipster-base '+ self.options.theme +'" style="'+ minWidth +' '+ maxWidth +' '+ pointerEvents +' '+ animationSpeed +'"><div class="tooltipster-content"></div></div>');
 						
-						// only add the animation class if the user has a browser that supports animations
+						// only add the animation class if the users has a browser that supports animations
 						if (supportsTransitions()) self.$tooltip.addClass(animation);
 						
 						// insert the content
@@ -382,7 +382,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 							// here we'll have to set different sets of bindings for both touch and mouse
 							if (self.options.trigger == 'hover') {
 								
-								// if the user touches the body, hide
+								// if the users touches the body, hide
 								if (deviceHasTouchCapability) {
 									// timeout 0 : explanation below in click section
 									setTimeout(function() {
