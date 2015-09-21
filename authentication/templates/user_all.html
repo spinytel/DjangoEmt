@@ -2,8 +2,8 @@
 {% block content %}
 {% load staticfiles %}
 {% include 'menu.html' %}
-<div id="block">
-    <div id="main-block">
+<div id="block" ng-app="djangoUser">
+    <div id="main-block" ng-view>
         <div class="dashboard_general">
             <div class="main-block-title">
                 <div id="bread-crumps">

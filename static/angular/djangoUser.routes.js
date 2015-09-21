@@ -13,11 +13,9 @@
   */
     function config($routeProvider) {
       $routeProvider.when('/accounts/users', {
-
           templateUrl: '/static/templates/users/user_all.html',
           controller: 'UserListController',
           controllerAs: 'ul'
-
         });
     }
 })();

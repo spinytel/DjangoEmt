@@ -1,10 +1,15 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
+
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from authentication.models import Account
 from .forms import UserForm, UserEditForm
+import json
 
 
 def user_login(request):
@@ -50,6 +55,13 @@ def get_logged_in_user_type(request):
         return True
     else:
         return False
+
+
+@login_required
+@api_view(['GET', 'POST', ])
+def api_user_type(request):
+    user_type = request.user.is_admin
+    return Response(user_type)
 
 
 @login_required
@@ -153,7 +165,7 @@ def user_delete(request, user_id):
 
 
 @login_required
-def user_all(request):
+def user_all_list(request):
     user_type = get_logged_in_user_type(request)
     if user_type:
         user_details = Account.objects.all().values()
@@ -161,4 +173,33 @@ def user_all(request):
         user_id = get_logged_in_user_id(request)
         user_details = Account.objects.filter(pk=user_id).values()
 
-    return render(request, 'user_all.html', {'user_details': user_details, 'user_type': user_type})
+    return render(request, 'user_all.html', {'user_details': user_details})
+
+
+@login_required
+@api_view(['GET', 'POST', ])
+def api_user_all(request):
+    user_type = get_logged_in_user_type(request)
+
+    '''
+    if user_type:
+        user_details = Account.objects.all().values_list('id', 'username', 'email', 'is_admin')
+    else:
+        user_id = get_logged_in_user_id(request)
+        user_details = Account.objects.filter(pk=user_id).values_list('id', 'username', 'email', 'is_admin')
+
+    a = ['id', 'name', 'email', 'is_admin']
+    d = []
+    for b in user_details :
+        d.append(dict(zip(a, list(b))))
+
+    return Response(json.dumps(d))
+    '''
+
+    if user_type:
+        user_details = Account.objects.all().values()
+    else:
+        user_id = get_logged_in_user_id(request)
+        user_details = Account.objects.filter(pk=user_id).values()
+
+    return Response(user_details)

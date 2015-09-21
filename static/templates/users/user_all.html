@@ -1,59 +1,46 @@
-{% extends "layout.html" %}
-{% block content %}
-{% load staticfiles %}
-{% include 'menu.html' %}
-<div id="block">
-    <div id="main-block">
-        <div class="dashboard_general">
-            <div class="main-block-title">
-                <div id="bread-crumps">
-                    <div style="height: 20px; line-height: 23px;">
-                        <a id="home_logo" style="color: #767676;">User Manager</a>
-                    </div>
-                </div>
-                {% if user_type %}
-                    <div style="float: right; height: 20px; ">
-                        <a href="{% url 'auth:user_create' %}" title="Add User" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add User</span><img style="height: 15px;" src="{% static 'img/user-add.png' %}"></a>
-                    </div>
-                {% endif %}
-                <div class="clear"></div>
-            </div>
-            <div class="main-block-padding">
-                <table id="myTable" class="tablesorter"  width="100%" cellspacing="0" cellpadding="5" align="center" style="border-collapse:collapse">
-                    <thead>
-                        <tr>
-                            <th style="text-align: center;">S/N</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>User Type</th>
-                            <th style="text-align: center;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in user_details %}
-                            <tr>
-                                <td valign="center" align="center" style="text-align: center;">{{ forloop.counter }}</td>
-                                <td valign="center" align="center">{{ user.username }}</td>
-                                <td valign="center" align="center">{{ user.email }}</td>
-                                <td valign="center" align="center">
-                                    {% if user.is_admin %}
-                                        Administrator
-                                    {% else %}
-                                        General
-                                    {% endif %}
-                                </td>
-                                <td valign="center" align="center">
-                                    <a class="table-icon edit" title="Edit User" href="{% url 'auth:user_edit' user.id  %}"></a>
-                                    {% if user_type %}
-                                        <a class="table-icon delete" title="Delete User" href="{% url 'auth:user_delete' user.id  %}"></a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<div class="dashboard_general">
+    <div class="main-block-title">
+        <div id="bread-crumps">
+            <div style="height: 20px; line-height: 23px;">
+                <a id="home_logo" style="color: #767676;">User Manager</a>
             </div>
         </div>
+        <div style="float: right; height: 20px; " ng-if="userType == true">
+            <a href="users/create" title="Add User" style="height: 18px; padding: 4px 0 0 0; display: block;">
+                <span class="b_name">Add User</span>
+                <span class="user_add">&nbsp;</span>
+            </a>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="main-block-padding">
+        <table id="myTable" class="tablesorter"  width="100%" cellspacing="0" cellpadding="5" align="center" style="border-collapse:collapse">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">S/N</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>User Type</th>
+                    <th style="text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in userData">
+                    <td valign="center" align="center" style="text-align: center;">{[{ $index + 1 }]}</td>
+                    <td valign="center" align="center">{[{ user.username }]}</td>
+                    <td valign="center" align="center">{[{ user.email }]}</td>
+                    <td valign="center" align="center" ng-if="user.is_admin == true">
+                            Administrator
+                    </td>
+                    <td valign="center" align="center" ng-if="user.is_admin == false">
+                            General
+                    </td>
+                    <td valign="center" align="center">
+                        <a class="table-icon edit" title="Edit User" href="users/{[{ user.id }]}/edit"></a>
+                        <a ng-controller="UserDeleteController as ud" class="table-icon delete" ng-if="userType == true" title="Delete User" ng-click="ud.user_delete(user.id)"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
-{% endblock %}

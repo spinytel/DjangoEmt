@@ -7,5 +7,7 @@ urlpatterns = [
     url(r'^users/create', views.user_create, name='user_create'),
     url(r'^users/(?P<user_id>[0-9]+)/edit', views.user_edit, name='user_edit'),
     url(r'^users/(?P<user_id>[0-9]+)/delete', views.user_delete, name='user_delete'),
-    url(r'^users', views.user_all, name='user_all'),
+    url(r'^users/api/userList', views.api_user_all),
+    url(r'^users/api/userType', views.api_user_type),
+    url(r'^users', views.user_all_list, name='user_all'),
 ]

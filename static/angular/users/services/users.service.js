@@ -9,7 +9,7 @@
     .module('djangoUser.users.services')
     .factory('users', users);
 
-  users.$inject = ['$location','$http'];
+  users.$inject = ['$location', '$http'];
 
   /**
   * @namespace Users
@@ -21,11 +21,9 @@
     * @desc The Factory to be returned
     */
     var users = {
-
     };
 
     return users;
-
 
   }
 })();

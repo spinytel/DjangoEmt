@@ -1104,6 +1104,12 @@ a:focus{
     text-shadow: 0 1px 0 #333333;
     font-size: 12px !important;
 }
+.user_add{
+    background: url(../img/user-add.png) no-repeat !important;
+    display: inline-block !important;
+    height: 15px !important;
+    width: 16px !important;
+}
 
 .table-icon { padding: 1px 8px; margin-right: 10px; }
 .add.table-icon { background: url(../img/i_add.png) no-repeat; }
