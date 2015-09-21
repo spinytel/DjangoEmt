@@ -1,0 +1,16 @@
+<div id="sign-father">
+    <div id="sign-in">
+        <div id="message">
+            <span style='color: green;'>Please Login First</span>
+        </div>
+        <form method="POST" name="user_entry"  ng-submit="vm.login()"> <!--action="{% url 'auth:user_login' %}"-->
+            <label for="login">Email</label>
+            <input type="text" name="email" placeholder="Email" ng-model="vm.email" required autocomplete="off">
+
+            <label for="pass">Password</label>
+            <input type="password" name="password" placeholder="Password" ng-model="vm.password" required autocomplete="off">
+
+            <input type="submit" name="submit" value="Login">
+        </form>
+    </div>
+</div>

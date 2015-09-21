@@ -1,0 +1,57 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+{% include 'menu.html' %}
+<div id="block">
+    <div id="main-block">
+        <div class="dashboard_general">
+            <div class="main-block-title">
+                <div id="bread-crumps">
+                    <div style="height: 20px; line-height: 23px;">
+                        <a id="home_logo" style="color: #767676;">All Projects</a>
+                    </div>
+                </div>
+
+                <div style="float: right; height: 20px; ">
+                    <a href="/project/create/" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="../../../static/img/i_add.png"></a>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="main-block-padding">
+                <table id="myTable" class="tablesorter"  width="100%" cellspacing="0" cellpadding="5" align="center" style="border-collapse:collapse">
+                    <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Project Name</th>
+                        <th>Creation Date</th>
+                        <th>Deadline</th>
+                        <th>Files</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      {% for project in projects %}
+                        <tr>
+                            <td valign="center" align="center">{{ project.project_id }}</td>
+                            <td valign="center" align="center">{{ project.name }}</td>
+                            <td valign="center" align="center">{{ project.create_date }}</td>
+                            <td valign="center" align="center">{{ project.deadline }}</td>
+                            <td valign="center" align="left">
+                              {% for files_name in project.files %}
+                                {{ files_name }}
+                              {% endfor %}
+                            </td>
+                            <td valign="center" align="center">
+                              <a class="table-icon edit" title="Edit Project" href=""></a>
+                              <a class="table-icon details" title="Project Details" href="/project/{{ project.project_id }}/milestone/"></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% include 'menu.html' %}
+<div id="block">
+    <div id="main-block">
+        <div class="dashboard_general">
+            <div class="main-block-title">
+                <div id="bread-crumps">
+                    <div style="height: 20px; line-height: 23px;">
+                        <a id="home_logo" href="{% url 'auth:user_all' %}">User Manager</a>»<a style="color: #767676;">{{ form.breadcrumb }}</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="main-block-padding">
+                <form name="user_add" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.user_pre_id.as_hidden}}
+                    <div style="float: left; width: 50%;">
+                        {% if user_type %}
+                            <div class="level_name">{{ form.is_admin.label }}</div>
+                            {{ form.is_admin }}
+                         {% endif %}
+
+                        <div class="level_name">{{ form.username.label }}</div>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="alert alert-danger">{{ form.username.errors.as_text }}</div>
+                        {% endif %}
+
+                        <div class="level_name">{{ form.email.label }}</div>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="alert alert-danger">{{ form.email.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div style="float: right; width: 50%;">
+                        <div class="level_name">{{ form.password.label }}</div>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="alert alert-danger">{{ form.password.errors.as_text }}</div>
+                        {% endif %}
+
+                        <div class="level_name">{{ form.confirm_password.label }}</div>
+                        {{ form.confirm_password }}
+                        {% if form.confirm_password.errors %}
+                            <div class="alert alert-danger">{{ form.confirm_password.errors.as_text }}</div>
+                        {% endif %}
+
+                        <!--
+                        {% ifnotequal form.password form.confirm_password %}
+                            <div class="alert alert-danger">Password Mismatch</div>
+                        {% endifnotequal %}
+                        -->
+                    </div>
+                    <div class="clear"></div>
+                    <div style="text-align: center; margin-top: 30px;">
+                    <input type="submit" value="{{ form.submit }}">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

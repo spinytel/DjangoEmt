@@ -1,0 +1,73 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+{% include 'menu.html' %}
+<div id="block">
+    <div id="main-block">
+          <div class="dashboard_general">
+              <div class="main-block-title">
+                  <div id="bread-crumps">
+                      <div style="height: 20px; line-height: 23px;">
+                          <a id="home_logo" href="home.php">Dashboard</a>»<a href="/project/all/">All Projects</a>»<a style="color: #767676;">Project Add </a>
+                      </div>
+                  </div>
+                  <div class="clear"></div>
+              </div>
+              <div class="main-block-padding">
+                  <form name="project_add" method="POST" enctype="multipart/form-data" action=".">
+                    {% csrf_token %}
+                      <div style="float: left; width: 50%;">
+                          <div class="level_name">{{ proj_form.name.label }} <strong>*</strong></div>
+                          {{ proj_form.name }}
+                          {% if proj_form.name.errors %}
+                            <div class="alert alert-danger">{{ proj_form.name.errors.as_text }}</div>
+                          {% endif %}
+                          <div class="level_name">Select Lead Member <strong>*</strong></div>
+                          <div class="select_box">
+                            {% for leader in leaders %}
+                              <div id="lead_{{ leader.id }}">
+                                  <input type="checkbox" value="{{ leader.id }}" name="lead_user_ID" class="lead_box" id="b{{ leader.id }}">
+                                  <label for="b{{ leader.id }}"><span class="box_check" onclick="member_show_hide('normal',{{ leader.id }},2)"></span><span class="box_name">{{ leader.username }}</span></label>
+                              </div>
+                            {% endfor %}
+                            </div>
+                          <div style="margin-top: 20px;" class="level_name">{{ proj_form.project_file.label }}</div>
+                          {{ proj_form.project_file }}
+                          {% if proj_form.project_file.errors %}
+                            <div class="alert alert-danger">{{ proj_form.project_file.errors.as_text }}</div>
+                          {% endif %}
+                          <div id="add_files"></div>
+                          <div id="add_another_i" class="add_another">
+                              <a>
+                                  <p>Add Another File</p>
+                              </a>
+                          </div>
+                      </div>
+                      <div style="float: right; width: 50%;">
+                          <div class="level_name">{{ proj_form.deadline.label }} <strong>*</strong></div>
+                          {{ proj_form.deadline }}
+                          {% if proj_form.deadline.errors %}
+                            <div class="alert alert-danger">{{ proj_form.deadline.errors.as_text }}</div>
+                          {% endif %}
+                          <div class="level_name">Select Normal Member <strong>*</strong></div>
+                          <div class="select_box">
+                            {% for member in members %}
+                              <div id="normal_{{ member.id }}">
+                                  <input type="checkbox" value="{{ member.id }}" name="normal_user_ID" class="normal_box" id="c{{ member.id }}">
+                                  <label for="c{{ member.id }}"><span class="box_check" onclick="member_show_hide('lead',{{ member.id}},2)" ></span><span class="box_name">{{ member.username }}</span></label>
+                              </div>
+                            {% endfor %}
+                          </div>
+                          <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
+                      </div>
+                      <div class="clear"></div>
+                      <div style="text-align: center; margin-top: 30px;">
+                          <input type="submit" value="Add Project" name="submit_project_add">
+                      </div>
+                  </form>
+              </div>
+          </div>
+    </div>
+</div>
+{% endblock %}
