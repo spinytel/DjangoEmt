@@ -15,7 +15,7 @@
   * @namespace UserDeleteController
   */
   function UserDeleteController($location, $scope, users) {
-    var vm = this;
+    var ud = this;
 
     
   }

@@ -15,7 +15,7 @@
   * @namespace UserEditController
   */
   function UserEditController($location, $scope, users) {
-    var vm = this;
+    var ue = this;
 
     
   }

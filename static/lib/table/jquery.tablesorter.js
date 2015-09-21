@@ -70,7 +70,7 @@
  * 
  * @option Array sortForce (optional) An array containing forced sorting rules.
  *         This option let's you specify a default sorting rule, which is
- *         prepended to users-selected rules. Default value: null
+ *         prepended to user-selected rules. Default value: null
  * 
  * @option Boolean sortLocaleCompare (optional) Boolean flag indicating whatever
  *         to use String.localeCampare method or not. Default set to true.
@@ -78,7 +78,7 @@
  * 
  * @option Array sortAppend (optional) An array containing forced sorting rules.
  *         This option let's you specify a default sorting rule, which is
- *         appended to users-selected rules. Default value: null
+ *         appended to user-selected rules. Default value: null
  * 
  * @option Boolean widthFixed (optional) Boolean flag indicating if tablesorter
  *         should apply fixed widths to the table columns. This is usefull when
@@ -728,7 +728,7 @@
 							// always sort on the locked order.
 							if(this.lockedOrder) this.order = this.lockedOrder;
 							
-							// users only whants to sort on one
+							// user only whants to sort on one
                             // column
                             if (!e[config.sortMultiSortKey]) {
                                 // flush the sort list
@@ -745,7 +745,7 @@
                                 config.sortList.push([i, this.order]);
                                 // multi column sorting
                             } else {
-                                // the users has clicked on an all
+                                // the user has clicked on an all
                                 // ready sortet column.
                                 if (isValueInArray(i, config.sortList)) {
                                     // revers the sorting direction
@@ -823,7 +823,7 @@
                     if ($.metadata && ($(this).metadata() && $(this).metadata().sortlist)) {
                         config.sortList = $(this).metadata().sortlist;
                     }
-                    // if users has supplied a sort list to constructor.
+                    // if user has supplied a sort list to constructor.
                     if (config.sortList.length > 0) {
                         $this.trigger("sorton", [config.sortList]);
                     }

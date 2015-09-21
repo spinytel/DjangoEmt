@@ -15,7 +15,7 @@
   * @namespace UserAddController
   */
   function UserAddController($location, $scope, users) {
-    var vm = this;
+    var ua = this;
 
     
   }
