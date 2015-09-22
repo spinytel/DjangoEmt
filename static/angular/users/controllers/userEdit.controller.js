@@ -40,7 +40,8 @@
     });
 
     function user_edit() {
-      users.user_edit($scope.is_admin, $scope.username, $scope.email, $scope.id);
+        window.location = '/accounts/users/'+user_id+'/edit/';
+      /*users.user_edit($scope.is_admin, $scope.username, $scope.email, $scope.id);*/
     }
 
 
