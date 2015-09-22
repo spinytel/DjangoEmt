@@ -9,7 +9,7 @@ from django.utils.dateformat import DateFormat
 from django.conf import settings
 from authentication.models import Account
 from .forms import ProjectForm, MilestoneForm, MilestoneEditForm,ProjectEditForm,TicketForm,TicketEditForm
-from django.db.models import Q
+from django.db.models import Q,F
 from django.contrib.auth.decorators import login_required
 import os
 
@@ -77,6 +77,7 @@ def project_create(request, template_name='project/create.html'):
     return render(request, template_name, {'proj_form': proj_form, 'leaders': leaders, 'members':members})
 
 #prject edit method @rejoan
+@login_required
 def project_edit(request,project_id,template_name="project/create.html"):
     #import pdb; pdb.set_trace()
     if project_id:
@@ -133,6 +134,7 @@ def project_edit(request,project_id,template_name="project/create.html"):
 
 
 #ticket manager @rejoan
+@login_required
 def ticket_create(request, project_id, template_name='ticket/create.html'):
     tick_form = TicketForm(initial={'project_id': project_id})
     assign_to = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
@@ -153,7 +155,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
             estimate = form_data['estimate']
             title = form_data['title']
             description = form_data['description']
-            creator_id = 26 # after authentication make session
+            creator_id = request.user.id
 
             ticket_row = Ticket.objects.create(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
             ticket_row.save()
@@ -181,6 +183,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
 
 
 #ticket manager @rejoan
+@login_required
 def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.html'):
     if ticket_id:
         ticket = get_object_or_404(Ticket, pk=ticket_id)
@@ -206,7 +209,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
             estimate = form_data['estimate']
             title = form_data['title']
             description = form_data['description']
-            creator_id = 26 # after authentication make session
+            creator_id = request.user.id
 
             ticket_row = Ticket.objects.filter(pk=t_id).update(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
 
@@ -235,7 +238,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
     #import pdb;pdb.set_trace()
     return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project})
 
-
+@login_required
 def tickets(request,project_id):
     f_ticket = Ticket.objects.filter(project_id=project_id).values()
     if request.POST:
@@ -243,19 +246,19 @@ def tickets(request,project_id):
         t_id = request.POST['f_ticket_ID']
         f_priority = request.POST['f_priority']
         f_status = request.POST['f_status']
-
+        f_args = {}
         if t_id.isdigit():
-            f_ticket = Ticket.objects.filter(project_id=project_id).filter(id=int(t_id)).values()
+            f_args['id'] = int(t_id)
 
         if f_priority.isdigit():
-            f_ticket = Ticket.objects.filter(project_id=project_id).filter(priority=int(f_priority)).values()
+            f_args['priority'] = int(f_priority)
 
         if f_status.isalnum():
-            f_ticket = Ticket.objects.filter(project_id=project_id).filter(status=str(f_status)).values()
-        #import pdb;pdb.set_trace()
+            f_args['status'] = f_status
+
+        f_ticket = Ticket.objects.filter(project_id=project_id).filter(**f_args).values()
     else:
         t_id = f_status = f_priority = posted = 'no'
-
 
     ticket = [[a['id'],a['title'],a['milestone_id'],a['assign_person_id'],a['status'],a['priority'],a['estimate']] for a in f_ticket]
     milestones = [Milestone.objects.values_list('title',flat=True).filter(id=int(b[2])) for b in ticket]
@@ -270,6 +273,13 @@ def tickets(request,project_id):
         tickets.append(t)
 
     return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
+
+
+@login_required
+def ticket_details(request,project_id,ticket_id):
+    tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline')).values()
+
+    return render(request, 'ticket/details.html', {'tickets':tickets})
 
 
 @login_required

@@ -2638,7 +2638,6 @@ table.milestone_table thead tr th:nth-child(8){
 }
 #table_filter_inner{
     padding: 10px;
-    display: none;
 }
 .filter_level{
     display: block;

@@ -22,7 +22,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/project/all/')
+                return HttpResponseRedirect('/project/')
             else:
                 return HttpResponse("Your account is disabled.")
         else:
@@ -110,7 +110,7 @@ def user_edit(request, user_id):
                     username = form_data['username']
                     email = form_data['email']
                     is_admin = form_data['is_admin'] == 'True'
-                    
+
                     Account.objects.filter(pk = pk).update(
                             username=username,
                             email=email,

@@ -31,6 +31,12 @@ $(document).ready(function(){
     $("#add_another_if").click(function(){
       $("#add_files").append('<input style="margin: 5px 5px 2px 5px;" type="file" name="ticket_file">');
     });
+
+    $("#add_another_if1").click(function(){
+      $("#add_files").append('<input style="margin: 5px 5px 2px 5px;" type="file" name="ticket_file">');
+    });
+
+
     jQuery('.dp_milestone_start_date').datetimepicker({
         timepicker: false,
         format: 'Y-m-d'

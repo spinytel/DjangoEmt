@@ -28,7 +28,7 @@
                                 <li>
                                     <div class="level">Reported by :</div>
                                     <div class="fields">
-                                        <span id="report_by">get_from_session</span>
+                                        <span id="report_by">{{user.username}}</span>
                                     </div>
                                 </li>
                                 <li>
@@ -92,7 +92,7 @@
                             <div id="add_files"></div>
                             <div class="add_another" id="add_another_if">
                                 <a>
-                                    <img src="includes/img/i_add.png" alt="Add Another File" title="Add Another File">
+                                    <img src='{% static "img/i_add.png" %}' alt="Add Another File" title="Add Another File">
                                     <p>Add Another File</p>
                                 </a>
                             </div>

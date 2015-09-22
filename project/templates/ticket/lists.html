@@ -17,9 +17,9 @@
         <div class="clear"></div>
     </div>
     <div class="p_middle">
-        <div id="table_filter">
-            <div id="table_filter_upper">
-                <div id="table_filter_inner">
+        <div id="table_filter" {% if posted != 'no' %}style="width:20%;"{% endif %}>
+            <div id="table_filter_upper" {% if posted != 'no' %}style="height:inherit;"{% endif %}>
+                <div id="table_filter_inner" style="display:{% if posted != 'no' %}block{% else %}none{% endif %};">
                     <form action="" enctype="multipart/form-data" method="POST">
                       {% csrf_token %}
                         <div class="filter_level">Ticket ID</div>
@@ -55,12 +55,11 @@
                 </div>
             </div>
         </div>
-        <div id="table_data">
+        <div id="table_data" {% if posted != 'no' %}style="width:80%;"{% endif %}>
             <div id="filter_option">
                 <div id="filter_option_1">
                     <p id="filter_button"><img class='filter_arrow' src='{% static "img/right_arrow.png" %}'>Filter</p>
                 </div>
-
                 <div class="clear"></div>
             </div>
             <table class="project_table ticket_table"  width="100%" cellspacing="0" cellpadding="5" align="center">
@@ -127,18 +126,9 @@
         </div>
         <div class="clear"></div>
     </div>
-    <script>
-    {% if posted == 'no' %}
-        var table_height = $('.ticket_table').height();
-        $("#table_filter_upper").css("height",table_height+27);
-    {% else %}
-        $('.filter_arrow').attr('src','/static/img/left_arrow.png');
-        $("#table_filter_inner").css("display","block");
-        $("#table_filter").css("width","20%");
-        $("#table_data").css("width","80%");
-        $("#table_filter_upper").css("height","inherit");
-    {% endif %}
 
+    {% include 'project/project_footer.html' %}
+    <script>
     var previous_id ;
     function project_menu_toggle(ID){
         if(previous_id == null){
@@ -166,7 +156,6 @@
         }
         previous_id = ID;
     }
-    </script>
-    {% include 'project/project_footer.html' %}
 
+    </script>
 {% endblock %}
