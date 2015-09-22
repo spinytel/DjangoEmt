@@ -11,5 +11,5 @@
     .module('djangoUser.users.controllers', []);
 
   angular
-    .module('djangoUser.users.services', []);
+    .module('djangoUser.users.services', ['ngCookies']);
 })();

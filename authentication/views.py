@@ -105,7 +105,7 @@ def user_edit(request, user_id):
             if form.is_valid():
                 form_data = form.cleaned_data
                 if my_validate_email(form_data['email']):
-                    pk = form_data['user_pre_id']
+                    pk = user_id
                     username = form_data['username']
                     email = form_data['email']
                     is_admin = form_data['is_admin'] == 'True'
@@ -133,7 +133,7 @@ def user_edit(request, user_id):
                 if form.is_valid():
                     form_data = form.cleaned_data
                     if my_validate_email(form_data['email']):
-                        pk = form_data['user_pre_id']
+                        pk = user_id
                         username = form_data['username']
                         email = form_data['email']
                         Account.objects.filter(pk = pk).update(
@@ -150,6 +150,25 @@ def user_edit(request, user_id):
             return render(request, 'user.html', {'form': form, 'user_type': user_type})
         else:
             return HttpResponse("Permission Denied")
+
+
+@login_required
+@api_view(['GET', 'POST', ])
+def api_user_data(request, user_id):
+    user_type = get_logged_in_user_type(request)
+    if user_type:
+        user_data = Account.objects.filter(pk=user_id).values_list('id', 'username', 'email', 'is_admin')
+    else:
+        logged_user_id = get_logged_in_user_id(request)
+        if logged_user_id == int(user_id):
+            user_data = Account.objects.filter(pk=user_id).values_list('id', 'username', 'email', 'is_admin')
+        else:
+            return HttpResponse("Permission Denied")
+    a = ['id', 'username', 'email', 'is_admin']
+    data = {}
+    for b in user_data:
+        data = dict(zip(a, list(b)))
+    return Response(data)
 
 
 @login_required

@@ -1,0 +1,32 @@
+<div class="dashboard_general">
+    <div class="main-block-title">
+        <div id="bread-crumps">
+            <div style="height: 20px; line-height: 23px;">
+                <a id="home_logo" href="/accounts/users">User Manager</a>»<a style="color: #767676;">User Edit</a>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="main-block-padding">
+        <form name="user_edit_form" method="POST" ng-submit="user_edit()">
+            <div style="float: left; width: 50%;">
+                <div ng-if="userType == true">
+                    <div class="level_name">User Type</div>
+                    <select class="selection" ng-model="is_admin" ng-options="o.value as o.n for o in [{ n: 'General', value: false }, { n: 'Administrator', value: true }]"></select>
+                </div>
+
+                <div class="level_name">Name </div>
+                <input type="text" ng-model="username" placeholder="Name">
+
+                <div class="level_name">Email</div>
+                <input type="text" ng-model="email" placeholder="Email">
+            </div>
+            <div style="float: right; width: 50%;">
+            </div>
+            <div class="clear"></div>
+            <div style="text-align: center; margin-top: 30px;">
+            <input type="submit" value="Update User">
+            </div>
+        </form>
+    </div>
+</div>

@@ -9,14 +9,40 @@
     .module('djangoUser.users.controllers')
     .controller('UserEditController', UserEditController);
 
-  UserEditController.$inject = ['$location', '$scope', 'users'];
+  UserEditController.$inject = ['$location', '$scope', 'users', '$routeParams', '$http'];
 
   /**
   * @namespace UserEditController
   */
-  function UserEditController($location, $scope, users) {
-    var ue = this;
+  function UserEditController($location, $scope, users, $routeParams, $http) {
 
-    
+    $scope.user_edit = user_edit;
+
+    var user_id = $routeParams.user_id;
+
+    $http({
+        method: 'GET',
+        url: '/accounts/users/api/'+user_id+'/userData',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+    })
+    .success(function(data, status, headers, config) {
+        $scope.is_admin = data["is_admin"];
+        $scope.username = data["username"];
+        $scope.email = data["email"];
+        $scope.id = data["id"];
+    })
+    .error(function(data, status, headers, config) {
+        console.error('Epic failure!');
+    });
+
+    $http.get('/accounts/users/api/userType').success(function(data) {
+        $scope.userType = data;
+    });
+
+    function user_edit() {
+      users.user_edit($scope.is_admin, $scope.username, $scope.email, $scope.id);
+    }
+
+
   }
 })();

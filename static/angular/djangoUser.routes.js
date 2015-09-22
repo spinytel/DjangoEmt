@@ -20,6 +20,9 @@
           templateUrl: '/static/templates/users/user_create.html',
           controller: 'UserAddController',
           controllerAs: 'ua'
+        }).when('/accounts/users/:user_id/edit', {
+          templateUrl: '/static/templates/users/user_edit.html',
+          controller: 'UserEditController'
         });
     }
 })();

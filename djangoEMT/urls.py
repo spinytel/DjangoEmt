@@ -14,8 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 from django.conf.urls import include, url
+from authentication.views import user_login
 
 urlpatterns = [
     url(r'^accounts/',include('authentication.urls', namespace='auth')),
     url(r'^project/', include('project.urls', namespace='project')),
+    url(r'^.*$', user_login),
 ]
