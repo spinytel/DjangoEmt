@@ -75,7 +75,6 @@ def user_create(request):
     user_type = get_logged_in_user_type(request)
     if user_type:
         form = UserForm()
-
         if request.POST:
             form = UserForm(request.POST)
             if form.is_valid():

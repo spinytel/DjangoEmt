@@ -1,0 +1,41 @@
+<div class="dashboard_general">
+    <div class="main-block-title">
+        <div id="bread-crumps">
+            <div style="height: 20px; line-height: 23px;">
+                <a id="home_logo" href="/accounts/users">User Manager</a>»<a style="color: #767676;">User Add</a>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="main-block-padding">
+        <form name="user_add" method="POST" ng-submit="ua.user_add()">
+            <div style="float: left; width: 50%;">
+                <div class="level_name">User Type</div>
+                <select class="selection" ng-model="ua.is_admin" name="user_type">
+                    <option value="">Select User Type</option>
+                    <option value="False">General</option>
+                    <option value="True">Administrator</option>
+
+                </select>
+
+                <div class="level_name">Name </div>
+                <input type="text" ng-model="ua.username" name="username" placeholder="Name">
+
+                <div class="level_name">Email</div>
+                <input type="text" ng-model="ua.email" name="email" placeholder="Email">
+
+            </div>
+            <div style="float: right; width: 50%;">
+                <div class="level_name">Password</div>
+                <input type="password" ng-model="ua.password" name="pass" autocomplete="off" placeholder="Password">
+
+                <div class="level_name">Confirm Password</div>
+                <input type="password" ng-model="ua.confirm_password" name="con_pass" autocomplete="off" placeholder="Confirm Password">
+            </div>
+            <div class="clear"></div>
+            <div style="text-align: center; margin-top: 30px;">
+            <input type="submit" value="User Add">
+            </div>
+        </form>
+    </div>
+</div>

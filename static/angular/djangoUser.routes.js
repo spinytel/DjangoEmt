@@ -16,6 +16,10 @@
           templateUrl: '/static/templates/users/user_all.html',
           controller: 'UserListController',
           controllerAs: 'ul'
+        }).when('/accounts/users/create', {
+          templateUrl: '/static/templates/users/user_create.html',
+          controller: 'UserAddController',
+          controllerAs: 'ua'
         });
     }
 })();

@@ -1,3 +1,13 @@
+toastr.options.positionClass = 'toast-bottom-right';
+toastr.options.extendedTimeOut = 0; //1000;
+toastr.options.timeOut = 8000;
+toastr.options.fadeOut = 250;
+toastr.options.fadeIn = 250;
+toastr.options.closeButton = true;
+toastr.options.closeHtml = '<button><i class="fa fa-close"></i></button>';
+toastr.options.progressBar = true;
+toastr.options.preventDuplicates = true;
+
 $(document).ready(function(){
     $('.datetime_picker').datetimepicker({
       timepicker:false,
