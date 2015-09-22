@@ -11,12 +11,10 @@ from authentication.models import Account
 from .forms import ProjectForm, MilestoneForm, MilestoneEditForm,ProjectEditForm,TicketForm,TicketEditForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+import os
 
 
 @login_required
-import os
-# Create your views here.
-
 #project lists @rejoan
 def projects(request):
     ps = [[a['id'],a['create_date'],a['name'],a['deadline']] for a in Project.objects.all().values()]
@@ -155,7 +153,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
             estimate = form_data['estimate']
             title = form_data['title']
             description = form_data['description']
-            creator_id = 1 # after authentication make session
+            creator_id = 26 # after authentication make session
 
             ticket_row = Ticket.objects.create(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
             ticket_row.save()
@@ -208,7 +206,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
             estimate = form_data['estimate']
             title = form_data['title']
             description = form_data['description']
-            creator_id = 1 # after authentication make session
+            creator_id = 26 # after authentication make session
 
             ticket_row = Ticket.objects.filter(pk=t_id).update(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
 

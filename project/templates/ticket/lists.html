@@ -2,10 +2,11 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% block content %}
-<div class="p_up">
+    {% include 'project/project_header.html' %}
+    <div class="p_up">
         <div class="p_up_left">
             <h1 class="inline">Tickets</h1>
-            <a href="{% url "ticket_create" project.id %}"><p id="milestone_new" class="button">New</p></a>
+            <a href="{% url "project:ticket_create" project.id %}"><p id="milestone_new" class="button">New</p></a>
         </div>
         <div class="p_up_right">
             <p>Project Creation Date : {{project.create_date}} </p>
@@ -113,7 +114,7 @@
                             <a class="list-action" title="Context Menu" id="p_click_{{ticket.0}}" onclick="project_menu_toggle({{ticket.0}})">&nbsp;</a>
                             <div class="project_vertical_menu" id="p_menu_{{ticket.0}}">
                                 <ul>
-                                    <li><a class="context_edit" href="{% url "ticket_edit" project.id ticket.0   %}">Edit</a></li>
+                                    <li><a class="context_edit" href="{% url "project:ticket_edit" project.id ticket.0   %}">Edit</a></li>
                                     <li class="context_divider"></li>
                                     <li><a class="context_delete" href="" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
                                 </ul>
@@ -137,6 +138,35 @@
         $("#table_data").css("width","80%");
         $("#table_filter_upper").css("height","inherit");
     {% endif %}
+
+    var previous_id ;
+    function project_menu_toggle(ID){
+        if(previous_id == null){
+            $('#p_menu_'+ID).toggle();
+
+            if($('#p_menu_'+ID).css("display") == "block"){
+                $('#p_click_'+ID).addClass('active_menu_button');
+            }else{
+                $('#p_click_'+ID).removeClass('active_menu_button');
+            }
+        }else if(previous_id != ID){
+            $('#p_menu_'+previous_id).hide();
+            $('#p_click_'+previous_id).removeClass('active_menu_button');
+
+            $('#p_menu_'+ID).show();
+            $('#p_click_'+ID).addClass('active_menu_button');
+        }else{
+            $('#p_menu_'+ID).toggle();
+
+            if($('#p_menu_'+ID).css("display") == "block"){
+                $('#p_click_'+ID).addClass('active_menu_button');
+            }else{
+                $('#p_click_'+ID).removeClass('active_menu_button');
+            }
+        }
+        previous_id = ID;
+    }
     </script>
+    {% include 'project/project_footer.html' %}
 
 {% endblock %}

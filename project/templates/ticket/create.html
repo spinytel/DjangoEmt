@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% block content %}
-<div class="p_up">
+    {% include 'project/project_header.html' %}
+    <div class="p_up">
         <div class="p_up_left">
             <h1 class="inline">New Ticket</h1>
-            <a href="{% url "tickets" project.id %}"><p id="milestone_new" class="button">Cancel</p></a>
+            <a href="{% url "project:tickets" project.id %}"><p id="milestone_new" class="button">Cancel</p></a>
         </div>
         <div class="p_up_right">
             <p>Project Creation Date : {{project.create_date}} </p>
@@ -116,4 +117,5 @@
             </form>
         </div>
     </div>
+    {% include 'project/project_footer.html' %}
 {% endblock %}

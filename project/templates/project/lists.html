@@ -14,7 +14,7 @@
                 </div>
 
                 <div style="float: right; height: 20px; ">
-                    <a href="{% url 'project_create' %}" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="{% static 'img/i_add.png' %}"></a>
+                    <a href="{% url 'project:project_create' %}" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="{% static 'img/i_add.png' %}"></a>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -49,7 +49,7 @@
                               {% endfor %}
                             </td>
                             <td valign="center" align="center">
-                              <a class="table-icon edit" title="Edit Project" href="{% url 'project_edit' project.project_id  %}"></a>
+                              <a class="table-icon edit" title="Edit Project" href="{% url 'project:project_edit' project.project_id  %}"></a>
                               <a class="table-icon details" title="Project Details" href=""></a>
                             </td>
                         </tr>
