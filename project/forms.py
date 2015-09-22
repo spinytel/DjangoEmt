@@ -3,11 +3,100 @@ from django.utils import timezone
 from .models import Project, ProjectMember, MilestoneType, Milestone
 from authentication.models import Account
 
-
+# project create form @rejoan
 class ProjectForm(forms.Form):
     name = forms.CharField(label='Project Name', max_length=200, required=True, widget=forms.TextInput(attrs={'placeholder':'Project Name'}))
-    deadline = forms.DateTimeField(label='Deadline', widget=forms.TextInput(attrs={'class':'datetime_picker','placeholder':'Estimated Project Deadline','autocomplete':'off'}))
+    deadline = forms.DateTimeField(label='Deadline', widget=forms.DateTimeInput(attrs={'class':'datetime_picker','placeholder':'Estimated Project Deadline','autocomplete':'off'}))
     project_file = forms.FileField(label='Project Files')
+
+# project edit form @rejoan
+class ProjectEditForm(forms.Form):
+    name = forms.CharField(label='Project Name', max_length=200, required=True, widget=forms.TextInput(attrs={'placeholder':'Project Name'}))
+    deadline = forms.DateTimeField(label='Deadline',widget=forms.DateTimeInput(attrs={'class':'datetime_picker','placeholder':'Estimated Project Deadline','autocomplete':'off'}))
+    project_file = forms.FileField(label='Project Files',required=False)
+    project_update_id = forms.CharField()
+
+# project create form @rejoan
+class TicketForm(forms.Form):
+    STATUS_CHOICES = (
+         ('In Progress', (
+           ('New', 'New'),
+           ('Accepted', 'Accepted'),
+           ('Test', 'Test'),
+          )
+         ),
+         ('Closed', (
+           ('Fixed', 'Fixed'),
+           ('Invalid', 'Invalid'),
+          )
+         ),
+        )
+    status = forms.ChoiceField(choices=STATUS_CHOICES, required=True, label='Status', widget=forms.Select(attrs = {'class':'p_selection selection'}))
+
+    PRIORITY_CHOICES = (
+           ('1', 'Highest (1)'),
+           ('2', 'High(2)'),
+           ('3', 'Normal(3)'),
+           ('4', 'Low(4)'),
+           ('5', 'Lowest(3)'),
+         )
+    priority = forms.ChoiceField(choices=PRIORITY_CHOICES, required=True, label='Status', widget=forms.Select(attrs = {'class':'p_selection selection'}))
+
+    ESTIMATE_CHOICES = (
+           ('None', 'None'),
+           ('Small', 'Small'),
+           ('Medium', 'Medium'),
+           ('Large', 'Large'),
+         )
+    estimate = forms.ChoiceField(choices=ESTIMATE_CHOICES, required=True, label='Estimate', widget=forms.Select(attrs = {'class':'p_selection selection'}))
+
+    title = forms.CharField(max_length=200, required = True, widget = forms.TextInput(attrs = {'placeholder':'Summary of new ticket'}))
+    description = forms.CharField(widget = forms.Textarea)
+    ticket_file = forms.FileField(label = 'Ticket Files')
+    #assign = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
+    project_id = forms.CharField()
+
+
+# project edit form @rejoan
+class TicketEditForm(forms.Form):
+    STATUS_CHOICES = (
+         ('In Progress', (
+           ('New', 'New'),
+           ('Accepted', 'Accepted'),
+           ('Test', 'Test'),
+          )
+         ),
+         ('Closed', (
+           ('Fixed', 'Fixed'),
+           ('Invalid', 'Invalid'),
+          )
+         ),
+        )
+    status = forms.ChoiceField(choices=STATUS_CHOICES, required=True, label='Status', widget=forms.Select(attrs = {'class':'p_selection selection'}))
+
+    PRIORITY_CHOICES = (
+           ('1', 'Highest (1)'),
+           ('2', 'High(2)'),
+           ('3', 'Normal(3)'),
+           ('4', 'Low(4)'),
+           ('5', 'Lowest(3)'),
+         )
+    priority = forms.ChoiceField(choices=PRIORITY_CHOICES, required=True, label='Status', widget=forms.Select(attrs = {'class':'p_selection selection'}))
+
+    ESTIMATE_CHOICES = (
+           ('None', 'None'),
+           ('Small', 'Small'),
+           ('Medium', 'Medium'),
+           ('Large', 'Large'),
+         )
+    estimate = forms.ChoiceField(choices=ESTIMATE_CHOICES, required=True, label='Estimate', widget=forms.Select(attrs = {'class':'p_selection selection'}))
+
+    title = forms.CharField(max_length=200, required = True, widget = forms.TextInput(attrs = {'placeholder':'Summary of new ticket'}))
+    description = forms.CharField(widget = forms.Textarea)
+    ticket_file = forms.FileField(label = 'Ticket Files',required=False)
+    #assign = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
+    project_id = forms.CharField()
+    ticket_id = forms.CharField()
 
 
 class MilestoneForm(forms.Form):

@@ -1,6 +1,6 @@
 
 {% extends "layout.html" %}
-
+{% load staticfiles %}
 {% block content %}
 {% include 'menu.html' %}
 <div id="block">
@@ -14,7 +14,7 @@
                 </div>
 
                 <div style="float: right; height: 20px; ">
-                    <a href="/project/create/" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="../../../static/img/i_add.png"></a>
+                    <a href="{% url 'project_create' %}" title="Add Project" style="height: 18px; padding: 4px 0 0 0; display: block;"><span class="b_name">Add Project</span><img style="height: 15px;" src="{% static 'img/i_add.png' %}"></a>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -26,7 +26,8 @@
                         <th>Project Name</th>
                         <th>Creation Date</th>
                         <th>Deadline</th>
-                        <th>Files</th>
+                        <th>Leaders</th>
+                        <th>Members</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -38,13 +39,18 @@
                             <td valign="center" align="center">{{ project.create_date }}</td>
                             <td valign="center" align="center">{{ project.deadline }}</td>
                             <td valign="center" align="left">
-                              {% for files_name in project.files %}
-                                {{ files_name }}
+                              {% for lead in project.leaders %}
+                                {{ lead.0 }}{% if not forloop.last %}, {% endif %}
+                              {% endfor %}
+                            </td>
+                            <td valign="center" align="left">
+                              {% for member in project.members %}
+                                {{ member.0 }}{% if not forloop.last %}, {% endif %}
                               {% endfor %}
                             </td>
                             <td valign="center" align="center">
-                              <a class="table-icon edit" title="Edit Project" href=""></a>
-                              <a class="table-icon details" title="Project Details" href="/project/{{ project.project_id }}/milestone/"></a>
+                              <a class="table-icon edit" title="Edit Project" href="{% url 'project_edit' project.project_id  %}"></a>
+                              <a class="table-icon details" title="Project Details" href=""></a>
                             </td>
                         </tr>
                         {% endfor %}
