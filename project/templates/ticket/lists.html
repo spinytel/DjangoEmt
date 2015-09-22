@@ -79,7 +79,7 @@
                   {% for ticket in tickets %}
                     <tr>
                         <td title="Ticket ID" valign="center" align="center" style="text-align: center;">{{ticket.0}}</td>
-                        <td valign="center" align="center">{{ticket.1}}</td>
+                        <td valign="center" align="center"><a href="{% url "project:ticket_details" project.id ticket.0   %}">{{ticket.1}}</a></td>
                         <td valign="center" align="center">
                             {{ ticket.2.0 }}
                         </td>
@@ -115,7 +115,7 @@
                                 <ul>
                                     <li><a class="context_edit" href="{% url "project:ticket_edit" project.id ticket.0   %}">Edit</a></li>
                                     <li class="context_divider"></li>
-                                    <li><a class="context_delete" href="" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
+                                    <li><a class="context_delete" href="{% url "project:ticket_delete" project.id ticket.0 %}" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
                                 </ul>
                             </div>
                         </td>

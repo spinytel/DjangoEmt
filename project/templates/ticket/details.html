@@ -41,35 +41,52 @@
                            <li>
                                <div class="level">Status :</div>
                                <div class="fields">
-                                   <span class="fields_value"></span>
+                                   <span class="fields_value">{{tickets.0.status}}</span>
                                </div>
                            </li>
                            <li>
                                <div class="level">Priority :</div>
                                <div class="fields">
                                    <span class="fields_value">
-
+                                     {% if tickets.0.priority == 1 %}
+                                         Highest (1)
+                                     {% elif tickets.0.priority == 2 %}
+                                         High (2)
+                                     {% elif tickets.0.priority == 3 %}
+                                         Normal (3)
+                                     {% elif tickets.0.priority == 4 %}
+                                         Low (4)
+                                     {% else %}
+                                         Lowest (5)
+                                     {% endif %}
                                    </span>
                                </div>
                            </li>
                            <li>
                                <div class="level">Assigned to :</div>
                                <div class="fields">
-
-                                   <span class="fields_value"></span>
+                                   <span class="fields_value">{{tickets.0.username}}</span>
                                </div>
                            </li>
                            <li>
                                <div class="level">Milestone :</div>
                                <div class="fields">
-                                    <span class="fields_value"></span>
+                                    <span class="fields_value">{{tickets.0.m_title}}</span>
                                </div>
                            </li>
                            <li>
                                <div class="level">Estimate :</div>
                                <div class="fields">
                                    <span class="fields_value">
-
+                                     {% if tickets.0.estimate == "Small" %}
+                                         <img class='estimate_t' src='{% static "img/estimate_small.png" %}'> Small
+                                     {% elif tickets.0.estimate == "Medium" %}
+                                         <img class='estimate_t' src='{% static "img/estimate_medium.png" %}'> Medium
+                                     {% elif tickets.0.estimate == "Large" %}
+                                         <img class='estimate_t' src='{% static "img/estimate_large.png" %}'> Large
+                                     {% else %}
+                                         <img class='estimate_t' src='{% static "img/estimate_none.png" %}'> None
+                                     {% endif %}
                                    </span>
                                </div>
                            </li>
@@ -80,19 +97,21 @@
                    <div class="p_left_fields" style="background-color: #FAFAFA;">
                        <div class="files_level">Ticket File's </div>
                        <ul class="files_ul">
+                         {% for f in ticket_files %}
                            <li>
-                               <a target="_blank" href=""></a>
+                               <a target="_blank" href="">{{f.file_name}}</a>
                            </li>
+                         {% endfor %}
                        </ul>
                    </div>
                </div>
            </div>
            <div class="p_form_right">
                <div class="m_title">
-                   <span>Hello ticket</span>
+                   <span>{{tickets.0.title}}</span>
                </div>
                <div class="ticket_desc">
-                       <span></span>
+                       <span>{{tickets.0.description}}</span>
                    </div>
 
                <div class="ticket_blocks">

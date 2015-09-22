@@ -177,7 +177,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
 
-            return HttpResponse('/ticket/')
+            return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     tick_form.submit_val = 'Add Ticket'
     return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project})
 
@@ -230,7 +230,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
 
-            return HttpResponse('/ticket/')
+            return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate}
 
     tick_form = TicketEditForm(data)
@@ -278,8 +278,17 @@ def tickets(request,project_id):
 @login_required
 def ticket_details(request,project_id,ticket_id):
     tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline')).values()
+    ticket_files = TicketFile.objects.filter(ticket_id=ticket_id).values()
 
-    return render(request, 'ticket/details.html', {'tickets':tickets})
+    return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files})
+
+
+@login_required
+def ticket_delete(request, project_id, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    ticket.delete()
+    TicketFile.objects.filter(ticket_id=ticket_id).delete()
+    return HttpResponseRedirect('/project/'+project_id+'/tickets/')
 
 
 @login_required
