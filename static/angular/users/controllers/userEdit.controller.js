@@ -19,6 +19,7 @@
     $scope.user_edit = user_edit;
 
     var user_id = $routeParams.user_id;
+    window.location.href = '/accounts/users/'+user_id+'/edit/';
 
     $http({
         method: 'GET',
@@ -40,8 +41,8 @@
     });
 
     function user_edit() {
-        window.location = '/accounts/users/'+user_id+'/edit/';
-      /*users.user_edit($scope.is_admin, $scope.username, $scope.email, $scope.id);*/
+        /*window.location = '/accounts/users/'+user_id+'/edit/';*/
+      users.user_edit($scope.is_admin, $scope.username, $scope.email, $scope.id);
     }
 
 

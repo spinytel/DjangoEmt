@@ -36,7 +36,7 @@
                             General
                     </td>
                     <td valign="center" align="center">
-                        <a class="table-icon edit" title="Edit User" href="/accounts/users/{[{ user.id }]}/edit"></a>
+                        <a class="table-icon edit" title="Edit User" href="/accounts/users/{[{ user.id }]}/edit" ></a> <!--href="/accounts/users/{[{ user.id }]}/edit"-->
                         <a ng-controller="UserDeleteController as ud" class="table-icon delete" href="#" ng-if="userType == true" title="Delete User" ng-click="ud.user_delete(user.id)"></a>
                     </td>
                 </tr>
