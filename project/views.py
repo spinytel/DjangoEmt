@@ -1,7 +1,6 @@
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render_to_response, redirect, get_object_or_404,render
 from django.template import RequestContext
 from django.http import HttpResponse,HttpResponseRedirect
-from django.shortcuts import render,get_object_or_404
 from .models import Project, ProjectFile, ProjectMember, MilestoneType, Milestone, Ticket, TicketFile, Comment
 from django.utils import timezone
 import time
@@ -9,7 +8,7 @@ from django.utils.dateformat import DateFormat
 from django.conf import settings
 from authentication.models import Account
 from .forms import ProjectForm, MilestoneForm, MilestoneEditForm,ProjectEditForm,TicketForm,TicketEditForm
-from django.db.models import Q,F
+from django.db.models import Q,F,Count
 from django.contrib.auth.decorators import login_required
 import os
 
@@ -315,6 +314,20 @@ def ticket_details(request,project_id,ticket_id):
             dest.close()
         return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files,'project_id':project_id,'comments':comments})
+
+
+
+
+@login_required
+def project_wall(request,project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    leaders = ProjectMember.objects.filter(project_id=project_id,member_type=1).select_related('user').annotate(username=F('user__username'))
+    members = ProjectMember.objects.filter(project_id=project_id,member_type=2).select_related('user').annotate(username=F('user__username'))
+
+    latest_three = Comment.objects.extra(select={'create_date':"to_char(create_date,'DD-MM-YYYY')"}).values('create_date').annotate(dcount=Count('create_date')).order_by('-create_date')
+    #import pdb;pdb.set_trace()
+    comments = Comment.objects.filter(ticket__project_id=project_id).select_related('creator','ticket').annotate(username=F('creator__username'),t_title=F('ticket__title')).values()
+    return render(request, 'project/home.html', {'project':project,'project_id':project_id,'comments':comments,'leaders':leaders,'members':members,'latest_three':latest_three})
 
 
 @login_required

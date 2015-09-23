@@ -8,9 +8,9 @@
             <p>Project Lead</p>
         </div>
         <div class="p_up_right">
-            <p>Project Creation Date : </p>
+            <p>Project Creation Date : {{project.create_date}}</p>
             <div class="clear"></div>
-            <p>Estimated Project Deadline : </p>
+            <p>Estimated Project Deadline : {{project.deadline}}</p>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>
@@ -20,46 +20,52 @@
             <h1>Team Members</h1>
             <div id="lead_member">
                 <p id="lead">Lead Members</p>
-            <p>tese</p>
+                {% for lead in leaders %}
+                  <p>{{lead.username}}</p>
+                {% endfor %}
             </div>
             <div id="general_member">
                 <p id="general">General Members</p>
-              <p>test</p>
+                {% for member in members %}
+                  <p>{{member.username}}</p>
+                {% endfor %}
             </div>
         </div>
         <div class="p_middle_right">
             <h1>
                 <span>Project Stream</span>
-                <!--a href="project_home.php?ID=<?php echo $project_ID; ?>">Browse all activity</a-->
             </h1>
             <div class="clear"></div>
             <div id="project_stream">
+              {% for d in latest_three %}
                 <div class="stream_details">
-                    <p>date</p>
-                    <a href="project_ticket_details.php?ID=<?php echo $project_ID; ?>&t_ID=<?php echo $nested_item['ticket_ID']; ?>&c_ID=<?php echo $nested_item['creator_ID']; ?>">
-                        <div class="stream_data">
-                            <div class="stream_time"></div>
-                            <div class="stream_status_m">
-                                <div class="stream_status">
-                                    <span></span> - updated
-                                    <span></span>
+                      <p>{{d.create_date}}</p>
+                    {% for cm in comments %}
+                        {% if d.create_date == cm.create_date|date:'d-m-Y' %}
+                            <a href="{% url 'project:ticket_details' project_id cm.ticket_id %}">
+                                <div class="stream_data">
+                                    <div class="stream_time">{{cm.create_date|date:'h:i'}}</div>
+                                    <div class="stream_status_m">
+                                        <div class="stream_status">
+                                            <span>{{cm.username}}</span> - updated
+                                            <span>{{cm.t_title}}</span>
+                                        </div>
+                                        {% if cm.prev_status and cm.prev_status.strip %}
+                                        <div class="stream_status_change">
+                                            <span>Status</span> changed from <span>{{cm.prev_status}}</span> to <span>{{cm.curr_status}}
+                                        </div>
+                                        {% endif %}
+                                        <div class="stream_comment">
+                                            commented - <span>"{{cm.details}}"</span>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
                                 </div>
-
-                                <div class="stream_status_change">
-                                    <span>Status</span> changed from <span></span> to <span>
-                                </div>
-
-                                <div class="stream_comment">
-                                    commented - <span>""</span>
-                                </div>
-
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                    </a>
-
+                            </a>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-
+              {% endfor %}
             </div>
         </div>
         <div class="clear"></div>

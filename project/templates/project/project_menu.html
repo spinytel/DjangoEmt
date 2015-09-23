@@ -2,7 +2,7 @@
     <li><a href="{% url "project:projects" %}">Project Home</a></li>
     <li><a href="{% url "project:ticket_create" project_id %}">New Ticket</a></li>
     <li><a href="{% url "project:tickets" project_id %}">Tickets</a></li>
-    <li><a href="#">Project Wall</a></li>
-    <li><a href="">Milestones</a></li>
+    <li><a href="{% url "project:project_wall" project_id %}">Project Wall</a></li>
+    <li><a href="{% url "project:milestone_all" project_id %}">Milestones</a></li>
     <li><a href="#">Files</a></li>
 </ul>
