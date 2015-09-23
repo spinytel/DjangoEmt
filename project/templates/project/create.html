@@ -43,6 +43,7 @@
                           <div id="add_files"></div>
                           <div id="add_another_i" class="add_another">
                               <a>
+                                <img src='{% static "img/i_add.png" %}' alt="Add Another File" title="Add Another File">
                                   <p>Add Another File</p>
                               </a>
                           </div>
@@ -63,13 +64,12 @@
                             {% endfor %}
                               <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
                           </div>
-                          <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
                           {% if project_files %}
                             <div class="level_name" style="margin-top: 20px;">Existing Project Files </div>
                               {% for project_file in project_files %}
                                 <div class="project_files" id="e_p_f_{{project_file.0}}">
                                       <a target="_blank" href="{% static 'uploads/' %}{{project_file.1}}">{{project_file.1}}</a>
-                                            <!--<img onclick="delete_p_file('.$row_p_f['ID'].','.$project_ID.',\''.$row_p_f['file_name'].'\');" src="_$includes/_$img/delete_i.png" title="Delete" alt="Delete">-->
+                                          <img onclick="delete_p_file();" src="{% static 'img/delete_i.png' %}" title="Delete" alt="Delete">
                                  </div>
                               {% endfor %}
                           {% endif %}

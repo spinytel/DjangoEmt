@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% block content %}
-    {% include 'project/project_header.html' %}
   <style>
        input[type="file"]{
            margin: 2px 0 5px 0;
            padding: 2px;
        }
    </style>
+   {% include 'project/project_header.html' %}
    <div class="p_up">
        <div class="p_up_left">
-           <h1 class="inline"><img src='{% static "img/ticket_ID_big.png" %}' alt="Ticket ID" title="Ticket ID"><span title="Ticket ID"></span> Details</h1>
+           <h1 class="inline"><img src='{% static "img/ticket_ID_big.png" %}' alt="Ticket ID" title="Ticket ID"><span title="Ticket ID">#{{tickets.0.id}}</span> Details</h1>
        </div>
        <div class="p_up_right">
            <p>Project Creation Date : {{tickets.0.p_create_date}} </p>
@@ -35,7 +35,7 @@
                            <li>
                                <div class="level">Reported by :</div>
                                <div class="fields">
-                                   <span id="report_by"></span>
+                                   <span id="report_by">{{tickets.0.ticket_creator}}</span>
                                </div>
                            </li>
                            <li>
@@ -115,31 +115,31 @@
                    </div>
 
                <div class="ticket_blocks">
+                 {% for c in comments %}
                    <div class="ticket_creator">
-                       <div class="">
-                           <div class="t_c_upper">
-                               <p>By <span></span></p>
-                               <p>on</p>
-                               <div class="clear"></div>
-                           </div>
-                           <div class="t_c_middle">
-                               <p><span>Status</span> changed from <span></span> to <span></p>
-                           </div>
+                     <div class="ticket_creator_header">
+                         <div class="t_c_upper">
+                             <p>By <span>{{c.username}}</span></p>
+                             <p>on {{c.create_date}}</p>
+                             <div class="clear"></div>
+                         </div>
+                         {% if c.curr_status and c.curr_status.strip %}
+                         <div class="t_c_middle">
+                             <p><span>Status</span> changed from <span>{{c.prev_status}}</span> to <span>{{c.curr_status}}</span></p>
+                         </div>
+                         {% endif %}
                        </div>
-                       <div class="t_c_desc">
-                         hello issue
-                       </div>
-                   </div>
-
+                       {% if c.details and c.details.strip %}
+                       <div class="t_c_desc">{{c.details}}</div>
+                        {% endif %}
+                     </div>
+                    {% endfor %}
                    <form action="" enctype="multipart/form-data" method="POST" name="ticket_details" >
+                     {% csrf_token %}
                        <textarea name="comment_desc" id="comment_area" placeholder="Leave a comment"></textarea>
-                       <input type="hidden" name="pre_t_status" value="">
-                       <input type="hidden" name="p_ID" value="">
-                       <input type="hidden" name="t_ID" value="">
-                       <input type="hidden" name="c_ID" value="">
                        <div id="ticket_details_form" style="width: 50%; float: left;">
                            <div class="ticket_level">File's </div>
-                           <input style="width: 80%;" type="file" name="t_files">
+                           <input style="width: 80%;" type="file" name="ticket_file">
                            <div id="add_files"></div>
                            <div class="add_another" id="add_another_if1">
                                <a>

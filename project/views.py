@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404
-from .models import Project, ProjectFile, ProjectMember, MilestoneType, Milestone, Ticket, TicketFile
+from .models import Project, ProjectFile, ProjectMember, MilestoneType, Milestone, Ticket, TicketFile, Comment
 from django.utils import timezone
 import time
 from django.utils.dateformat import DateFormat
@@ -179,7 +179,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
 
             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     tick_form.submit_val = 'Add Ticket'
-    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project})
+    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
 
 
 #ticket manager @rejoan
@@ -231,7 +231,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
                 ticket_files.save()
 
             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
-    data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate}
+    data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate,'project_id':project_id}
 
     tick_form = TicketEditForm(data)
     tick_form.submit_val = 'Update Ticket'
@@ -272,15 +272,49 @@ def tickets(request,project_id):
         t[3] = assigned_to[i]
         tickets.append(t)
 
-    return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
+    return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'project_id':project_id,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
 
 
 @login_required
 def ticket_details(request,project_id,ticket_id):
-    tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline')).values()
+    tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project','creator').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline'),project_id=F('project__id'),ticket_creator=F('creator__username')).values()
     ticket_files = TicketFile.objects.filter(ticket_id=ticket_id).values()
+    comments = Comment.objects.filter(ticket_id=ticket_id).order_by('id').select_related('creator').annotate(username=F('creator__username')).values()
 
-    return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files})
+    comment = {}
+    if request.POST:
+        if request.POST['t_status'].isalnum():
+            curr_status = request.POST['t_status']
+        else:
+            return HttpResponse('Wromg comment')
+        comment['create_date'] = timezone.now()
+        comment['creator_id'] = request.user.id
+        comment['ticket_id'] = ticket_id
+        comment['details'] = request.POST['comment_desc']
+
+        if tickets[0]["status"] != curr_status:
+            comment['prev_status'] = tickets[0]["status"]
+            comment['curr_status'] = curr_status
+
+            Ticket.objects.filter(pk=ticket_id).update(status=curr_status)
+
+        Comment.objects.create(**comment)
+
+        if not os.path.exists(settings.MEDIA_ROOT):
+            os.makedirs(settings.MEDIA_ROOT)
+        for file in request.FILES.getlist('ticket_file'):
+            dt = timezone.now()
+            extn = str(int(time.mktime(dt.timetuple())))
+            dest = open(os.path.join(settings.MEDIA_ROOT, str(ticket_id)+'_'+extn+'_'+file.name), 'wb')
+            for chunk in file.chunks():
+                dest.write(chunk)
+
+            file_name = file.name
+            ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
+            ticket_files.save()
+            dest.close()
+        return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+    return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files,'project_id':project_id,'comments':comments})
 
 
 @login_required

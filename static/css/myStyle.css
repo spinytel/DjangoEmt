@@ -73,6 +73,9 @@ a:hover{
     letter-spacing: 1px;
     line-height: 22px;
 }
+#header-h1 a:hover,#header-h1 a:active,#header-h1 a:focus{
+    text-decoration: none;
+}
 #header-h1 a{
     color: #357DA5;
 }
