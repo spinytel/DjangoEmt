@@ -30,6 +30,18 @@ def projects(request):
         projects.append(dict(zip(k,a)))
     return render(request, 'project/lists.html',{'projects':projects})
 
+# project wall show project specific streams
+@login_required
+def project_wall(request,project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    leaders = ProjectMember.objects.filter(project_id=project_id,member_type=1).select_related('user').annotate(username=F('user__username'))
+    members = ProjectMember.objects.filter(project_id=project_id,member_type=2).select_related('user').annotate(username=F('user__username'))
+
+    latest_three = Comment.objects.extra(select={'create_date':"to_char(create_date,'DD-MM-YYYY')"}).values('create_date').annotate(dcount=Count('create_date')).order_by('-create_date')
+    #import pdb;pdb.set_trace()
+    comments = Comment.objects.filter(ticket__project_id=project_id).select_related('creator','ticket').annotate(username=F('creator__username'),t_title=F('ticket__title')).values()
+    return render(request, 'project/home.html', {'project':project,'project_id':project_id,'comments':comments,'leaders':leaders,'members':members,'latest_three':latest_three})
+
 
 @login_required
 #project create method @rejoan
@@ -53,6 +65,7 @@ def project_create(request, template_name='project/create.html'):
             proj_id = latest.pk
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
+            dest = False
             for f in request.FILES.getlist('project_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
@@ -60,10 +73,11 @@ def project_create(request, template_name='project/create.html'):
                 dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
                 for chunk in f.chunks():
                     dest.write(chunk)
-                dest.close()
 
                 project_files = ProjectFile.objects.create(file_name=file_name,project_id=proj_id)
                 project_files.save()
+            if dest:
+                dest.close()
 
             #project and lead members process
             for lead_member in request.POST.getlist('lead_user_ID'):
@@ -112,6 +126,7 @@ def project_edit(request,project_id,template_name="project/create.html"):
 
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
+            dest = False
             for f in request.FILES.getlist('project_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
@@ -119,9 +134,10 @@ def project_edit(request,project_id,template_name="project/create.html"):
                 dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
                 for chunk in f.chunks():
                     dest.write(chunk)
-                dest.close()
                 project_files = ProjectFile.objects.create(file_name=file_name,project_id=p_id)
                 project_files.save()
+            if dest:
+                dest.close()
 
             messages.info(request, 'Project Updated Successfully')
             return HttpResponseRedirect("/project/")
@@ -157,7 +173,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
             status = form_data['status']
             priority = form_data['priority']
             assign = request.POST['t_assign']
-            milestone = request.POST['t_milestone']
+            milestone = milstn
             estimate = form_data['estimate']
             title = form_data['title']
             description = form_data['description']
@@ -171,6 +187,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
             ticket_id = latest.pk
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
+            dest = False
             for f in request.FILES.getlist('ticket_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
@@ -178,32 +195,18 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
                 dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
                 for chunk in f.chunks():
                     dest.write(chunk)
-                dest.close()
 
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
+            if dest:
+                dest.close()
             messages.info(request, 'Ticket Created Successfully')
             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     tick_form.submit_val = 'Add Ticket'
     return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
 
-@login_required
-def delete_files(request):
-    if request.is_ajax():
-        file_id = int(request.POST['ID'])
-        file_name = request.POST['f_name']
-        is_project = request.POST['project']
-        #import pdb; pdb.set_trace()
-        if(is_project == 'yes'):
-            ProjectFile.objects.filter(pk=file_id).delete()
-        else:
-            TicketFile.objects.filter(pk=file_id).delete()
 
-        folder = settings.MEDIA_ROOT
-        os.remove(os.path.join(folder, file_name))
-        return HttpResponse('1')
-
-#ticket manager @rejoan
+#ticket edit @rejoan
 @login_required
 def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.html'):
     if ticket_id:
@@ -220,13 +223,18 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
         #import pdb;pdb.set_trace()
         if tick_form.is_valid(): #if form valid
             form_data = tick_form.cleaned_data
+            milstn = request.POST['t_milestone']
+            if not milstn.isdigit():
+                messages.error(request, 'Select a milestone. If none add first')
+                #import pdb;pdb.set_trace()
+                return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/edit')
             t_id = form_data['ticket_id']
             create_date = timezone.now()
             project_id = form_data['project_id']
             status = form_data['status']
             priority = form_data['priority']
             assign = request.POST['t_assign']
-            milestone = request.POST['t_milestone']
+            milestone = milstn
             estimate = form_data['estimate']
             title = form_data['title']
             description = form_data['description']
@@ -235,21 +243,21 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
             ticket_row = Ticket.objects.filter(pk=t_id).update(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
 
             #Ticket file process start
-            latest = Ticket.objects.latest('id')
-            ticket_id = latest.pk
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
+            dest = False
             for f in request.FILES.getlist('ticket_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
                 file_name = str(ticket_id)+'_'+extn+'_'+f.name
                 dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+                #import pdb;pdb.set_trace()
                 for chunk in f.chunks():
                     dest.write(chunk)
-                dest.close()
-
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
+            if dest:
+                dest.close()
 
             messages.info(request, 'Ticket Updated Successfully')
             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
@@ -260,6 +268,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
     #import pdb;pdb.set_trace()
     return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project,'project_id':project_id})
 
+#all tickets of particual project and tiicket search
 @login_required
 def tickets(request,project_id):
     f_ticket = Ticket.objects.filter(project_id=project_id).values()
@@ -296,7 +305,7 @@ def tickets(request,project_id):
 
     return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'project_id':project_id,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
 
-
+# ticket details and commenting on ticket
 @login_required
 def ticket_details(request,project_id,ticket_id):
     tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project','creator').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline'),project_id=F('project__id'),ticket_creator=F('creator__username')).values()
@@ -305,10 +314,15 @@ def ticket_details(request,project_id,ticket_id):
 
     comment = {}
     if request.POST:
-        if request.POST['t_status'].isalnum():
+        if request.POST['comment_desc'] == '':
+            messages.info(request, 'Comment can\'t empty')
+            return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/details')
+
+        if request.POST['t_status'].isalpha():
             curr_status = request.POST['t_status']
         else:
-            return HttpResponse('Wromg comment')
+            curr_status = tickets[0]["status"]
+
         comment['create_date'] = timezone.now()
         comment['creator_id'] = request.user.id
         comment['ticket_id'] = ticket_id
@@ -324,35 +338,41 @@ def ticket_details(request,project_id,ticket_id):
 
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
-        for file in request.FILES.getlist('ticket_file'):
+        dest = False
+        for f in request.FILES.getlist('ticket_file'):
             dt = timezone.now()
             extn = str(int(time.mktime(dt.timetuple())))
-            dest = open(os.path.join(settings.MEDIA_ROOT, str(ticket_id)+'_'+extn+'_'+file.name), 'wb')
-            for chunk in file.chunks():
+            file_name = str(ticket_id)+'_'+extn+'_'+f.name
+            dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+            for chunk in f.chunks():
                 dest.write(chunk)
 
-            file_name = file.name
             ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
             ticket_files.save()
+
+        if dest:
             dest.close()
-        return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+        return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/details')
     return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files,'project_id':project_id,'comments':comments})
 
-
-
-
+#delete files from edit page (project, ticket)
 @login_required
-def project_wall(request,project_id):
-    project = get_object_or_404(Project, pk=project_id)
-    leaders = ProjectMember.objects.filter(project_id=project_id,member_type=1).select_related('user').annotate(username=F('user__username'))
-    members = ProjectMember.objects.filter(project_id=project_id,member_type=2).select_related('user').annotate(username=F('user__username'))
+def delete_files(request):
+    if request.is_ajax():
+        file_id = int(request.POST['ID'])
+        file_name = request.POST['f_name']
+        is_project = request.POST['project']
+        #import pdb; pdb.set_trace()
+        if(is_project == 'yes'):
+            ProjectFile.objects.filter(pk=file_id).delete()
+        else:
+            TicketFile.objects.filter(pk=file_id).delete()
 
-    latest_three = Comment.objects.extra(select={'create_date':"to_char(create_date,'DD-MM-YYYY')"}).values('create_date').annotate(dcount=Count('create_date')).order_by('-create_date')
-    #import pdb;pdb.set_trace()
-    comments = Comment.objects.filter(ticket__project_id=project_id).select_related('creator','ticket').annotate(username=F('creator__username'),t_title=F('ticket__title')).values()
-    return render(request, 'project/home.html', {'project':project,'project_id':project_id,'comments':comments,'leaders':leaders,'members':members,'latest_three':latest_three})
+        folder = settings.MEDIA_ROOT
+        os.remove(os.path.join(folder, file_name))
+        return HttpResponse('1')
 
-
+#delete ticket with associated files
 @login_required
 def ticket_delete(request, project_id, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
@@ -361,7 +381,7 @@ def ticket_delete(request, project_id, ticket_id):
     messages.info(request, 'Ticket Deleted Successfully')
     return HttpResponseRedirect('/project/'+project_id+'/tickets/')
 
-
+# project files on menu (dashboard)
 @login_required
 def project_files(request,project_id):
     all_files = ProjectFile.objects.filter(project_id=project_id).values()

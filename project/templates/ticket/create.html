@@ -3,7 +3,7 @@
 {% block content %}
     {% include 'project/project_header.html' %}
     <div class="p_up">
-    
+
         <div class="p_up_left">
             <h1 class="inline">New Ticket</h1>
             <a href="{% url "project:tickets" project.id %}"><p id="milestone_new" class="button">Cancel</p></a>
@@ -67,7 +67,7 @@
                                     </div>
                                     {% if messages %}
                                       {% for message in messages %}
-                                          <p class="alert alert-info">{{ message }}</p>
+                                          <p style="width:90%;margin:0 auto;padding:5px;" class="alert alert-info">{{ message }}</p>
                                       {% endfor %}
                                     {% endif %}
                                 </li>
@@ -116,7 +116,7 @@
                           <div class="level_name" style="margin-top: 20px;">Existing Ticket Files </div>
                             {% for ticket_file in ticket_files %}
                               <div class="project_files" id="e_p_f_{{ticket_file.0}}">
-                                    <a target="_blank" href="{% static 'uploads/' %}{{ticket_file.1}}">{{ticket_file.1}}</a>
+                                    <a target="_blank" href="/static/uploads/{{ticket_file.1}}">{{ticket_file.1}}</a>
                                     <img onclick='delete_p_file({{ticket_file.0}},"{{ticket_file.1}}");' src="{% static 'img/delete_i.png' %}" title="Delete" alt="Delete">
                                </div>
                             {% endfor %}

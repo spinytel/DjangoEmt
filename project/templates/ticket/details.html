@@ -9,6 +9,11 @@
    </style>
    {% include 'project/project_header.html' %}
    <div class="p_up">
+       {% if messages %}
+         {% for message in messages %}
+             <p class="alert alert-info">{{ message }}</p>
+         {% endfor %}
+       {% endif %}
        <div class="p_up_left">
            <h1 class="inline"><img src='{% static "img/ticket_ID_big.png" %}' alt="Ticket ID" title="Ticket ID"><span title="Ticket ID">#{{tickets.0.id}}</span> Details</h1>
        </div>
@@ -99,7 +104,7 @@
                        <ul class="files_ul">
                          {% for f in ticket_files %}
                            <li>
-                               <a target="_blank" href="">{{f.file_name}}</a>
+                               <a target="_blank" href="/static/uploads/{{f.file_name}}">{{f.file_name}}</a>
                            </li>
                          {% endfor %}
                        </ul>

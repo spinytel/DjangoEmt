@@ -16,7 +16,7 @@
                   <div class="clear"></div>
               </div>
               <div class="main-block-padding">
-                  <form name="project_add" method="POST" enctype="multipart/form-data" action='{% if proj_form.submit_val == 'Add Project' %}{% else %}{% endif %}'>
+                  <form name="project_add" method="POST" enctype="multipart/form-data" action="">
                     {% csrf_token %}
                     <input type="hidden" value="{% url 'project:delete_files' %}" id="delete_url">
                       <div style="float: left; width: 50%;">
@@ -75,7 +75,7 @@
                             <div class="level_name" style="margin-top: 20px;">Existing Project Files </div>
                               {% for project_file in project_files %}
                                 <div class="project_files" id="e_p_f_{{project_file.0}}">
-                                      <a target="_blank" href="{% static 'uploads/' %}{{project_file.1}}">{{project_file.1}}</a>
+                                      <a target="_blank" href="/static/uploads/{{project_file.1}}">{{project_file.1}}</a>
                                         <img onclick='delete_p_file({{project_file.0}},"{{project_file.1}}","yes");' src="{% static 'img/delete_i.png' %}" title="Delete" alt="Delete">
                                  </div>
                               {% endfor %}

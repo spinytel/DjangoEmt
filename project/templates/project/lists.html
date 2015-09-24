@@ -4,14 +4,15 @@
 {% block content %}
 {% include 'menu.html' %}
 <div id="block">
-    {% if messages %}
-      {% for message in messages %}
-          <p class="alert alert-info">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
+
     <div id="main-block">
         <div class="dashboard_general">
             <div class="main-block-title">
+              {% if messages %}
+                {% for message in messages %}
+                    <p class="alert alert-info">{{ message }}</p>
+                {% endfor %}
+              {% endif %}
                 <div id="bread-crumps">
                     <div style="height: 20px; line-height: 23px;">
                         <a id="home_logo" style="color: #767676;">All Projects</a>
