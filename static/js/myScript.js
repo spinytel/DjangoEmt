@@ -67,3 +67,32 @@ $(document).ready(function(){
         $("#show_sub_menu_ul").slideToggle("slow");
     });
 });
+
+//Deleting Existing Project File
+function delete_p_file(ID, file_name,project='no'){
+    var loader    = $('.loader');
+    var url = $('#delete_url').val();
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    var isYes=confirm('Do you really want to delete this File ?');
+    if(ID && isYes && file_name){
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: url,
+            data: { ID: ID, f_name: file_name,csrfmiddlewaretoken: csrfmiddlewaretoken,project:project},
+            beforeSend: function () {
+                loader.show();
+            },
+            success: function(data) {
+                if(data == 1){
+                    $("#e_p_f_"+ID).hide();
+                }else{
+                    alert('Something wrong, Please try again.')
+                }
+            },
+            complete: function () {
+                loader.hide();
+            }
+        });
+    }
+}

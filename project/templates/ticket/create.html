@@ -19,6 +19,7 @@
         <div id="milestone_add_body">
             <form action="" enctype="multipart/form-data" method="POST" name="ticket_add">
               {% csrf_token %}
+              <input type="hidden" value="{% url 'project:delete_files' %}" id="delete_url">
                   {{tick_form.project_id.as_hidden}}
                   {{tick_form.ticket_id.as_hidden}}
                 <div class="p_form_left">
@@ -105,7 +106,7 @@
                             {% for ticket_file in ticket_files %}
                               <div class="project_files" id="e_p_f_{{ticket_file.0}}">
                                     <a target="_blank" href="{% static 'uploads/' %}{{ticket_file.1}}">{{ticket_file.1}}</a>
-                                          <!--<img onclick="delete_p_file('.$row_p_f['ID'].','.$project_ID.',\''.$row_p_f['file_name'].'\');" src="_$includes/_$img/delete_i.png" title="Delete" alt="Delete">-->
+                                    <img onclick='delete_p_file({{ticket_file.0}},"{{ticket_file.1}}");' src="{% static 'img/delete_i.png' %}" title="Delete" alt="Delete">
                                </div>
                             {% endfor %}
                           </div>

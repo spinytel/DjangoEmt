@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^(?P<project_id>[0-9]+)/milestone/(?P<milestone_id>[0-9]+)/delete', views.milestone_delete, name='milestone_delete'),
     url(r'^(?P<project_id>[0-9]+)/milestone', views.milestone_all, name='milestone_all'),
     url(r'^(?P<project_id>[0-9]+)/', views.project_wall, name='project_wall'),
+    url(r'^delete_files/$', views.delete_files, name='delete_files'),
     url(r'^$', views.projects, name='projects'),
 
 ]

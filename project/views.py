@@ -52,15 +52,15 @@ def project_create(request, template_name='project/create.html'):
             proj_id = latest.pk
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
-            for file in request.FILES.getlist('project_file'):
+            for f in request.FILES.getlist('project_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
-                dest = open(os.path.join(settings.MEDIA_ROOT, str(proj_id)+'_'+extn+'_'+file.name), 'wb')
-                for chunk in file.chunks():
+                file_name = str(proj_id)+'_'+extn+'_'+f.name
+                dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+                for chunk in f.chunks():
                     dest.write(chunk)
                 dest.close()
 
-                file_name = file.name
                 project_files = ProjectFile.objects.create(file_name=file_name,project_id=proj_id)
                 project_files.save()
 
@@ -110,14 +110,14 @@ def project_edit(request,project_id,template_name="project/create.html"):
 
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
-            for file in request.FILES.getlist('project_file'):
+            for f in request.FILES.getlist('project_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
-                dest = open(os.path.join(settings.MEDIA_ROOT, str(p_id)+'_'+extn+'_'+file.name), 'wb')
-                for chunk in file.chunks():
+                file_name = str(p_id)+'_'+extn+'_'+f.name
+                dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+                for chunk in f.chunks():
                     dest.write(chunk)
-                    dest.close()
-                file_name = file.name
+                dest.close()
                 project_files = ProjectFile.objects.create(file_name=file_name,project_id=p_id)
                 project_files.save()
 
@@ -164,15 +164,15 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
             ticket_id = latest.pk
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
-            for file in request.FILES.getlist('ticket_file'):
+            for f in request.FILES.getlist('ticket_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
-                dest = open(os.path.join(settings.MEDIA_ROOT, str(ticket_id)+'_'+extn+'_'+file.name), 'wb')
-                for chunk in file.chunks():
+                file_name = str(ticket_id)+'_'+extn+'_'+f.name
+                dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+                for chunk in f.chunks():
                     dest.write(chunk)
                 dest.close()
 
-                file_name = file.name
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
 
@@ -180,6 +180,21 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
     tick_form.submit_val = 'Add Ticket'
     return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
 
+@login_required
+def delete_files(request):
+    if request.is_ajax():
+        file_id = int(request.POST['ID'])
+        file_name = request.POST['f_name']
+        is_project = request.POST['project']
+        #import pdb; pdb.set_trace()
+        if(is_project == 'yes'):
+            ProjectFile.objects.filter(pk=file_id).delete()
+        else:
+            TicketFile.objects.filter(pk=file_id).delete()
+
+        folder = settings.MEDIA_ROOT
+        os.remove(os.path.join(folder, file_name))
+        return HttpResponse('1')
 
 #ticket manager @rejoan
 @login_required
@@ -217,15 +232,15 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
             ticket_id = latest.pk
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
-            for file in request.FILES.getlist('ticket_file'):
+            for f in request.FILES.getlist('ticket_file'):
                 dt = timezone.now()
                 extn = str(int(time.mktime(dt.timetuple())))
-                dest = open(os.path.join(settings.MEDIA_ROOT, str(ticket_id)+'_'+extn+'_'+file.name), 'wb')
-                for chunk in file.chunks():
+                file_name = str(ticket_id)+'_'+extn+'_'+f.name
+                dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+                for chunk in f.chunks():
                     dest.write(chunk)
                 dest.close()
 
-                file_name = file.name
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
 
@@ -235,7 +250,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
     tick_form = TicketEditForm(data)
     tick_form.submit_val = 'Update Ticket'
     #import pdb;pdb.set_trace()
-    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project})
+    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project,'project_id':project_id})
 
 @login_required
 def tickets(request,project_id):
