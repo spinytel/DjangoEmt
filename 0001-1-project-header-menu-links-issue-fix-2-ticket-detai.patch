@@ -1,0 +1,332 @@
+From c524073ffb6a9429beafbaa30af8107ec908bd12 Mon Sep 17 00:00:00 2001
+From: tiny-rejoan <rejoanul.alam@gmail.com>
+Date: Wed, 23 Sep 2015 15:37:24 +0600
+Subject: [PATCH 1/2] [1] project header menu links issue fix [2] ticket
+ details with all history and comment creation done
+
+---
+ project/templates/project/create.html       |  4 +-
+ project/templates/project/home.html         | 68 +++++++++++++++++++++++++++++
+ project/templates/project/project_menu.html |  8 ++--
+ project/templates/ticket/details.html       | 44 +++++++++----------
+ project/views.py                            | 46 ++++++++++++++++---
+ static/css/myStyle.css                      |  3 ++
+ templates/header.html                       |  2 +-
+ 7 files changed, 140 insertions(+), 35 deletions(-)
+ create mode 100644 project/templates/project/home.html
+
+diff --git a/project/templates/project/create.html b/project/templates/project/create.html
+index fe6c6df..a12cfa2 100644
+--- a/project/templates/project/create.html
++++ b/project/templates/project/create.html
+@@ -43,6 +43,7 @@
+                           <div id="add_files"></div>
+                           <div id="add_another_i" class="add_another">
+                               <a>
++                                <img src='{% static "img/i_add.png" %}' alt="Add Another File" title="Add Another File">
+                                   <p>Add Another File</p>
+                               </a>
+                           </div>
+@@ -63,13 +64,12 @@
+                             {% endfor %}
+                               <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
+                           </div>
+-                          <!--p class="note">Only JPEG,JPG,PNG,GIF,PDF file Supported, Size Limit : Max 5MB</p-->
+                           {% if project_files %}
+                             <div class="level_name" style="margin-top: 20px;">Existing Project Files </div>
+                               {% for project_file in project_files %}
+                                 <div class="project_files" id="e_p_f_{{project_file.0}}">
+                                       <a target="_blank" href="{% static 'uploads/' %}{{project_file.1}}">{{project_file.1}}</a>
+-                                            <!--<img onclick="delete_p_file('.$row_p_f['ID'].','.$project_ID.',\''.$row_p_f['file_name'].'\');" src="_$includes/_$img/delete_i.png" title="Delete" alt="Delete">-->
++                                          <img onclick="delete_p_file();" src="{% static 'img/delete_i.png' %}" title="Delete" alt="Delete">
+                                  </div>
+                               {% endfor %}
+                           {% endif %}
+diff --git a/project/templates/project/home.html b/project/templates/project/home.html
+new file mode 100644
+index 0000000..7aeefeb
+--- /dev/null
++++ b/project/templates/project/home.html
+@@ -0,0 +1,68 @@
++{% extends "layout.html" %}
++{% load staticfiles %}
++{% block content %}
++{% include 'project/project_header.html' %}
++<div class="p_up">
++        <div class="p_up_left">
++            <h1></h1>
++            <p>Project Lead</p>
++        </div>
++        <div class="p_up_right">
++            <p>Project Creation Date : </p>
++            <div class="clear"></div>
++            <p>Estimated Project Deadline : </p>
++            <div class="clear"></div>
++        </div>
++        <div class="clear"></div>
++    </div>
++    <div class="p_middle">
++        <div class="p_middle_left">
++            <h1>Team Members</h1>
++            <div id="lead_member">
++                <p id="lead">Lead Members</p>
++            <p>tese</p>
++            </div>
++            <div id="general_member">
++                <p id="general">General Members</p>
++              <p>test</p>
++            </div>
++        </div>
++        <div class="p_middle_right">
++            <h1>
++                <span>Project Stream</span>
++                <!--a href="project_home.php?ID=<?php echo $project_ID; ?>">Browse all activity</a-->
++            </h1>
++            <div class="clear"></div>
++            <div id="project_stream">
++                <div class="stream_details">
++                    <p>date</p>
++                    <a href="project_ticket_details.php?ID=<?php echo $project_ID; ?>&t_ID=<?php echo $nested_item['ticket_ID']; ?>&c_ID=<?php echo $nested_item['creator_ID']; ?>">
++                        <div class="stream_data">
++                            <div class="stream_time"></div>
++                            <div class="stream_status_m">
++                                <div class="stream_status">
++                                    <span></span> - updated
++                                    <span></span>
++                                </div>
++
++                                <div class="stream_status_change">
++                                    <span>Status</span> changed from <span></span> to <span>
++                                </div>
++
++                                <div class="stream_comment">
++                                    commented - <span>""</span>
++                                </div>
++
++                            </div>
++                            <div class="clear"></div>
++                        </div>
++                    </a>
++
++                </div>
++
++            </div>
++        </div>
++        <div class="clear"></div>
++    </div>
++ {% include 'project/project_footer.html' %}
++ {% endblock %}
+diff --git a/project/templates/project/project_menu.html b/project/templates/project/project_menu.html
+index a610f93..c05dc84 100644
+--- a/project/templates/project/project_menu.html
++++ b/project/templates/project/project_menu.html
+@@ -1,8 +1,8 @@
+ <ul id="nav_list">
+-    <li><a href="#">Project Home</a></li>
+-    <li><a href="#">New Ticket</a></li>
+-    <li><a href="">Tickets</a></li>
++    <li><a href="{% url "project:projects" %}">Project Home</a></li>
++    <li><a href="{% url "project:ticket_create" project_id %}">New Ticket</a></li>
++    <li><a href="{% url "project:tickets" project_id %}">Tickets</a></li>
+     <li><a href="#">Project Wall</a></li>
+     <li><a href="">Milestones</a></li>
+     <li><a href="#">Files</a></li>
+-</ul>
+\ No newline at end of file
++</ul>
+diff --git a/project/templates/ticket/details.html b/project/templates/ticket/details.html
+index 0c9a790..2ee96b5 100644
+--- a/project/templates/ticket/details.html
++++ b/project/templates/ticket/details.html
+@@ -1,16 +1,16 @@
+ {% extends "layout.html" %}
+ {% load staticfiles %}
+ {% block content %}
+-    {% include 'project/project_header.html' %}
+   <style>
+        input[type="file"]{
+            margin: 2px 0 5px 0;
+            padding: 2px;
+        }
+    </style>
++   {% include 'project/project_header.html' %}
+    <div class="p_up">
+        <div class="p_up_left">
+-           <h1 class="inline"><img src='{% static "img/ticket_ID_big.png" %}' alt="Ticket ID" title="Ticket ID"><span title="Ticket ID"></span> Details</h1>
++           <h1 class="inline"><img src='{% static "img/ticket_ID_big.png" %}' alt="Ticket ID" title="Ticket ID"><span title="Ticket ID">#{{tickets.0.id}}</span> Details</h1>
+        </div>
+        <div class="p_up_right">
+            <p>Project Creation Date : {{tickets.0.p_create_date}} </p>
+@@ -35,7 +35,7 @@
+                            <li>
+                                <div class="level">Reported by :</div>
+                                <div class="fields">
+-                                   <span id="report_by"></span>
++                                   <span id="report_by">{{tickets.0.ticket_creator}}</span>
+                                </div>
+                            </li>
+                            <li>
+@@ -115,31 +115,31 @@
+                    </div>
+ 
+                <div class="ticket_blocks">
++                 {% for c in comments %}
+                    <div class="ticket_creator">
+-                       <div class="">
+-                           <div class="t_c_upper">
+-                               <p>By <span></span></p>
+-                               <p>on</p>
+-                               <div class="clear"></div>
+-                           </div>
+-                           <div class="t_c_middle">
+-                               <p><span>Status</span> changed from <span></span> to <span></p>
+-                           </div>
+-                       </div>
+-                       <div class="t_c_desc">
+-                         hello issue
++                     <div class="ticket_creator_header">
++                         <div class="t_c_upper">
++                             <p>By <span>{{c.username}}</span></p>
++                             <p>on {{c.create_date}}</p>
++                             <div class="clear"></div>
++                         </div>
++                         {% if c.curr_status and c.curr_status.strip %}
++                         <div class="t_c_middle">
++                             <p><span>Status</span> changed from <span>{{c.prev_status}}</span> to <span>{{c.curr_status}}</span></p>
++                         </div>
++                         {% endif %}
+                        </div>
+-                   </div>
+-
++                       {% if c.details and c.details.strip %}
++                       <div class="t_c_desc">{{c.details}}</div>
++                        {% endif %}
++                     </div>
++                    {% endfor %}
+                    <form action="" enctype="multipart/form-data" method="POST" name="ticket_details" >
++                     {% csrf_token %}
+                        <textarea name="comment_desc" id="comment_area" placeholder="Leave a comment"></textarea>
+-                       <input type="hidden" name="pre_t_status" value="">
+-                       <input type="hidden" name="p_ID" value="">
+-                       <input type="hidden" name="t_ID" value="">
+-                       <input type="hidden" name="c_ID" value="">
+                        <div id="ticket_details_form" style="width: 50%; float: left;">
+                            <div class="ticket_level">File's </div>
+-                           <input style="width: 80%;" type="file" name="t_files">
++                           <input style="width: 80%;" type="file" name="ticket_file">
+                            <div id="add_files"></div>
+                            <div class="add_another" id="add_another_if1">
+                                <a>
+diff --git a/project/views.py b/project/views.py
+index 97b4ca6..d5ad7c8 100644
+--- a/project/views.py
++++ b/project/views.py
+@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
+ from django.template import RequestContext
+ from django.http import HttpResponse,HttpResponseRedirect
+ from django.shortcuts import render,get_object_or_404
+-from .models import Project, ProjectFile, ProjectMember, MilestoneType, Milestone, Ticket, TicketFile
++from .models import Project, ProjectFile, ProjectMember, MilestoneType, Milestone, Ticket, TicketFile, Comment
+ from django.utils import timezone
+ import time
+ from django.utils.dateformat import DateFormat
+@@ -179,7 +179,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
+ 
+             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+     tick_form.submit_val = 'Add Ticket'
+-    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project})
++    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
+ 
+ 
+ #ticket manager @rejoan
+@@ -231,7 +231,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
+                 ticket_files.save()
+ 
+             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+-    data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate}
++    data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate,'project_id':project_id}
+ 
+     tick_form = TicketEditForm(data)
+     tick_form.submit_val = 'Update Ticket'
+@@ -272,15 +272,49 @@ def tickets(request,project_id):
+         t[3] = assigned_to[i]
+         tickets.append(t)
+ 
+-    return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
++    return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'project_id':project_id,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
+ 
+ 
+ @login_required
+ def ticket_details(request,project_id,ticket_id):
+-    tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline')).values()
++    tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project','creator').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline'),project_id=F('project__id'),ticket_creator=F('creator__username')).values()
+     ticket_files = TicketFile.objects.filter(ticket_id=ticket_id).values()
++    comments = Comment.objects.filter(ticket_id=ticket_id).order_by('id').select_related('creator').annotate(username=F('creator__username')).values()
+ 
+-    return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files})
++    comment = {}
++    if request.POST:
++        if request.POST['t_status'].isalnum():
++            curr_status = request.POST['t_status']
++        else:
++            return HttpResponse('Wromg comment')
++        comment['create_date'] = timezone.now()
++        comment['creator_id'] = request.user.id
++        comment['ticket_id'] = ticket_id
++        comment['details'] = request.POST['comment_desc']
++
++        if tickets[0]["status"] != curr_status:
++            comment['prev_status'] = tickets[0]["status"]
++            comment['curr_status'] = curr_status
++
++            Ticket.objects.filter(pk=ticket_id).update(status=curr_status)
++
++        Comment.objects.create(**comment)
++
++        if not os.path.exists(settings.MEDIA_ROOT):
++            os.makedirs(settings.MEDIA_ROOT)
++        for file in request.FILES.getlist('ticket_file'):
++            dt = timezone.now()
++            extn = str(int(time.mktime(dt.timetuple())))
++            dest = open(os.path.join(settings.MEDIA_ROOT, str(ticket_id)+'_'+extn+'_'+file.name), 'wb')
++            for chunk in file.chunks():
++                dest.write(chunk)
++
++            file_name = file.name
++            ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
++            ticket_files.save()
++            dest.close()
++        return HttpResponseRedirect('/project/'+project_id+'/tickets/')
++    return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files,'project_id':project_id,'comments':comments})
+ 
+ 
+ @login_required
+diff --git a/static/css/myStyle.css b/static/css/myStyle.css
+index 327ba8a..58c51fe 100644
+--- a/static/css/myStyle.css
++++ b/static/css/myStyle.css
+@@ -73,6 +73,9 @@ a:hover{
+     letter-spacing: 1px;
+     line-height: 22px;
+ }
++#header-h1 a:hover,#header-h1 a:active,#header-h1 a:focus{
++    text-decoration: none;
++}
+ #header-h1 a{
+     color: #357DA5;
+ }
+diff --git a/templates/header.html b/templates/header.html
+index 0db9a54..41b5605 100644
+--- a/templates/header.html
++++ b/templates/header.html
+@@ -1,6 +1,6 @@
+ <div id="header">
+     <div style="padding: 10px;">
+-        <h1 id="header-h1"><a href="#"><span class="logo_emt">EMT</span> | Spinytel</a></h1>
++        <h1 id="header-h1"><a href="{% url "project:projects" %}"><span class="logo_emt">EMT</span> | Spinytel</a></h1>
+         <div id="user-info">
+             {% if user.is_authenticated %}
+                 <h1>{{ user.username }}</h1>
+-- 
+1.9.5.msysgit.0
+
