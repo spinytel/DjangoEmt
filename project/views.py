@@ -10,6 +10,7 @@ from authentication.models import Account
 from .forms import ProjectForm, MilestoneForm, MilestoneEditForm,ProjectEditForm,TicketForm,TicketEditForm
 from django.db.models import Q,F,Count
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 import os
 
 
@@ -71,6 +72,7 @@ def project_create(request, template_name='project/create.html'):
             for normal_member in request.POST.getlist('normal_user_ID'):
                 project_member = ProjectMember.objects.create(project_id=proj_id,user_id=normal_member,member_type=2)
 
+            messages.info(request, 'Project Created Successfully')
             return HttpResponseRedirect('/project/')
     proj_form.submit_val = 'Add Project'
     return render(request, template_name, {'proj_form': proj_form, 'leaders': leaders, 'members':members})
@@ -121,7 +123,7 @@ def project_edit(request,project_id,template_name="project/create.html"):
                 project_files = ProjectFile.objects.create(file_name=file_name,project_id=p_id)
                 project_files.save()
 
-            #redirect to project lists
+            messages.info(request, 'Project Updated Successfully')
             return HttpResponseRedirect("/project/")
 
     #send data row to edit
@@ -145,6 +147,11 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
         #import pdb;pdb.set_trace()
         if tick_form.is_valid(): #if form valid
             form_data = tick_form.cleaned_data
+            milstn = request.POST['t_milestone']
+            if not milstn.isdigit():
+                messages.error(request, 'Select a milestone. If none add first')
+                #import pdb;pdb.set_trace()
+                return HttpResponseRedirect('/project/'+project_id+'/ticket/create')
             create_date = timezone.now()
             project_id = form_data['project_id']
             status = form_data['status']
@@ -175,7 +182,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
 
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
-
+            messages.info(request, 'Ticket Created Successfully')
             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     tick_form.submit_val = 'Add Ticket'
     return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
@@ -244,6 +251,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
 
+            messages.info(request, 'Ticket Updated Successfully')
             return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate,'project_id':project_id}
 
@@ -350,7 +358,16 @@ def ticket_delete(request, project_id, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     ticket.delete()
     TicketFile.objects.filter(ticket_id=ticket_id).delete()
+    messages.info(request, 'Ticket Deleted Successfully')
     return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+
+
+@login_required
+def project_files(request,project_id):
+    all_files = ProjectFile.objects.filter(project_id=project_id).values()
+    project = get_object_or_404(Project,pk=project_id)
+    return render(request, 'project/files.html', {'project':project,'all_files':all_files,'project_id':project_id})
+
 
 
 @login_required

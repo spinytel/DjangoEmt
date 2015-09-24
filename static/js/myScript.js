@@ -14,9 +14,6 @@ $(document).ready(function(){
       format:'Y-m-d'
     });
       // Filter Design - Start
-    var table_height = $('.ticket_table').height();
-    //alert(table_height);
-    $("#table_filter_upper").css("height",table_height+27);
     $('#filter_button').on({
         'click': function(){
             if($('#table_filter_inner').css("display") == "block"){

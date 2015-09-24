@@ -52,7 +52,7 @@ class TicketForm(forms.Form):
 
     title = forms.CharField(max_length=200, required = True, widget = forms.TextInput(attrs = {'placeholder':'Summary of new ticket'}))
     description = forms.CharField(widget = forms.Textarea)
-    ticket_file = forms.FileField(label = 'Ticket Files')
+    ticket_file = forms.FileField(label = 'Ticket Files',required = False)
     #assign = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
     project_id = forms.CharField()
 
@@ -93,7 +93,7 @@ class TicketEditForm(forms.Form):
 
     title = forms.CharField(max_length=200, required = True, widget = forms.TextInput(attrs = {'placeholder':'Summary of new ticket'}))
     description = forms.CharField(widget = forms.Textarea)
-    ticket_file = forms.FileField(label = 'Ticket Files',required=False)
+    ticket_file = forms.FileField(label = 'Ticket Files', required=False)
     #assign = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
     project_id = forms.CharField()
     ticket_id = forms.CharField()

@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     url(r'^create/$', views.project_create,name='project_create'),
+    url(r'^(?P<project_id>[0-9]+)/files', views.project_files, name='project_files'),
     url(r'^(?P<project_id>[0-9]+)/edit', views.project_edit, name='project_edit'),
     url(r'^(?P<project_id>[0-9]+)/ticket/create', views.ticket_create, name='ticket_create'),
     url(r'^(?P<project_id>[0-9]+)/ticket/(?P<ticket_id>[0-9]+)/details', views.ticket_details, name='ticket_details'),

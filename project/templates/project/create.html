@@ -23,7 +23,9 @@
                           <div class="level_name">{{ proj_form.name.label }} <strong>*</strong></div>
                           {{ proj_form.name }}
                           {% if proj_form.name.errors %}
-                            <div class="alert alert-danger">{{ proj_form.name.errors.as_text }}</div>
+                          <div style="width: 80%;">
+                            <p class="alert alert-danger">{{ proj_form.name.errors.as_text }}</p>
+                          </div>
                           {% endif %}
                           <div class="level_name">Project Lead Member <strong>*</strong></div>
 
@@ -39,7 +41,9 @@
                           {{ proj_form.project_file }}
 
                           {% if proj_form.project_file.errors %}
-                            <div class="alert alert-danger">{{ proj_form.project_file.errors.as_text }}</div>
+                          <div style="width: 80%;">
+                            <p class="alert alert-danger">{{ proj_form.project_file.errors.as_text }}</p>
+                          </div>
                           {% endif %}
                           <div id="add_files"></div>
                           <div id="add_another_i" class="add_another">
@@ -53,7 +57,9 @@
                           <div class="level_name">{{ proj_form.deadline.label }} <strong>*</strong></div>
                           {{ proj_form.deadline }}
                           {% if proj_form.deadline.errors %}
-                            <div class="alert alert-danger">{{ proj_form.deadline.errors.as_text }}</div>
+                          <div style="width: 80%;">
+                            <p class="alert alert-danger">{{ proj_form.deadline.errors.as_text }}</p>
+                          </div>
                           {% endif %}
                           <div class="level_name">Select Normal Member <strong>*</strong></div>
                           <div class="select_box">

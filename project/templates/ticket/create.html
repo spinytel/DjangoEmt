@@ -3,6 +3,7 @@
 {% block content %}
     {% include 'project/project_header.html' %}
     <div class="p_up">
+    
         <div class="p_up_left">
             <h1 class="inline">New Ticket</h1>
             <a href="{% url "project:tickets" project.id %}"><p id="milestone_new" class="button">Cancel</p></a>
@@ -58,11 +59,17 @@
                                     <div class="level">Milestone :</div>
                                     <div class="fields">
                                         <select class="p_selection selection" name="t_milestone">
+                                          <option value="">Select a Milestone</option>
                                           {% for milestone in milestones %}
                                             <option value="{{milestone.id}}" {% if milesId == milestone.id %}selected{% endif %}>{{milestone.title}}</option>
                                           {% endfor %}
                                         </select>
                                     </div>
+                                    {% if messages %}
+                                      {% for message in messages %}
+                                          <p class="alert alert-info">{{ message }}</p>
+                                      {% endfor %}
+                                    {% endif %}
                                 </li>
                                 <li>
                                     <div class="level">Estimate :</div>
@@ -79,12 +86,16 @@
                         {{tick_form.title}}
                     </div>
                     {% if tick_form.title.errors %}
-                      <div class="alert alert-danger">{{ tick_form.title.errors.as_text }}</div>
+                      <div class="m_title">
+                        <p class="alert alert-danger">{{ tick_form.title.errors.as_text }}</p>
+                      </div>
                     {% endif %}
                     <div class="m_desc">
                           {{tick_form.description}}
                           {% if tick_form.description.errors %}
-                            <div class="alert alert-danger">{{ tick_form.description.errors.as_text }}</div>
+                            <div class="m_title">
+                              <p class="alert alert-danger">{{ tick_form.description.errors.as_text }}</p>
+                            </div>
                           {% endif %}
                         <div>
                             <div class="level" style="margin-top: 5px;">File's </div>

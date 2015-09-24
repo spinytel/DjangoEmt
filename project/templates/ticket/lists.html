@@ -4,6 +4,11 @@
 {% block content %}
     {% include 'project/project_header.html' %}
     <div class="p_up">
+      {% if messages %}
+        {% for message in messages %}
+            <p class="alert alert-info">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
         <div class="p_up_left">
             <h1 class="inline">Tickets</h1>
             <a href="{% url "project:ticket_create" project.id %}"><p id="milestone_new" class="button">New</p></a>
@@ -18,7 +23,7 @@
     </div>
     <div class="p_middle">
         <div id="table_filter" {% if posted != 'no' %}style="width:20%;"{% endif %}>
-            <div id="table_filter_upper" {% if posted != 'no' %}style="height:inherit;"{% endif %}>
+            <div id="table_filter_upper" style="{% if posted != 'no' %}height:inherit{% endif %};">
                 <div id="table_filter_inner" style="display:{% if posted != 'no' %}block{% else %}none{% endif %};">
                     <form action="" enctype="multipart/form-data" method="POST">
                       {% csrf_token %}

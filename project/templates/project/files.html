@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% block content %}
+{% include 'project/project_header.html' %}
+<div class="p_up">
+  {% csrf_token %}
+  <input type="hidden" value="{% url 'project:delete_files' %}" id="delete_url">
+        <div class="p_up_left">
+            <h1 class="inline">Project File's</h1>
+        </div>
+        <div class="p_up_right">
+            <p>Project Creation Date : {{project.create_date}} </p>
+            <div class="clear"></div>
+            <p>Estimated Project Deadline : {{project.deadline}}</p>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="p_middle">
+      {% if all_files %}
+        {% for af in all_files %}
+          <div class="project_files" id="e_p_f_{{af.id}}">
+              <a target="_blank" href="">{{af.file_name}}</a>
+                <img onclick='delete_p_file({{af.id}},"{{af.file_name}}","yes");' src="{% static 'img/delete_i.png' %}" title="Delete" alt="Delete">
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="project_files">
+            <a>No file.</a>
+         </div>
+      {% endif %}
+    </div>
+{% endblock %}
