@@ -11,6 +11,7 @@ from .forms import ProjectForm, MilestoneForm, MilestoneEditForm,ProjectEditForm
 from django.db.models import Q,F,Count
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from authentication.views import get_logged_in_user_id
 import os
 
 
@@ -30,17 +31,29 @@ def projects(request):
         projects.append(dict(zip(k,a)))
     return render(request, 'project/lists.html',{'projects':projects})
 
-# project wall show project specific streams
+
 @login_required
-def project_wall(request,project_id):
+# project home show project specific streams
+def project_home(request,project_id):
+    current_user_id = get_logged_in_user_id(request)
+    current_user_type = ProjectMember.objects.filter(project_id=project_id,user_id=current_user_id).values('member_type')
+    current_user_type_l = current_user_type[0]
+
     project = get_object_or_404(Project, pk=project_id)
+    #import pdb;pdb.set_trace()
     leaders = ProjectMember.objects.filter(project_id=project_id,member_type=1).select_related('user').annotate(username=F('user__username'))
     members = ProjectMember.objects.filter(project_id=project_id,member_type=2).select_related('user').annotate(username=F('user__username'))
 
     latest_three = Comment.objects.extra(select={'create_date':"to_char(create_date,'DD-MM-YYYY')"}).values('create_date').annotate(dcount=Count('create_date')).order_by('-create_date')
-    #import pdb;pdb.set_trace()
     comments = Comment.objects.filter(ticket__project_id=project_id).select_related('creator','ticket').annotate(username=F('creator__username'),t_title=F('ticket__title')).values()
-    return render(request, 'project/home.html', {'project':project,'project_id':project_id,'comments':comments,'leaders':leaders,'members':members,'latest_three':latest_three})
+    return render(request, 'project/home.html', {'project': project, 'project_id': project_id, 'comments': comments, 'leaders': leaders, 'members': members, 'latest_three': latest_three, 'current_user_type': current_user_type_l})
+
+
+@login_required
+def project_wall(request,project_id):
+
+    project = get_object_or_404(Project, pk=project_id)
+    return render(request, 'project/wall.html', {'project': project, 'project_id': project_id})
 
 
 @login_required
