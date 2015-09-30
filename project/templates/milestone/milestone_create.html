@@ -9,9 +9,9 @@
             <a href="{% url 'project:milestone_all' project_id  %}"><p id="milestone_new" class="button">Cancel</p></a>
         </div>
         <div class="p_up_right">
-            <p>Project Creation Date : #</p>
+            <p>Project Creation Date : {{project.create_date}}</p>
             <div class="clear"></div>
-            <p>Estimated Project Deadline : #</p>
+            <p>Estimated Project Deadline : {{project.deadline}}</p>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>

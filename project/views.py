@@ -408,6 +408,7 @@ def project_files(request,project_id):
 # Author : @mamun0024
 def milestone_create(request, project_id, template_name='milestone/milestone_create.html'):
     form = MilestoneForm(passing_id=project_id)
+    project = get_object_or_404(Project, pk=project_id)
 
     if request.POST:
         form = MilestoneForm(request.POST, passing_id=project_id)
@@ -425,13 +426,14 @@ def milestone_create(request, project_id, template_name='milestone/milestone_cre
             form.save()
             return redirect('/project/'+project_id+'/milestone/')
 
-    return render(request, template_name, {'form': form, 'project_id': project_id})
+    return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
 
 
 @login_required
 # Author : @mamun0024
 def milestone_edit(request, project_id, milestone_id, template_name='milestone/milestone_edit.html'):
     form = MilestoneEditForm(passing_milestone_id=milestone_id)
+    project = get_object_or_404(Project, pk=project_id)
 
     if request.POST:
         form = MilestoneEditForm(request.POST, passing_milestone_id=milestone_id)
@@ -448,7 +450,7 @@ def milestone_edit(request, project_id, milestone_id, template_name='milestone/m
                 type_id=form['m_type'])
             return redirect('/project/'+project_id+'/milestone/')
 
-    return render(request, template_name, {'form': form, 'project_id': project_id})
+    return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
 
 
 @login_required
@@ -463,4 +465,5 @@ def milestone_delete(request, project_id, milestone_id):
 # Author : @mamun0024
 def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
     milestone_details = Milestone.objects.filter(project_id=project_id)
-    return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id})
+    project = get_object_or_404(Project, pk=project_id)
+    return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id, 'project': project})
