@@ -16,7 +16,7 @@ import os
 
 
 @login_required
-#project lists @rejoan
+# project lists @rejoan
 def projects(request):
     ps = [[a['id'],a['create_date'],a['name'],a['deadline']] for a in Project.objects.all().values()]
     lm = [[Account.objects.values_list('username',flat=True).filter(id=int(b['user_id'])) for b in ProjectMember.objects.select_related().filter(project_id__id=int(a[0])).filter(member_type=1).values()] for a in ps]
@@ -34,6 +34,7 @@ def projects(request):
 
 @login_required
 # project home show project specific streams
+# project lists @rejoan & @mamun0024
 def project_home(request,project_id):
     current_user_id = get_logged_in_user_id(request)
     current_user_type = ProjectMember.objects.filter(project_id=project_id,user_id=current_user_id).values('member_type')
@@ -50,6 +51,7 @@ def project_home(request,project_id):
 
 
 @login_required
+# Author : @mamun0024
 def project_wall(request,project_id):
 
     project = get_object_or_404(Project, pk=project_id)
@@ -402,8 +404,8 @@ def project_files(request,project_id):
     return render(request, 'project/files.html', {'project':project,'all_files':all_files,'project_id':project_id})
 
 
-
 @login_required
+# Author : @mamun0024
 def milestone_create(request, project_id, template_name='milestone/milestone_create.html'):
     form = MilestoneForm(passing_id=project_id)
 
@@ -427,6 +429,7 @@ def milestone_create(request, project_id, template_name='milestone/milestone_cre
 
 
 @login_required
+# Author : @mamun0024
 def milestone_edit(request, project_id, milestone_id, template_name='milestone/milestone_edit.html'):
     form = MilestoneEditForm(passing_milestone_id=milestone_id)
 
@@ -449,6 +452,7 @@ def milestone_edit(request, project_id, milestone_id, template_name='milestone/m
 
 
 @login_required
+# Author : @mamun0024
 def milestone_delete(request, project_id, milestone_id):
     data = get_object_or_404(Milestone, pk=milestone_id)
     data.delete()
@@ -456,6 +460,7 @@ def milestone_delete(request, project_id, milestone_id):
 
 
 @login_required
+# Author : @mamun0024
 def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
     milestone_details = Milestone.objects.filter(project_id=project_id)
     return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id})
