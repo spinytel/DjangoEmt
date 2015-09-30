@@ -431,8 +431,6 @@ def milestone_edit(request, project_id, milestone_id, template_name='milestone/m
                 user_id=form['m_responsible'],
                 type_id=form['m_type'])
             return redirect('/project/'+project_id+'/milestone/')
-        else:
-            return HttpResponse(form)
 
     return render(request, template_name, {'form': form, 'project_id': project_id})
 

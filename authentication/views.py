@@ -87,6 +87,8 @@ def user_create(request):
                         return HttpResponse('Password Mismatch')
                 else:
                     return HttpResponse("Please enter a valid Email Address.")
+            else:
+                return HttpResponseRedirect('/accounts/users/create/')
 
         form.submit = 'Add User'
         form.breadcrumb = 'User Add'
@@ -110,13 +112,15 @@ def user_edit(request, user_id):
                     email = form_data['email']
                     is_admin = form_data['is_admin'] == 'True'
 
-                    Account.objects.filter(pk = pk).update(
+                    Account.objects.filter(pk=pk).update(
                             username=username,
                             email=email,
                             is_admin=is_admin)
-                    return redirect('/accounts/users/')
+                    return HttpResponseRedirect('/accounts/users/')
                 else:
                     return HttpResponse("Please enter a valid Email Address.")
+            else:
+                return HttpResponseRedirect('/accounts/users/'+user_id+'/edit/')
 
         data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
         form = UserEditForm(data)
@@ -142,6 +146,8 @@ def user_edit(request, user_id):
                         return redirect('/accounts/users/')
                     else:
                         return HttpResponse("Please enter a valid Email Address.")
+                else:
+                    return HttpResponseRedirect('/accounts/users/'+user_id+'/edit/')
 
             data = {'username': form.username, 'email': form.email, 'is_admin': form.is_admin, 'user_pre_id': form.id}
             form = UserEditForm(data)
