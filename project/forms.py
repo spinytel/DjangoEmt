@@ -99,6 +99,7 @@ class TicketEditForm(forms.Form):
     ticket_id = forms.CharField()
 
 
+# Author : @mamun0024
 class MilestoneForm(forms.Form):
     def __init__(self,*args,**kwargs):
         passing_product_id = kwargs.pop("passing_id")     # passing_product_id is the parameter passed from views.py
@@ -114,6 +115,7 @@ class MilestoneForm(forms.Form):
         self.fields['m_responsible'] = forms.ChoiceField(label="Responsible", choices=[(c.user.get_id(), c.user.get_full_name()) for c in ProjectMember.objects.filter(project__id = passing_product_id)], widget=forms.Select(attrs={'class':'p_selection selection'}))
 
 
+# Author : @mamun0024
 class MilestoneEditForm(forms.Form):
     class Meta:
         model = Milestone

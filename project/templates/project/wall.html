@@ -1,0 +1,22 @@
+<!-- Author : @mamun0024 -->
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% block content %}
+{% include 'project/project_header.html' %}
+<div class="p_up">
+    <div class="p_up_left">
+        <h1>Project Wall</h1>
+    </div>
+    <div class="p_up_right">
+        <p>Project Creation Date : {{project.create_date}}</p>
+        <div class="clear"></div>
+        <p>Estimated Project Deadline : {{project.deadline}}</p>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="p_middle">
+
+</div>
+ {% include 'project/project_footer.html' %}
+ {% endblock %}

@@ -4,8 +4,14 @@
 {% include 'project/project_header.html' %}
 <div class="p_up">
         <div class="p_up_left">
-            <h1></h1>
-            <p>Project Lead</p>
+            <h1>{{ user.username }}</h1>
+            <p>
+                {% if current_user_type.member_type == 1 %}
+                    Project Lead
+                {% else %}
+                    Project Member
+                {% endif %}
+            </p>
         </div>
         <div class="p_up_right">
             <p>Project Creation Date : {{project.create_date}}</p>
@@ -52,7 +58,7 @@
                                         </div>
                                         {% if cm.prev_status and cm.prev_status.strip %}
                                         <div class="stream_status_change">
-                                            <span>Status</span> changed from <span>{{cm.prev_status}}</span> to <span>{{cm.curr_status}}
+                                            <span>Status</span> changed from <span>{{cm.prev_status}}</span> to <span>{{cm.curr_status}}</span>
                                         </div>
                                         {% endif %}
                                         <div class="stream_comment">

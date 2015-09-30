@@ -12,6 +12,7 @@ from .forms import UserForm, UserEditForm
 import json
 
 
+# Author : @mamun0024
 def user_login(request):
     if request.POST:
         email = request.POST.get('email')
@@ -33,11 +34,13 @@ def user_login(request):
 
 
 @login_required
+# Author : @mamun0024
 def user_logout(request):
     logout(request)
     return render(request, 'login.html')
 
 
+# Author : @mamun0024
 def my_validate_email(email):
     from django.core.validators import validate_email
     from django.core.exceptions import ValidationError
@@ -49,6 +52,7 @@ def my_validate_email(email):
 
 
 @login_required
+# Author : @mamun0024
 def get_logged_in_user_type(request):
     user_type = request.user.is_admin
     if user_type:
@@ -58,6 +62,7 @@ def get_logged_in_user_type(request):
 
 
 @login_required
+# Author : @mamun0024
 @api_view(['GET', 'POST', ])
 def api_user_type(request):
     user_type = request.user.is_admin
@@ -65,12 +70,14 @@ def api_user_type(request):
 
 
 @login_required
+# Author : @mamun0024
 def get_logged_in_user_id(request):
     user_id = request.user.id
     return user_id
 
 
 @login_required
+# Author : @mamun0024
 def user_create(request):
     user_type = get_logged_in_user_type(request)
     if user_type:
@@ -98,6 +105,7 @@ def user_create(request):
 
 
 @login_required
+# Author : @mamun0024
 def user_edit(request, user_id):
     user_type = get_logged_in_user_type(request)
     if user_type:
@@ -159,6 +167,7 @@ def user_edit(request, user_id):
 
 
 @login_required
+# Author : @mamun0024
 @api_view(['GET', 'POST', ])
 def api_user_data(request, user_id):
     user_type = get_logged_in_user_type(request)
@@ -178,6 +187,7 @@ def api_user_data(request, user_id):
 
 
 @login_required
+# Author : @mamun0024
 def user_delete(request, user_id):
     user_type = get_logged_in_user_type(request)
     if user_type:
@@ -189,6 +199,7 @@ def user_delete(request, user_id):
 
 
 @login_required
+# Author : @mamun0024
 def user_all_list(request):
     user_type = get_logged_in_user_type(request)
     if user_type:
@@ -201,6 +212,7 @@ def user_all_list(request):
 
 
 @login_required
+# Author : @mamun0024
 @api_view(['GET', 'POST', ])
 def api_user_all(request):
     user_type = get_logged_in_user_type(request)

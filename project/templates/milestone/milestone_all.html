@@ -1,16 +1,19 @@
+<!-- Author : @mamun0024 -->
 {% extends "layout.html" %}
-
+{% load milestone_tags %}
 {% block content %}
     {% include 'project/project_header.html' %}
     <div class="p_up">
         <div class="p_up_left">
             <h1 class="inline">New Milestone</h1>
-            <a href="{% url 'project:milestone_create' project_id  %}"><p id="milestone_new" class="button">New</p></a>
+            {% if current_user_type.member_type == 1 %}
+               <a href="{% url 'project:milestone_create' project_id  %}"> <p id="milestone_new" class="button">New</p></a>
+            {% endif %}
         </div>
         <div class="p_up_right">
-            <p>Project Creation Date : #</p>
+            <p>Project Creation Date : {{project.create_date}}</p>
             <div class="clear"></div>
-            <p>Estimated Project Deadline : #</p>
+            <p>Estimated Project Deadline : {{project.deadline}}</p>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>
@@ -26,7 +29,9 @@
                 <th>Due Date</th>
                 <th>Budget</th>
                 <th style="text-align: center;">Progress</th>
-                <th style="text-align: center;">Action</th>
+                {% if current_user_type.member_type == 1 %}
+                   <th style="text-align: center;">Action</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -41,30 +46,32 @@
                     <td valign="center" align="center" style="text-align: center;">
                         <div class="progress-mother">
                             <div class="progress-child">
-                                <div class="progress" style="width:10%;"></div>
+                                <div class="progress" style="width:{% get_done_tickets milestone.id %}%;"></div>
                             </div>
                             <div class="progress-child-percent">
-                                <span>10%</span>
+                                <span>{% get_done_tickets milestone.id %}%</span>
                             </div>
                             <div class="clear"></div>
                             <div class="ticket_info">
-                                <span>closed</span>
-                                <span>open</span>
+                                <span>{% get_close_tickets milestone.id %} closed</span>
+                                <span>{% get_open_tickets milestone.id %} open</span>
                                 <div class="clear"></div>
                             </div>
                         </div>
                     </td>
-                    <td valign="center" align="center" style="text-align: center;">
-                        <a class="list-action" title="Context Menu" id="p_click_{{ milestone.id }}"  onclick="project_menu_toggle({{ milestone.id }})">&nbsp;</a>
-                        <div class="project_vertical_menu" id="p_menu_{{ milestone.id }}">
-                            <ul>
-                                <li><a class="context_wall" href="#">View on Project Wall</a></li>
-                                <li><a class="context_edit" href="{% url 'project:milestone_edit' milestone.project.id milestone.id  %}">Edit</a></li>
-                                <li class="context_divider"></li>
-                                <li><a class="context_delete" href="{% url 'project:milestone_delete' milestone.project.id milestone.id  %}" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
-                            </ul>
-                        </div>
-                    </td>
+                    {% if current_user_type.member_type == 1 %}
+                       <td valign="center" align="center" style="text-align: center;">
+                            <a class="list-action" title="Context Menu" id="p_click_{{ milestone.id }}"  onclick="project_menu_toggle({{ milestone.id }})">&nbsp;</a>
+                            <div class="project_vertical_menu" id="p_menu_{{ milestone.id }}">
+                                <ul>
+                                    <li><a class="context_wall" href="#">View on Project Wall</a></li>
+                                    <li><a class="context_edit" href="{% url 'project:milestone_edit' milestone.project.id milestone.id  %}">Edit</a></li>
+                                    <li class="context_divider"></li>
+                                    <li><a class="context_delete" href="{% url 'project:milestone_delete' milestone.project.id milestone.id  %}" onclick="return confirm('Do you really want to delete ?');">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
