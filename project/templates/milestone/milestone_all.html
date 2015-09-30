@@ -1,5 +1,6 @@
 <!-- Author : @mamun0024 -->
 {% extends "layout.html" %}
+{% load milestone_tags %}
 {% block content %}
     {% include 'project/project_header.html' %}
     <div class="p_up">
@@ -41,15 +42,15 @@
                     <td valign="center" align="center" style="text-align: center;">
                         <div class="progress-mother">
                             <div class="progress-child">
-                                <div class="progress" style="width:10%;"></div>
+                                <div class="progress" style="width:{% get_done_tickets milestone.id %}%;"></div>
                             </div>
                             <div class="progress-child-percent">
-                                <span>10%</span>
+                                <span>{% get_done_tickets milestone.id %}%</span>
                             </div>
                             <div class="clear"></div>
                             <div class="ticket_info">
-                                <span>closed</span>
-                                <span>open</span>
+                                <span>{% get_close_tickets milestone.id %} closed</span>
+                                <span>{% get_open_tickets milestone.id %} open</span>
                                 <div class="clear"></div>
                             </div>
                         </div>
