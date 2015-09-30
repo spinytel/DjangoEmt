@@ -1982,13 +1982,13 @@ input[type="checkbox"]:checked + label .box_check {
 #nav_list li:nth-child(1) {
     background: url("../img/p_home.png") 14px 11px no-repeat;
 }
-#nav_list li:nth-child(2) {
+#nav_list li:nth-child(3) {
     background: url("../img/new_ticket.png") 14px 11px no-repeat;
 }
-#nav_list li:nth-child(3) {
+#nav_list li:nth-child(4) {
     background: url("../img/all_tickets.png") 14px 11px no-repeat;
 }
-#nav_list li:nth-child(4) {
+#nav_list li:nth-child(2) {
     background: url("../img/project-wall.png") 14px 11px no-repeat;
 }
 #nav_list li:nth-child(5) {

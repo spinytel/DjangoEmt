@@ -1,9 +1,9 @@
 <!-- Author : @mamun0024 & Rejoan -->
 <ul id="nav_list">
     <li><a href="{% url "project:project_home" project_id %}">Project Home</a></li>
+    <li><a href="{% url "project:project_wall" project_id %}">Project Wall</a></li>
     <li><a href="{% url "project:ticket_create" project_id %}">New Ticket</a></li>
     <li><a href="{% url "project:tickets" project_id %}">Tickets</a></li>
-    <li><a href="{% url "project:project_wall" project_id %}">Project Wall</a></li>
     <li><a href="{% url "project:milestone_all" project_id %}">Milestones</a></li>
     <li><a href="{% url "project:project_files" project_id %}">Files</a></li>
 </ul>
