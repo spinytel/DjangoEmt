@@ -33,12 +33,18 @@ def projects(request):
 
 
 @login_required
-# project home show project specific streams
-# project lists @rejoan & @mamun0024
-def project_home(request,project_id):
+# Author : @mamun0024
+def project_user_type(request, project_id):
     current_user_id = get_logged_in_user_id(request)
     current_user_type = ProjectMember.objects.filter(project_id=project_id,user_id=current_user_id).values('member_type')
-    current_user_type_l = current_user_type[0]
+    return current_user_type[0]
+
+
+@login_required
+# project home show project specific streams
+# project lists @rejoan & @mamun0024
+def project_home(request, project_id):
+    current_user_type_l = project_user_type(request, project_id)
 
     project = get_object_or_404(Project, pk=project_id)
     #import pdb;pdb.set_trace()
@@ -464,6 +470,7 @@ def milestone_delete(request, project_id, milestone_id):
 @login_required
 # Author : @mamun0024
 def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
+    current_user_type_l = project_user_type(request, project_id)
     milestone_details = Milestone.objects.filter(project_id=project_id)
     project = get_object_or_404(Project, pk=project_id)
-    return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id, 'project': project})
+    return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id, 'project': project, 'current_user_type': current_user_type_l})
