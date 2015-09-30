@@ -108,7 +108,7 @@ class MilestoneForm(forms.Form):
         self.fields['description'] = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Write an optional description'}),max_length=10000, required=True)
         self.fields['start_date'] = forms.DateTimeField(label='Start Date', widget=forms.TextInput(attrs={'class':'dp_milestone_start_date', 'placeholder':'Start Date'}), required=True)
         self.fields['due_date'] = forms.DateTimeField(label='Due Date', widget=forms.TextInput(attrs={'class':'dp_milestone_due_date', 'placeholder':'Due Date'}), required=True)
-        self.fields['budget'] = forms.IntegerField(label='Budget', max_value=99999999, required=False, widget=forms.TextInput(attrs={'placeholder':'Budget'}))
+        self.fields['budget'] = forms.IntegerField(label='Budget', max_value=99999999, required=True, widget=forms.TextInput(attrs={'placeholder':'Budget'}))
 
         self.fields['m_type'] = forms.ChoiceField(label="Milestone type", choices=[(c.id, c.types) for c in MilestoneType.objects.order_by('id')], widget=forms.Select(attrs={'class':'p_selection selection'}))
         self.fields['m_responsible'] = forms.ChoiceField(label="Responsible", choices=[(c.user.get_id(), c.user.get_full_name()) for c in ProjectMember.objects.filter(project__id = passing_product_id)], widget=forms.Select(attrs={'class':'p_selection selection'}))
@@ -127,7 +127,7 @@ class MilestoneEditForm(forms.Form):
         self.fields['description'] = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Write an optional description'}),max_length=10000, required=True, initial=milestone_details.description)
         self.fields['start_date'] = forms.DateTimeField(label='Start Date', widget=forms.TextInput(attrs={'class':'dp_milestone_start_date', 'placeholder':'Start Date','value':milestone_details.start_date.strftime("%Y-%m-%d")}), required=True)
         self.fields['due_date'] = forms.DateTimeField(label='Due Date', widget=forms.TextInput(attrs={'class':'dp_milestone_due_date', 'placeholder':'Due Date','value':milestone_details.due_date.strftime("%Y-%m-%d")}), required=True)
-        self.fields['budget'] = forms.IntegerField(label='Budget', max_value=99999999, required=False, widget=forms.TextInput(attrs={'placeholder':'Budget','value':milestone_details.budget}))
+        self.fields['budget'] = forms.IntegerField(label='Budget', max_value=99999999, required=True, widget=forms.TextInput(attrs={'placeholder':'Budget','value':milestone_details.budget}))
 
         self.fields['m_type'] = forms.ChoiceField(label="Milestone type", choices=[(c.id, c.types) for c in MilestoneType.objects.order_by('id')], widget=forms.Select(attrs={'class':'p_selection selection'}), initial=milestone_details.type_id)
         self.fields['m_responsible'] = forms.ChoiceField(label="Responsible", choices=[(c.user.get_id(), c.user.get_full_name()) for c in ProjectMember.objects.filter(project__id = milestone_details.project_id)], widget=forms.Select(attrs={'class':'p_selection selection'}), initial=milestone_details.user_id)
