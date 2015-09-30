@@ -37,7 +37,10 @@ def projects(request):
 def project_user_type(request, project_id):
     current_user_id = get_logged_in_user_id(request)
     current_user_type = ProjectMember.objects.filter(project_id=project_id,user_id=current_user_id).values('member_type')
-    return current_user_type[0]
+    if current_user_type:
+        return current_user_type[0]
+    else:
+        return {'member_type': 0}
 
 
 @login_required
@@ -46,22 +49,29 @@ def project_user_type(request, project_id):
 def project_home(request, project_id):
     current_user_type_l = project_user_type(request, project_id)
 
-    project = get_object_or_404(Project, pk=project_id)
-    #import pdb;pdb.set_trace()
-    leaders = ProjectMember.objects.filter(project_id=project_id,member_type=1).select_related('user').annotate(username=F('user__username'))
-    members = ProjectMember.objects.filter(project_id=project_id,member_type=2).select_related('user').annotate(username=F('user__username'))
+    if current_user_type_l['member_type'] != 0:
+        project = get_object_or_404(Project, pk=project_id)
+        #import pdb;pdb.set_trace()
+        leaders = ProjectMember.objects.filter(project_id=project_id,member_type=1).select_related('user').annotate(username=F('user__username'))
+        members = ProjectMember.objects.filter(project_id=project_id,member_type=2).select_related('user').annotate(username=F('user__username'))
 
-    latest_three = Comment.objects.extra(select={'create_date':"to_char(create_date,'DD-MM-YYYY')"}).values('create_date').annotate(dcount=Count('create_date')).order_by('-create_date')
-    comments = Comment.objects.filter(ticket__project_id=project_id).select_related('creator','ticket').annotate(username=F('creator__username'),t_title=F('ticket__title')).values()
-    return render(request, 'project/home.html', {'project': project, 'project_id': project_id, 'comments': comments, 'leaders': leaders, 'members': members, 'latest_three': latest_three, 'current_user_type': current_user_type_l})
+        latest_three = Comment.objects.extra(select={'create_date':"to_char(create_date,'DD-MM-YYYY')"}).values('create_date').annotate(dcount=Count('create_date')).order_by('-create_date')
+        comments = Comment.objects.filter(ticket__project_id=project_id).select_related('creator','ticket').annotate(username=F('creator__username'),t_title=F('ticket__title')).values()
+        return render(request, 'project/home.html', {'project': project, 'project_id': project_id, 'comments': comments, 'leaders': leaders, 'members': members, 'latest_three': latest_three, 'current_user_type': current_user_type_l})
+    else:
+        return HttpResponse("Permission Denied")
+
 
 
 @login_required
 # Author : @mamun0024
 def project_wall(request,project_id):
-
-    project = get_object_or_404(Project, pk=project_id)
-    return render(request, 'project/wall.html', {'project': project, 'project_id': project_id})
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] != 0:
+        project = get_object_or_404(Project, pk=project_id)
+        return render(request, 'project/wall.html', {'project': project, 'project_id': project_id})
+    else:
+        return HttpResponse("Permission Denied")
 
 
 @login_required
@@ -174,96 +184,203 @@ def project_edit(request,project_id,template_name="project/create.html"):
 #ticket manager @rejoan
 @login_required
 def ticket_create(request, project_id, template_name='ticket/create.html'):
-    tick_form = TicketForm(initial={'project_id': project_id})
-    assign_to = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
-    milestones = Milestone.objects.filter(project_id = project_id).values()
-    project = get_object_or_404(Project,pk=project_id)
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] != 0:
+        tick_form = TicketForm(initial={'project_id': project_id})
+        assign_to = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
+        milestones = Milestone.objects.filter(project_id = project_id).values()
+        project = get_object_or_404(Project,pk=project_id)
 
-    if request.POST:# if submit form
-        tick_form = TicketForm(request.POST, request.FILES)
-        #import pdb;pdb.set_trace()
-        if tick_form.is_valid(): #if form valid
-            form_data = tick_form.cleaned_data
-            milstn = request.POST['t_milestone']
-            if not milstn.isdigit():
-                messages.error(request, 'Select a milestone. If none add first')
-                #import pdb;pdb.set_trace()
-                return HttpResponseRedirect('/project/'+project_id+'/ticket/create')
-            create_date = timezone.now()
-            project_id = form_data['project_id']
-            status = form_data['status']
-            priority = form_data['priority']
-            assign = request.POST['t_assign']
-            milestone = milstn
-            estimate = form_data['estimate']
-            title = form_data['title']
-            description = form_data['description']
-            creator_id = request.user.id
+        if request.POST:# if submit form
+            tick_form = TicketForm(request.POST, request.FILES)
+            #import pdb;pdb.set_trace()
+            if tick_form.is_valid(): #if form valid
+                form_data = tick_form.cleaned_data
+                milstn = request.POST['t_milestone']
+                if not milstn.isdigit():
+                    messages.error(request, 'Select a milestone. If none add first')
+                    #import pdb;pdb.set_trace()
+                    return HttpResponseRedirect('/project/'+project_id+'/ticket/create')
+                create_date = timezone.now()
+                project_id = form_data['project_id']
+                status = form_data['status']
+                priority = form_data['priority']
+                assign = request.POST['t_assign']
+                milestone = milstn
+                estimate = form_data['estimate']
+                title = form_data['title']
+                description = form_data['description']
+                creator_id = request.user.id
 
-            ticket_row = Ticket.objects.create(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
-            ticket_row.save()
+                ticket_row = Ticket.objects.create(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
+                ticket_row.save()
 
-            #Ticket file process start
-            latest = Ticket.objects.latest('id')
-            ticket_id = latest.pk
-            if not os.path.exists(settings.MEDIA_ROOT):
-                os.makedirs(settings.MEDIA_ROOT)
-            dest = False
-            for f in request.FILES.getlist('ticket_file'):
-                dt = timezone.now()
-                extn = str(int(time.mktime(dt.timetuple())))
-                file_name = str(ticket_id)+'_'+extn+'_'+f.name
-                dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
-                for chunk in f.chunks():
-                    dest.write(chunk)
+                #Ticket file process start
+                latest = Ticket.objects.latest('id')
+                ticket_id = latest.pk
+                if not os.path.exists(settings.MEDIA_ROOT):
+                    os.makedirs(settings.MEDIA_ROOT)
+                dest = False
+                for f in request.FILES.getlist('ticket_file'):
+                    dt = timezone.now()
+                    extn = str(int(time.mktime(dt.timetuple())))
+                    file_name = str(ticket_id)+'_'+extn+'_'+f.name
+                    dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+                    for chunk in f.chunks():
+                        dest.write(chunk)
 
-                ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
-                ticket_files.save()
-            if dest:
-                dest.close()
-            messages.info(request, 'Ticket Created Successfully')
-            return HttpResponseRedirect('/project/'+project_id+'/tickets/')
-    tick_form.submit_val = 'Add Ticket'
-    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
+                    ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
+                    ticket_files.save()
+                if dest:
+                    dest.close()
+                messages.info(request, 'Ticket Created Successfully')
+                return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+        tick_form.submit_val = 'Add Ticket'
+        return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
+    else:
+        return HttpResponse("Permission Denied")
 
 
 #ticket edit @rejoan
 @login_required
 def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.html'):
-    if ticket_id:
-        ticket = get_object_or_404(Ticket, pk=ticket_id)
-        tick_form = TicketEditForm(initial={'project_id': project_id,'ticket_id':ticket_id})
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] != 0:
+        if ticket_id:
+            ticket = get_object_or_404(Ticket, pk=ticket_id)
+            tick_form = TicketEditForm(initial={'project_id': project_id,'ticket_id':ticket_id})
 
-        assign_to = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
-        milestones = Milestone.objects.filter(project_id = project_id).values()
-        ticket_files = TicketFile.objects.filter(ticket_id=int(ticket_id)).values_list('id', 'file_name')
-        project = get_object_or_404(Project,pk=project_id)
+            assign_to = [(a.user.get_id(), a.user.get_full_name()) for a in ProjectMember.objects.filter(project__id = project_id)]
+            milestones = Milestone.objects.filter(project_id = project_id).values()
+            ticket_files = TicketFile.objects.filter(ticket_id=int(ticket_id)).values_list('id', 'file_name')
+            project = get_object_or_404(Project,pk=project_id)
 
-    if request.POST:# if submit form
-        tick_form = TicketEditForm(request.POST, request.FILES)
+        if request.POST:# if submit form
+            tick_form = TicketEditForm(request.POST, request.FILES)
+            #import pdb;pdb.set_trace()
+            if tick_form.is_valid(): #if form valid
+                form_data = tick_form.cleaned_data
+                milstn = request.POST['t_milestone']
+                if not milstn.isdigit():
+                    messages.error(request, 'Select a milestone. If none add first')
+                    #import pdb;pdb.set_trace()
+                    return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/edit')
+                t_id = form_data['ticket_id']
+                create_date = timezone.now()
+                project_id = form_data['project_id']
+                status = form_data['status']
+                priority = form_data['priority']
+                assign = request.POST['t_assign']
+                milestone = milstn
+                estimate = form_data['estimate']
+                title = form_data['title']
+                description = form_data['description']
+                creator_id = request.user.id
+
+                ticket_row = Ticket.objects.filter(pk=t_id).update(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
+
+                #Ticket file process start
+                if not os.path.exists(settings.MEDIA_ROOT):
+                    os.makedirs(settings.MEDIA_ROOT)
+                dest = False
+                for f in request.FILES.getlist('ticket_file'):
+                    dt = timezone.now()
+                    extn = str(int(time.mktime(dt.timetuple())))
+                    file_name = str(ticket_id)+'_'+extn+'_'+f.name
+                    dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
+                    #import pdb;pdb.set_trace()
+                    for chunk in f.chunks():
+                        dest.write(chunk)
+                    ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
+                    ticket_files.save()
+                if dest:
+                    dest.close()
+
+                messages.info(request, 'Ticket Updated Successfully')
+                return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+        data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate,'project_id':project_id}
+
+        tick_form = TicketEditForm(data)
+        tick_form.submit_val = 'Update Ticket'
         #import pdb;pdb.set_trace()
-        if tick_form.is_valid(): #if form valid
-            form_data = tick_form.cleaned_data
-            milstn = request.POST['t_milestone']
-            if not milstn.isdigit():
-                messages.error(request, 'Select a milestone. If none add first')
-                #import pdb;pdb.set_trace()
-                return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/edit')
-            t_id = form_data['ticket_id']
-            create_date = timezone.now()
-            project_id = form_data['project_id']
-            status = form_data['status']
-            priority = form_data['priority']
-            assign = request.POST['t_assign']
-            milestone = milstn
-            estimate = form_data['estimate']
-            title = form_data['title']
-            description = form_data['description']
-            creator_id = request.user.id
+        return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project,'project_id':project_id})
+    else:
+        return HttpResponse("Permission Denied")
 
-            ticket_row = Ticket.objects.filter(pk=t_id).update(create_date=create_date,title=title,description=description,status=status,priority=priority,estimate=estimate,assign_person_id=assign,creator_id=creator_id,milestone_id=milestone,project_id=project_id)
+#all tickets of particual project and tiicket search
+@login_required
+def tickets(request,project_id):
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] != 0:
+        f_ticket = Ticket.objects.filter(project_id=project_id).values()
+        if request.POST:
+            posted = 'yes'
+            t_id = request.POST['f_ticket_ID']
+            f_priority = request.POST['f_priority']
+            f_status = request.POST['f_status']
+            f_args = {}
+            if t_id.isdigit():
+                f_args['id'] = int(t_id)
 
-            #Ticket file process start
+            if f_priority.isdigit():
+                f_args['priority'] = int(f_priority)
+
+            if f_status.isalnum():
+                f_args['status'] = f_status
+
+            f_ticket = Ticket.objects.filter(project_id=project_id).filter(**f_args).values()
+        else:
+            t_id = f_status = f_priority = posted = 'no'
+
+        ticket = [[a['id'],a['title'],a['milestone_id'],a['assign_person_id'],a['status'],a['priority'],a['estimate']] for a in f_ticket]
+        milestones = [Milestone.objects.values_list('title',flat=True).filter(id=int(b[2])) for b in ticket]
+        assigned_to = [Account.objects.filter(id=int(b[3])).values_list('username', flat=True) for b in ticket]
+        project = get_object_or_404(Project, pk=project_id)
+
+        tickets = []
+        for i in range(0,len(ticket)) :
+            t = ticket[i]
+            t[2] = milestones[i]
+            t[3] = assigned_to[i]
+            tickets.append(t)
+
+        return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'project_id':project_id,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
+    else:
+        return HttpResponse("Permission Denied")
+
+# ticket details and commenting on ticket
+@login_required
+def ticket_details(request,project_id,ticket_id):
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] != 0:
+        tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project','creator').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline'),project_id=F('project__id'),ticket_creator=F('creator__username')).values()
+        ticket_files = TicketFile.objects.filter(ticket_id=ticket_id).values()
+        comments = Comment.objects.filter(ticket_id=ticket_id).order_by('id').select_related('creator').annotate(username=F('creator__username')).values()
+
+        comment = {}
+        if request.POST:
+            if request.POST['comment_desc'] == '':
+                messages.info(request, 'Comment can\'t empty')
+                return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/details')
+
+            if request.POST['t_status'].isalpha():
+                curr_status = request.POST['t_status']
+            else:
+                curr_status = tickets[0]["status"]
+
+            comment['create_date'] = timezone.now()
+            comment['creator_id'] = request.user.id
+            comment['ticket_id'] = ticket_id
+            comment['details'] = request.POST['comment_desc']
+
+            if tickets[0]["status"] != curr_status:
+                comment['prev_status'] = tickets[0]["status"]
+                comment['curr_status'] = curr_status
+
+                Ticket.objects.filter(pk=ticket_id).update(status=curr_status)
+
+            Comment.objects.create(**comment)
+
             if not os.path.exists(settings.MEDIA_ROOT):
                 os.makedirs(settings.MEDIA_ROOT)
             dest = False
@@ -272,109 +389,18 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
                 extn = str(int(time.mktime(dt.timetuple())))
                 file_name = str(ticket_id)+'_'+extn+'_'+f.name
                 dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
-                #import pdb;pdb.set_trace()
                 for chunk in f.chunks():
                     dest.write(chunk)
+
                 ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
                 ticket_files.save()
+
             if dest:
                 dest.close()
-
-            messages.info(request, 'Ticket Updated Successfully')
-            return HttpResponseRedirect('/project/'+project_id+'/tickets/')
-    data = {'project_id':project_id,'title':ticket.title,'description':ticket.description, 'ticket_id':ticket.id,'status':ticket.status,'priority':ticket.priority,'estimate':ticket.estimate,'project_id':project_id}
-
-    tick_form = TicketEditForm(data)
-    tick_form.submit_val = 'Update Ticket'
-    #import pdb;pdb.set_trace()
-    return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project,'project_id':project_id})
-
-#all tickets of particual project and tiicket search
-@login_required
-def tickets(request,project_id):
-    f_ticket = Ticket.objects.filter(project_id=project_id).values()
-    if request.POST:
-        posted = 'yes'
-        t_id = request.POST['f_ticket_ID']
-        f_priority = request.POST['f_priority']
-        f_status = request.POST['f_status']
-        f_args = {}
-        if t_id.isdigit():
-            f_args['id'] = int(t_id)
-
-        if f_priority.isdigit():
-            f_args['priority'] = int(f_priority)
-
-        if f_status.isalnum():
-            f_args['status'] = f_status
-
-        f_ticket = Ticket.objects.filter(project_id=project_id).filter(**f_args).values()
-    else:
-        t_id = f_status = f_priority = posted = 'no'
-
-    ticket = [[a['id'],a['title'],a['milestone_id'],a['assign_person_id'],a['status'],a['priority'],a['estimate']] for a in f_ticket]
-    milestones = [Milestone.objects.values_list('title',flat=True).filter(id=int(b[2])) for b in ticket]
-    assigned_to = [Account.objects.filter(id=int(b[3])).values_list('username', flat=True) for b in ticket]
-    project = get_object_or_404(Project, pk=project_id)
-
-    tickets = []
-    for i in range(0,len(ticket)) :
-        t = ticket[i]
-        t[2] = milestones[i]
-        t[3] = assigned_to[i]
-        tickets.append(t)
-
-    return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'project_id':project_id,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
-
-# ticket details and commenting on ticket
-@login_required
-def ticket_details(request,project_id,ticket_id):
-    tickets = Ticket.objects.filter(project_id=project_id,id=ticket_id).select_related('milestone','assign_person','project','creator').annotate(username=F('assign_person__username'),m_title=F('milestone__title'),p_create_date=F('project__create_date'),p_deadline=F('project__deadline'),project_id=F('project__id'),ticket_creator=F('creator__username')).values()
-    ticket_files = TicketFile.objects.filter(ticket_id=ticket_id).values()
-    comments = Comment.objects.filter(ticket_id=ticket_id).order_by('id').select_related('creator').annotate(username=F('creator__username')).values()
-
-    comment = {}
-    if request.POST:
-        if request.POST['comment_desc'] == '':
-            messages.info(request, 'Comment can\'t empty')
             return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/details')
-
-        if request.POST['t_status'].isalpha():
-            curr_status = request.POST['t_status']
-        else:
-            curr_status = tickets[0]["status"]
-
-        comment['create_date'] = timezone.now()
-        comment['creator_id'] = request.user.id
-        comment['ticket_id'] = ticket_id
-        comment['details'] = request.POST['comment_desc']
-
-        if tickets[0]["status"] != curr_status:
-            comment['prev_status'] = tickets[0]["status"]
-            comment['curr_status'] = curr_status
-
-            Ticket.objects.filter(pk=ticket_id).update(status=curr_status)
-
-        Comment.objects.create(**comment)
-
-        if not os.path.exists(settings.MEDIA_ROOT):
-            os.makedirs(settings.MEDIA_ROOT)
-        dest = False
-        for f in request.FILES.getlist('ticket_file'):
-            dt = timezone.now()
-            extn = str(int(time.mktime(dt.timetuple())))
-            file_name = str(ticket_id)+'_'+extn+'_'+f.name
-            dest = open(os.path.join(settings.MEDIA_ROOT, file_name), 'wb')
-            for chunk in f.chunks():
-                dest.write(chunk)
-
-            ticket_files = TicketFile.objects.create(file_name=file_name,ticket_id=ticket_id)
-            ticket_files.save()
-
-        if dest:
-            dest.close()
-        return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/details')
-    return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files,'project_id':project_id,'comments':comments})
+        return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files,'project_id':project_id,'comments':comments})
+    else:
+        return HttpResponse("Permission Denied")
 
 #delete files from edit page (project, ticket)
 @login_required
@@ -396,81 +422,104 @@ def delete_files(request):
 #delete ticket with associated files
 @login_required
 def ticket_delete(request, project_id, ticket_id):
-    ticket = get_object_or_404(Ticket, pk=ticket_id)
-    ticket.delete()
-    TicketFile.objects.filter(ticket_id=ticket_id).delete()
-    messages.info(request, 'Ticket Deleted Successfully')
-    return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] != 0:
+        ticket = get_object_or_404(Ticket, pk=ticket_id)
+        ticket.delete()
+        TicketFile.objects.filter(ticket_id=ticket_id).delete()
+        messages.info(request, 'Ticket Deleted Successfully')
+        return HttpResponseRedirect('/project/'+project_id+'/tickets/')
+    else:
+        return HttpResponse("Permission Denied")
 
 # project files on menu (dashboard)
 @login_required
 def project_files(request,project_id):
-    all_files = ProjectFile.objects.filter(project_id=project_id).values()
-    project = get_object_or_404(Project,pk=project_id)
-    return render(request, 'project/files.html', {'project':project,'all_files':all_files,'project_id':project_id})
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] != 0:
+        all_files = ProjectFile.objects.filter(project_id=project_id).values()
+        project = get_object_or_404(Project,pk=project_id)
+        return render(request, 'project/files.html', {'project':project,'all_files':all_files,'project_id':project_id})
+    else:
+        return HttpResponse("Permission Denied")
 
 
 @login_required
 # Author : @mamun0024
 def milestone_create(request, project_id, template_name='milestone/milestone_create.html'):
-    form = MilestoneForm(passing_id=project_id)
-    project = get_object_or_404(Project, pk=project_id)
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] == 1:
+        form = MilestoneForm(passing_id=project_id)
+        project = get_object_or_404(Project, pk=project_id)
 
-    if request.POST:
-        form = MilestoneForm(request.POST, passing_id=project_id)
-        if form.is_valid():
-            form = form.cleaned_data
-            form = Milestone.objects.create(
-                title=form['title'],
-                description=form['description'],
-                start_date=form['start_date'],
-                due_date=form['due_date'],
-                budget=form['budget'],
-                project_id=form['project_id'],
-                user_id=form['m_responsible'],
-                type_id=form['m_type'])
-            form.save()
-            return redirect('/project/'+project_id+'/milestone/')
+        if request.POST:
+            form = MilestoneForm(request.POST, passing_id=project_id)
+            if form.is_valid():
+                form = form.cleaned_data
+                form = Milestone.objects.create(
+                    title=form['title'],
+                    description=form['description'],
+                    start_date=form['start_date'],
+                    due_date=form['due_date'],
+                    budget=form['budget'],
+                    project_id=form['project_id'],
+                    user_id=form['m_responsible'],
+                    type_id=form['m_type'])
+                form.save()
+                return redirect('/project/'+project_id+'/milestone/')
 
-    return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
+        return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
+    else:
+        return HttpResponse("Permission Denied")
 
 
 @login_required
 # Author : @mamun0024
 def milestone_edit(request, project_id, milestone_id, template_name='milestone/milestone_edit.html'):
-    form = MilestoneEditForm(passing_milestone_id=milestone_id)
-    project = get_object_or_404(Project, pk=project_id)
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] == 1:
+        form = MilestoneEditForm(passing_milestone_id=milestone_id)
+        project = get_object_or_404(Project, pk=project_id)
 
-    if request.POST:
-        form = MilestoneEditForm(request.POST, passing_milestone_id=milestone_id)
-        if form.is_valid():
-            form = form.cleaned_data
-            Milestone.objects.filter(pk = milestone_id).update(
-                title=form['title'],
-                description=form['description'],
-                start_date=form['start_date'],
-                due_date=form['due_date'],
-                budget=form['budget'],
-                project_id=form['project_id'],
-                user_id=form['m_responsible'],
-                type_id=form['m_type'])
-            return redirect('/project/'+project_id+'/milestone/')
+        if request.POST:
+            form = MilestoneEditForm(request.POST, passing_milestone_id=milestone_id)
+            if form.is_valid():
+                form = form.cleaned_data
+                Milestone.objects.filter(pk = milestone_id).update(
+                    title=form['title'],
+                    description=form['description'],
+                    start_date=form['start_date'],
+                    due_date=form['due_date'],
+                    budget=form['budget'],
+                    project_id=form['project_id'],
+                    user_id=form['m_responsible'],
+                    type_id=form['m_type'])
+                return redirect('/project/'+project_id+'/milestone/')
 
-    return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
+        return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
+    else:
+        return HttpResponse("Permission Denied")
 
 
 @login_required
 # Author : @mamun0024
 def milestone_delete(request, project_id, milestone_id):
-    data = get_object_or_404(Milestone, pk=milestone_id)
-    data.delete()
-    return redirect('/project/'+project_id+'/milestone/')
+    current_user_type_l = project_user_type(request, project_id)
+    if current_user_type_l['member_type'] == 1:
+        data = get_object_or_404(Milestone, pk=milestone_id)
+        data.delete()
+        return redirect('/project/'+project_id+'/milestone/')
+    else:
+        return HttpResponse("Permission Denied")
 
 
 @login_required
 # Author : @mamun0024
 def milestone_all(request, project_id, template_name='milestone/milestone_all.html'):
     current_user_type_l = project_user_type(request, project_id)
-    milestone_details = Milestone.objects.filter(project_id=project_id)
-    project = get_object_or_404(Project, pk=project_id)
-    return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id, 'project': project, 'current_user_type': current_user_type_l})
+    if current_user_type_l['member_type'] != 0:
+        milestone_details = Milestone.objects.filter(project_id=project_id)
+        project = get_object_or_404(Project, pk=project_id)
+        return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id, 'project': project, 'current_user_type': current_user_type_l})
+    else:
+        return HttpResponse("Permission Denied")
