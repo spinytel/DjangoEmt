@@ -59,7 +59,7 @@ def project_home(request, project_id):
         comments = Comment.objects.filter(ticket__project_id=project_id).select_related('creator','ticket').annotate(username=F('creator__username'),t_title=F('ticket__title')).values()
         return render(request, 'project/home.html', {'project': project, 'project_id': project_id, 'comments': comments, 'leaders': leaders, 'members': members, 'latest_three': latest_three, 'current_user_type': current_user_type_l})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 
 
@@ -71,7 +71,7 @@ def project_wall(request,project_id):
         project = get_object_or_404(Project, pk=project_id)
         return render(request, 'project/wall.html', {'project': project, 'project_id': project_id})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 
 @login_required
@@ -238,7 +238,7 @@ def ticket_create(request, project_id, template_name='ticket/create.html'):
         tick_form.submit_val = 'Add Ticket'
         return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'project':project,'project_id':project_id})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 
 #ticket edit @rejoan
@@ -305,7 +305,7 @@ def ticket_edit(request, project_id, ticket_id, template_name='ticket/create.htm
         #import pdb;pdb.set_trace()
         return render(request, template_name, {'tick_form': tick_form, 'assign_to': assign_to,'milestones':milestones,'ticket_files':ticket_files,'milesId':ticket.milestone_id,'assignId':ticket.assign_person_id,'project':project,'project_id':project_id})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 #all tickets of particual project and tiicket search
 @login_required
@@ -346,7 +346,7 @@ def tickets(request,project_id):
 
         return render(request, 'ticket/lists.html',{'tickets':tickets,'project':project,'project_id':project_id,'posted':posted,'t_id':t_id,'f_priority':f_priority,'f_status':f_status})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 # ticket details and commenting on ticket
 @login_required
@@ -400,7 +400,7 @@ def ticket_details(request,project_id,ticket_id):
             return HttpResponseRedirect('/project/'+project_id+'/ticket/'+ticket_id+'/details')
         return render(request, 'ticket/details.html', {'tickets':tickets,'ticket_files':ticket_files,'project_id':project_id,'comments':comments})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 #delete files from edit page (project, ticket)
 @login_required
@@ -430,7 +430,7 @@ def ticket_delete(request, project_id, ticket_id):
         messages.info(request, 'Ticket Deleted Successfully')
         return HttpResponseRedirect('/project/'+project_id+'/tickets/')
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 # project files on menu (dashboard)
 @login_required
@@ -441,7 +441,7 @@ def project_files(request,project_id):
         project = get_object_or_404(Project,pk=project_id)
         return render(request, 'project/files.html', {'project':project,'all_files':all_files,'project_id':project_id})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 
 @login_required
@@ -470,7 +470,7 @@ def milestone_create(request, project_id, template_name='milestone/milestone_cre
 
         return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 
 @login_required
@@ -498,7 +498,7 @@ def milestone_edit(request, project_id, milestone_id, template_name='milestone/m
 
         return render(request, template_name, {'form': form, 'project_id': project_id, 'project': project})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 
 @login_required
@@ -510,7 +510,7 @@ def milestone_delete(request, project_id, milestone_id):
         data.delete()
         return redirect('/project/'+project_id+'/milestone/')
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")
 
 
 @login_required
@@ -522,4 +522,4 @@ def milestone_all(request, project_id, template_name='milestone/milestone_all.ht
         project = get_object_or_404(Project, pk=project_id)
         return render(request, template_name, {'milestone_details': milestone_details, 'project_id': project_id, 'project': project, 'current_user_type': current_user_type_l})
     else:
-        return HttpResponse("Permission Denied")
+        return HttpResponse("Access Denied")

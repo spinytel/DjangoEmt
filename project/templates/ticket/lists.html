@@ -161,6 +161,11 @@
         }
         previous_id = ID;
     }
+    {% if posted == 'no' %}
+        var table_height = $('.ticket_table').height();
+        //alert(table_height);
+        $("#table_filter_upper").css("height",table_height+27);
+    {% endif %}
 
     </script>
 {% endblock %}
