@@ -63,10 +63,13 @@ $(document).ready(function(){
     $("#show_sub_menu").click(function() {
         $("#show_sub_menu_ul").slideToggle("slow");
     });
+
+
+
 });
 
 //Deleting Existing Project File
-function delete_p_file(ID, file_name,project='no'){
+function delete_p_file(ID, file_name, project){
     var loader    = $('.loader');
     var url = $('#delete_url').val();
     var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();

@@ -1,8 +1,10 @@
 <!-- Author : @mamun0024 -->
 {% extends "layout.html" %}
+{% load wall_tags %}
 {% load staticfiles %}
 {% block content %}
 {% include 'project/project_header.html' %}
+{% static "" as baseStaticUrl %}
 <div class="p_up">
     <div class="p_up_left">
         <h1>Project Wall</h1>
@@ -16,7 +18,164 @@
     <div class="clear"></div>
 </div>
 <div class="p_middle">
+    <div class="wall-1">
+        <div class="wall-inner">
+            <div class="wall-header">
+                <p>New (<span id="new_t_number">{% wall_ticket_number "New" project_id %}</span>)</p>
+                <p><img src="{{ baseStaticUrl }}img/waitage.png"><span id="new_t_weight">{% wall_ticket_estimate "New" project_id %}</span></p>
+                <div class="clear"></div>
+            </div>
+            <div id="wall-inner-1" class="wall-drop">
+                {% wall_ticket_all "New" project_id as tickets %}
+                {% for ticket in tickets %}
+                    <div class="wall-t">
+                        <div class="wall-ticket {% wall_ticket_priority ticket.priority %}">
+                            <p><a href="{% url "project:ticket_details" project_id ticket.id %}">{{ ticket.title }}</a></p>
+                            <div class="wall-ticket-inner">
+                                <p><img src="{{ baseStaticUrl }}img/ticket_ID.png"> #{{ ticket.id }} </p>
+                                <p><span>to</span>{% wall_ticket_assign_to ticket.assign_person_id %}</p>
+                                <p><img src="{{ baseStaticUrl }}img/{% wall_ticket_estimate_image ticket.estimate %}"></p>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
+    <div class="wall-2">
+        <div class="wall-inner">
+            <div class="wall-header">
+                <p>Accepted (<span id="new_t_number">{% wall_ticket_number "Accepted" project_id %}</span>)</p>
+                <p><img src="{{ baseStaticUrl }}img/waitage.png"><span id="new_t_weight">{% wall_ticket_estimate "Accepted" project_id %}</span></p>
+                <div class="clear"></div>
+            </div>
+            <div id="wall-inner-1" class="wall-drop">
+                {% wall_ticket_all "Accepted" project_id as tickets %}
+                {% for ticket in tickets %}
+                    <div class="wall-t">
+                        <div class="wall-ticket {% wall_ticket_priority ticket.priority %}">
+                            <p><a href="{% url "project:ticket_details" project_id ticket.id %}">{{ ticket.title }}</a></p>
+                            <div class="wall-ticket-inner">
+                                <p><img src="{{ baseStaticUrl }}img/ticket_ID.png"> #{{ ticket.id }} </p>
+                                <p><span>to</span>{% wall_ticket_assign_to ticket.assign_person_id %}</p>
+                                <p><img src="{{ baseStaticUrl }}img/{% wall_ticket_estimate_image ticket.estimate %}"></p>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="wall-3">
+        <div class="wall-inner">
+            <div class="wall-header">
+                <p>Test (<span id="new_t_number">{% wall_ticket_number "Test" project_id %}</span>)</p>
+                <p><img src="{{ baseStaticUrl }}img/waitage.png"><span id="new_t_weight">{% wall_ticket_estimate "Test" project_id %}</span></p>
+                <div class="clear"></div>
+            </div>
+            <div id="wall-inner-1" class="wall-drop">
+                {% wall_ticket_all "Test" project_id as tickets %}
+                {% for ticket in tickets %}
+                    <div class="wall-t">
+                        <div class="wall-ticket {% wall_ticket_priority ticket.priority %}">
+                            <p><a href="{% url "project:ticket_details" project_id ticket.id %}">{{ ticket.title }}</a></p>
+                            <div class="wall-ticket-inner">
+                                <p><img src="{{ baseStaticUrl }}img/ticket_ID.png"> #{{ ticket.id }} </p>
+                                <p><span>to</span>{% wall_ticket_assign_to ticket.assign_person_id %}</p>
+                                <p><img src="{{ baseStaticUrl }}img/{% wall_ticket_estimate_image ticket.estimate %}"></p>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="wall-divider">
+        <div class="wall-inner">
+            <img id="wall-show" src="{{ baseStaticUrl }}img/wall_left.png">
+        </div>
+    </div>
+
+    <div class="wall-4">
+        <div class="wall-inner">
+            <div class="wall-header">
+                <p>Fixed (<span id="new_t_number">{% wall_ticket_number "Fixed" project_id %}</span>)</p>
+                <p><img src="{{ baseStaticUrl }}img/waitage.png"><span id="new_t_weight">{% wall_ticket_estimate "Fixed" project_id %}</span></p>
+                <div class="clear"></div>
+            </div>
+            <div id="wall-inner-1" class="wall-drop">
+                {% wall_ticket_all "Fixed" project_id as tickets %}
+                {% for ticket in tickets %}
+                    <div class="wall-t">
+                        <div class="wall-ticket {% wall_ticket_priority ticket.priority %}">
+                            <p><a href="{% url "project:ticket_details" project_id ticket.id %}">{{ ticket.title }}</a></p>
+                            <div class="wall-ticket-inner">
+                                <p><img src="{{ baseStaticUrl }}img/ticket_ID.png"> #{{ ticket.id }} </p>
+                                <p><span>to</span>{% wall_ticket_assign_to ticket.assign_person_id %}</p>
+                                <p><img src="{{ baseStaticUrl }}img/{% wall_ticket_estimate_image ticket.estimate %}"></p>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="wall-5">
+        <div class="wall-inner">
+            <div class="wall-header">
+                <p>Invalid (<span id="new_t_number">{% wall_ticket_number "Invalid" project_id %}</span>)</p>
+                <p><img src="{{ baseStaticUrl }}img/waitage.png"><span id="new_t_weight">{% wall_ticket_estimate "Invalid" project_id %}</span></p>
+                <div class="clear"></div>
+            </div>
+            <div id="wall-inner-1" class="wall-drop">
+                {% wall_ticket_all "Invalid" project_id as tickets %}
+                {% for ticket in tickets %}
+                    <div class="wall-t">
+                        <div class="wall-ticket {% wall_ticket_priority ticket.priority %}">
+                            <p><a href="{% url "project:ticket_details" project_id ticket.id %}">{{ ticket.title }}</a></p>
+                            <div class="wall-ticket-inner">
+                                <p><img src="{{ baseStaticUrl }}img/ticket_ID.png"> #{{ ticket.id }} </p>
+                                <p><span>to</span>{% wall_ticket_assign_to ticket.assign_person_id %}</p>
+                                <p><img src="{{ baseStaticUrl }}img/{% wall_ticket_estimate_image ticket.estimate %}"></p>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="clear"></div>
 </div>
+    <script>
+        $('#wall-show').on({
+            'click': function(){
+                if($('.wall-4').css("display") == "block"){
+                    $(".wall-1").css("width","33%");
+                    $(".wall-2").css("width","33%");
+                    $(".wall-3").css("width","33%");
+                    $(".wall-4").css("display","none");
+                    $(".wall-5").css("display","none");
+                    $('#wall-show').attr('src','/static/img/wall_left.png');
+                }else{
+                    $(".wall-1").css("width","20%");
+                    $(".wall-2").css("width","20%");
+                    $(".wall-3").css("width","20%");
+                    $(".wall-4").css("display","block");
+                    $(".wall-5").css("display","block");
+                    $('#wall-show').attr('src','/static/img/wall_right.png');
+                }
+            }
+        });
+    </script>
  {% include 'project/project_footer.html' %}
  {% endblock %}
